@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Say Hello to Your Future- English Learning</title>
+    <title>Goodbye, John - English Learning</title>
     <script src="https://w.soundcloud.com/player/api.js"></script>
     <style>
     * {
@@ -816,58 +816,58 @@ body::before {
         font-size: 16px;
     }
 }
-
 </style>
 </head>
 <body>
     <div class="container">
     <div class="header-row">
-        <h1>L01 Say Hello to Your Future</h1>
+        <h1>L06 You Can Do it!</h1>
         <div class="button-group">
-            <a href="https://sites.google.com/view/main-unit-6-lt/%E9%A6%96%E9%A0%81" target="_blank" class="home-button">🏠</a>
+            <a href="menu.html" target="_blank" class="home-button">🏠</a>
             <button id="instructionsBtn" onclick="toggleInstructions()">💡</button>
         </div>
     </div>
 
     <div class="player-container">
     <div class="player-content">
-        <div class="controls-left">
+        <div class="top-controls">
             <!-- 播放/暫停按鈕 -->
-           <!-- 播放按鈕部分 -->
-<button id="playPauseBtn" class="play-button">
-    <svg class="play-icon" viewBox="0 0 24 24">
-        <path class="play-path" d="M8 5v14l11-7z" fill="currentColor"/>
-        <path class="pause-path hidden" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="currentColor"/>
-    </svg>
-</button>
+            <button id="playPauseBtn" class="play-button">
+                <svg class="play-icon" viewBox="0 0 24 24">
+                    <path class="play-path" d="M8 5v14l11-7z" fill="currentColor"/>
+                    <path class="pause-path hidden" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="currentColor"/>
+                </svg>
+            </button>
             
-            <!-- 時間顯示 -->
-            <span id="currentTime" class="time-text">0:00</span>
-            <span class="time-separator">/</span>
-            <span id="duration" class="time-text">0:00</span>
-        </div>
+            <!-- 進度條區域 -->
+            <div class="progress-section">
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress" id="progress"></div>
+                </div>
+            </div>
 
-        <!-- 進度條區域 -->
-        <div class="progress-section">
-            <div class="progress-bar" id="progressBar">
-                <div class="progress" id="progress"></div>
+            <!-- 右側控制區 -->
+            <div class="controls-right">
+                <button id="toggleTranslation" class="translation-button">
+                    <svg class="translate-icon" viewBox="0 0 24 24">
+                        <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12z" fill="currentColor"/>
+                    </svg>
+                </button>
             </div>
         </div>
 
-        <!-- 右側控制區 -->
-        <div class="controls-right">
-            <button id="toggleTranslation" class="translation-button">
-                <svg class="translate-icon" viewBox="0 0 24 24">
-                    <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12z" fill="currentColor"/>
-                </svg>
-            </button>
+        <!-- 時間顯示 -->
+        <div class="time-display-container">
+            <span id="currentTime" class="time-text">0:00</span>
+            <span class="time-separator">/</span>
+            <span id="duration" class="time-text">0:00</span>
         </div>
     </div>
 </div>
 
     <!-- 隱藏的音頻元素 -->
     <audio id="audioPlayer" preload="metadata">
-        <source src=" https://www.ltedu.com.tw/Web/Sharefile/LT/81001_SelfLearning/B1L1_Song.mp3 " type="audio/mpeg">
+        <source src="https://www.ltedu.com.tw/Web/Sharefile/LT/english2025/GoodbyeJohn.mp3" type="audio/mpeg">
     </audio>
 </div>
 
@@ -1070,9 +1070,9 @@ body::before {
         </div>
     </div>
 
-<div class="song-selection">
+		<div class="song-selection">
     <div class="song-buttons-container">
-        <button class="song-circle-button" data-song="B1L2">B1L2</button>
+        <button class="song-circle-button" data-song="B1L1">B1L1</button>
         <button class="song-circle-button" data-song="B1L3">B1L3</button>
     </div>
     <div id="extraPlayer" class="song-player hidden">
@@ -1493,8 +1493,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         document.querySelector(`#part${currentPart}`).style.opacity = '1';
     }, 100);
-
-	document.querySelectorAll('.lyrics-container').forEach(container => { if (container.id !== 'part1') { container.classList.add('hidden'); } });
 });
 
    function toggleInstructions() {
@@ -1751,7 +1749,6 @@ closePlayer() {
 document.addEventListener('DOMContentLoaded', () => {
     const extraPlayer = new ExtraPlayer();
 });
-
 </script>
 </body>
 </html>
