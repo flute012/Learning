@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> L06 You Can Do it!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            color: #2d3748;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        #fixed-top {
+    background: linear-gradient(to right, #4a90e2, #63b3ed);
+    padding: 0 16px;
+    height: 60px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.header-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.left-section {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 16px;
+}
+
+h1 {
+    color: white;
+    font-size: 18px;
+    margin: 0;
+    text-align: center;
+}
+
+#instructionsBtn {
+    position: absolute;
+    right: 16px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 8px;
+}
+
+/* 底部控制欄樣式 */
+#bottom-controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    border-top: 1px solid #eee;
+    z-index: 1000;
+}
+
+.control-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 33.33%;
+}
+
+.control-label {
+    font-size: 14px;
+    color: #666;
+}
+
+/* 語速按鈕樣式 */
+#speedBtn {
+    background-color: #f5f5f5;
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    color: #555;
+    font-size: 20px;
+}
+
+.speed-icon {
+    font-size: 20px;
+}
+
+.speed-value {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    background: #4a90e2;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-right: 0;
+}
+
+/* 播放按鈕樣式 */
+#playPauseBtn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 2px 8px rgba(74,144,226,0.4);
+}
+
+/* 翻譯開關樣式 - 改進視覺提示 */
+.translation-switch {
+    position: relative;
+    display: inline-block;
+    width: 80px;
+    height: 34px;
+    vertical-align: middle;
+    margin: 0;
+}
+
+.translation-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #f0f0f0;
+    transition: .4s;
+    border-radius: 34px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+
+/* 兩種語言標籤 */
+.lang-label {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.lang-en {
+    left: 0;
+}
+
+.lang-zh {
+    right: 0;
+}
+
+/* 滑塊 */
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 36px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 34px;
+    z-index: 1;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* 當前選中的語言高亮顯示 */
+input:not(:checked) + .slider .lang-en {
+    color: #4a90e2;
+    font-weight: bold;
+    z-index: 2;
+}
+
+input:checked + .slider .lang-zh {
+    color: #4a90e2;
+    font-weight: bold;
+    z-index: 2;
+}
+
+input:checked + .slider {
+    background-color: #f0f0f0;
+}
+
+input:checked + .slider:before {
+    transform: translateX(36px);
+}
+
+/* 調整滾動內容區域 */
+#scrollable-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    margin-top: 60px; /* 調整為頂部欄高度 */
+    margin-bottom: 90px; /* 為底部控制欄留出空間 */
+    background-color: #f0f4f8;
+}
+
+#article {
+    font-family: 'Times New Roman', Times, serif;
+    line-height: 1.6;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.highlight {
+    background-color: #ffff00;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.bold {
+    font-weight: 700 !important;
+}
+
+.phrase.bold {
+    font-weight: 700 !important;
+    border-bottom: 1px dotted #4a90e2;
+    display: inline-block;
+    color: #4a90e2; /* 添加藍色 */
+}
+
+/* 提高特異性 */
+#article .phrase.bold {
+    font-weight: 700 !important;
+    color: #4a90e2; /* 確保藍色會被應用 */
+}
+
+#article .bold {
+    font-weight: 700 !important;
+}
+
+#wordInfo {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: none;
+    z-index: 1000;
+    max-width: 80%;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: none;
+    z-index: 999;
+}
+
+#instructionsModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+#instructionsContent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 24px;
+    border-radius: 12px;
+    max-width: 90%;
+    width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.instructions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.instructions-header h2 {
+    margin: 0;
+    color: #2d3748;
+    font-size: 1.5rem;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.instructions-body {
+    margin-bottom: 24px;
+}
+
+.instruction-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 12px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+}
+
+.instruction-icon {
+    font-size: 24px;
+    margin-right: 16px;
+    width: 32px;
+    text-align: center;
+}
+
+.instruction-item p {
+    margin: 0;
+    color: #4a5568;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.got-it-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.got-it-button:hover {
+    background-color: #357abd;
+}
+
+/* 中文翻譯樣式 */
+.translation {
+    display: none;
+    padding: 10px 15px;
+    margin-top: 8px;
+    background-color: #f5f5f5;
+    border-left: 3px solid #4a90e2;
+    font-size: 0.95em;
+    color: #555;
+    border-radius: 0 5px 5px 0;
+    margin-bottom: 15px;
+}
+
+/* 速度調節模態窗 */
+#speedModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2000;
+    background-color: rgba(0,0,0,0.5);
+    animation: fadeIn 0.2s ease-out;
+}
+
+#speedControlPanel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 20px;
+    padding: 25px;
+    width: 85%;
+    max-width: 500px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* 頂部拖動條 */
+.modal-drag-indicator {
+    width: 40px;
+    height: 4px;
+    background-color: #e2e2e2;
+    border-radius: 2px;
+    margin: 0 auto 20px;
+}
+
+/* 當前速度顯示 */
+.current-speed-display {
+    text-align: center;
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+/* 改進的滑動條 */
+.speed-slider-container {
+    padding: 0 10px;
+    margin-bottom: 40px;
+}
+
+#speedControlModal {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    background: #e2e2e2;
+    border-radius: 3px;
+    outline: none;
+}
+
+#speedControlModal::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    background: #4a90e2;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* 預設速度選項 */
+.speed-presets {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.speed-preset-btn {
+    background-color: #f5f5f5;
+    border: none;
+    border-radius: 30px;
+    padding: 12px 0;
+    width: 18%;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.speed-preset-btn:hover {
+    background-color: #e5e5e5;
+}
+
+.speed-preset-btn.active {
+    background-color: #4a90e2;
+    color: white;
+}
+
+/* 標籤 */
+.speed-label {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-top: 5px;
+}
+</style>
+</head>
+<body>
+    <div id="fixed-top">
+    <div class="header-row">
+        <a href="menu.html" target="_blank" class="home-button" style="position: absolute; left: 16px;">🏠</a>
+        <h1> L06 You Can Do it!</h1>
+        <button id="instructionsBtn" style="position: absolute; right: 16px;" onclick="toggleInstructions()">💡</button>
+    </div>
+</div>
+
+    <div id="scrollable-content">
+        <div id="article"></div>
+    </div>
+    <div id="wordInfo"></div>
+    <div id="overlay"></div>
+    <!-- 速度調節模態窗 -->
+    <div id="speedModal">
+        <div id="speedControlPanel">
+            <div class="modal-drag-indicator"></div>
+            <div class="current-speed-display" id="modalSpeedValue">1x</div>
+            
+            <div class="speed-slider-container">
+                <input type="range" id="speedControlModal" min="0.25" max="2" step="0.05" value="1">
+            </div>
+            
+            <div class="speed-presets">
+                <button class="speed-preset-btn" data-speed="0.25">0.25</button>
+                <button class="speed-preset-btn active" data-speed="1.0">1.0</button>
+                <button class="speed-preset-btn" data-speed="1.25">1.25</button>
+                <button class="speed-preset-btn" data-speed="1.5">1.5</button>
+                <button class="speed-preset-btn" data-speed="2.0">2.0</button>
+            </div>
+            <div class="speed-label">正常</div>
+        </div>
+    </div>
+
+<!-- 底部控制欄 -->
+<div id="bottom-controls">
+    <div class="control-item">
+        <button id="speedBtn">
+            <span class="speed-icon">⏱️</span>
+            <span id="speedValue" class="speed-value">1.0x</span>
+        </button>
+        <span class="control-label">語速</span>
+    </div>
+    
+    <div class="control-item">
+        <button id="playPauseBtn" onclick="togglePlayPause()">▶</button>
+        <span class="control-label">播放</span>
+    </div>
+    
+    <div class="control-item">
+        <label class="translation-switch" title="切換中英文顯示">
+            <input type="checkbox" id="translationToggle">
+            <span class="slider">
+                <span class="lang-label lang-en">英文</span>
+                <span class="lang-label lang-zh">中英</span>
+            </span>
+        </label>
+        <span class="control-label">語言切換</span>
+    </div>
+</div>
+
+    <div id="instructionsModal">
+        <div id="instructionsContent">
+            <div class="instructions-header">
+                <h2>使用說明</h2>
+                <button class="close-button" onclick="toggleInstructions()">×</button>
+            </div>
+            <div class="instructions-body">
+                <div class="instruction-item">
+                    <span class="instruction-icon">🔊</span>
+                    <p>點擊任何單字可聽發音</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="instruction-icon">📖</span>
+                    <p>點擊<strong>粗體字</strong>可查看詳細解釋</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="instruction-icon">⏱️</span>
+                    <p>點擊速度按鈕可調整朗讀速度</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="instruction-icon">▶️</span>
+                    <p>使用播放按鈕控制全文朗讀</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="instruction-icon">🔄</span>
+                    <p>切換翻譯開關可顯示/隱藏中文翻譯</p>
+                </div>
+            </div>
+            <button class="got-it-button" onclick="toggleInstructions()">知道了！</button>
+        </div>
+    </div>
+
+    <script>
+        let synth = window.speechSynthesis;
+        let utterance;
+        let wordArray;
+        let currentIndex = 0;
+        let speedControl = document.getElementById('speedControl');
+        let speedValue = document.getElementById('speedValue');
+        let currentRate = 1.0;
+        let article = document.getElementById('article');
+        let wordInfoDiv = document.getElementById('wordInfo');
+        let currentWord = '';
+        let isPlaying = false;
+        let playPauseBtn = document.getElementById('playPauseBtn');
+        let currentPosition = 0;
+        // 速度控制模態窗功能
+        function toggleSpeedControl() {
+            const speedModal = document.getElementById('speedModal');
+            const speedControlModal = document.getElementById('speedControlModal');
+            const modalSpeedValue = document.getElementById('modalSpeedValue');
+            
+            speedModal.style.display = 'block';
+            // 更新滑動條位置
+            speedControlModal.value = currentRate;
+            modalSpeedValue.textContent = currentRate + 'x';
+            updateSpeedPresetActive(currentRate);
+            updateSpeedLabel(currentRate);
+        }
+        
+        // 更新激活的預設按鈕
+        function updateSpeedPresetActive(speed) {
+            const speedPresetBtns = document.querySelectorAll('.speed-preset-btn');
+            speedPresetBtns.forEach(btn => {
+                const btnSpeed = parseFloat(btn.dataset.speed);
+                btn.classList.toggle('active', btnSpeed === speed);
+            });
+        }
+        
+        // 更新速度標籤
+        function updateSpeedLabel(speed) {
+            const speedLabel = document.querySelector('.speed-label');
+            if (speed === 1.0) {
+                speedLabel.textContent = '正常';
+            } else if (speed < 1.0) {
+                speedLabel.textContent = '較慢';
+            } else {
+                speedLabel.textContent = '較快';
+            }
+        }
+        let translationVisible = false;
+        let originalText = `Joe Whale was a 9-year-old boy in England. He was always bored in class, so he doodled all the time. He enjoyed drawing pictures a lot and drew all kinds of things, such as animals, robots, aliens, and so on.
+
+	His teachers couldn’t understand his love of drawing. Therefore, they complained to his parents. However, this didn’t make his parents angry; instead, they put him in an art class! Soon after, Joe’s talent was recognized by his art teacher. Later, Joe’s art teacher posted his drawings on Instagram. A restaurant owner saw these pictures and asked Joe to doodle on his restaurant wall.
+
+	At first, Joe’s family was worried. They knew Joe had difficulty focusing for a long time. Also, the restaurant wall was big, so Joe would have to create lots of new doodles. Joe’s father thought his son would just give up. However, Joe was not only patient but also very determined. After days of drawing, the wall was covered with hundreds of fun little doodles! The restaurant owner and his customers loved them. After that, Joe’s parents set up a website to share Joe’s creative doodles. Soon, his doodle wall became famous!
+
+	In the end, Joe’s parents’ support made his art a great success. With a little encouragement, anyone can do amazing things!`;
+
+        // 新增中文翻譯文本
+        const chineseTranslation = {
+    "paragraph1": "Joe Whale是一名英國的9歲男孩。他在課堂上總是感到無聊，所以他一直在塗鴉。他很喜歡畫畫，畫了各種事物，像是動物、機器人、外星人等等。",
+    "paragraph2": "他的老師們無法理解他對於畫畫的熱愛。因此，他們向他的父母親抱怨。然而，這並未使他的父母生氣，相反地，他們讓他去上藝術課！不久之後，Joe的天賦被他的美術老師認可了。之後，Joe的美術老師把他的畫作發布在Instagram上面。一名餐廳老闆看到了這些照片，並且要求Joe在他的餐廳牆上塗鴉。",
+    "paragraph3": "起初，Joe的家人很擔心。他們知道Joe沒辦法長時間集中精神。此外，那家餐廳的牆面很大，因此Joe將必須創作出大量的新塗鴉。Joe的父親認為他的兒子會放棄。然而，Joe不但有耐心，而且非常堅定。在幾天的繪畫之後，整面牆畫滿了數百個有趣的小塗鴉！餐廳老闆與顧客都很喜愛這些塗鴉。在那之後，Joe的父母親建立了一個網站來分享Joe那些充滿創意的塗鴉。很快的，他的塗鴉牆就變得遠近聞名了！",
+    "paragraph4": "最後，Joe父母親的支持讓他的藝術大獲成功。只要一點鼓勵，任何人都可以做到令人驚歎的事！"
+};
+
+        const wordInfo = {
+    // 原形詞及其變化形式都指向相同的資訊
+    "complain": {
+        phonetic: "[kəmˋplen]",
+        syllable: "com·plain",
+        partOfSpeech: "vi. vt.",
+        meaning: "抱怨",
+        variations: ["complained", "complaining", "complains"]  // 加入變化形式
+    },
+    "complained": {
+        baseForm: "complain"  // 指向基本形式
+    },
+    "talent": {
+        phonetic: "[ˋtælənt]",
+        syllable: "tal·ent",
+        partOfSpeech: "n.",
+        meaning: "天賦",
+        variations: ["talents"]
+    },
+    "recognize": {
+        phonetic: "[ˋrɛkəg͵naɪz]",
+        syllable: "rec·og·nize",
+        partOfSpeech: "vt.",
+        meaning: "認可",
+        variations: ["recognized", "recognizing", "recognizes"]
+    },
+    "recognized": {
+        baseForm: "recognize"
+    },
+    "post": {
+        phonetic: "[post]",
+        syllable: "post",
+        partOfSpeech: "vt.",
+        meaning: "（在網上）發布",
+        variations: ["posted", "posting", "posts"]
+    },
+    "posted": {
+        baseForm: "post"
+    },
+    "focus": {
+        phonetic: "[ˋfokəs]",
+        syllable: "fo·cus",
+        partOfSpeech: "vi.",
+        meaning: "集中",
+        variations: ["focused", "focusing", "focuses"]
+    },
+    "focusing": {
+        baseForm: "focus"
+    },
+    "patient": {
+        phonetic: "[ˋpeʃənt]",
+        syllable: "pa·tient",
+        partOfSpeech: "adj.",
+        meaning: "有耐心的"
+    },
+    "determined": {
+        phonetic: "[dɪˋtɝmɪnd]",
+        syllable: "de·ter·mined",
+        partOfSpeech: "adj.",
+        meaning: "堅決的"
+    },
+    "customer": {
+        phonetic: "[ˋkʌstəmɚ]",
+        syllable: "cus·tom·er",
+        partOfSpeech: "n.",
+        meaning: "顧客",
+        variations: ["customers"]
+    },
+    "customers": {
+        baseForm: "customer"
+    },
+    "support": {
+        phonetic: "[səˋport]",
+        syllable: "sup·port",
+        partOfSpeech: "n. vt.",
+        meaning: "支持",
+        variations: ["supported", "supporting", "supports"]
+    },
+    "success": {
+        phonetic: "[səkˋsɛs]",
+        syllable: "suc·cess",
+        partOfSpeech: "n.",
+        meaning: "成功",
+        variations: ["successes"]
+    },
+    "encouragement": {
+        phonetic: "[ɪnˋkɝɪdʒmənt]",
+        syllable: "en·cour·age·ment",
+        partOfSpeech: "n.",
+        meaning: "鼓勵",
+        variations: ["encouragements"]
+    },
+    // 片語保持不變
+    "such as": {
+        phonetic: "[ˈsʌtʃ æz]",
+        type: "phrase",
+        partOfSpeech: "phr.",
+        meaning: "例如"
+    },
+    "and so on": {
+        phonetic: "[ænd soʊ ɑn]",
+        type: "phrase",
+        partOfSpeech: "phr.",
+        meaning: "等等；諸如此類"
+    },
+    "at first": {
+        phonetic: "[æt fɜːrst]",
+        type: "phrase",
+        partOfSpeech: "phr.",
+        meaning: "起初"
+    },
+    "give up": {
+        phonetic: "[ɡɪv ʌp]",
+        type: "phrase",
+        partOfSpeech: "phr.",
+        meaning: "放棄"
+    },
+    "set up": {
+        phonetic: "[sɛt ʌp]",
+        type: "phrase",
+        partOfSpeech: "phr.",
+        meaning: "建立"
+    },
+    "in the end": {
+        phonetic: "[ɪn ði ɛnd]",
+        type: "phrase",
+        partOfSpeech: "phr.",
+        meaning: "最後"
+    }
+};
+
+
+        // 中英翻譯功能
+        function toggleTranslation() {
+            translationVisible = !translationVisible;
+            
+            // 更新開關狀態
+            document.getElementById('translationToggle').checked = translationVisible;
+            
+            const translations = document.querySelectorAll('.translation');
+            translations.forEach(translation => {
+                translation.style.display = translationVisible ? 'block' : 'none';
+            });
+        }
+
+        function initializePage() {
+            let processedWords = [];
+            let globalWordIndex = 0;
+
+            // 先列出所有片語，並按長度降序排序
+            const phrases = Object.keys(wordInfo)
+                .filter(key => key.includes(' '))
+                .sort((a, b) => b.length - a.length);
+
+            console.log('需要處理的片語:', phrases);
+
+            // 建立更靈活的正則表達式
+            const phraseRegexes = phrases.map(phrase => {
+                // 產生兩種匹配模式：原始大小寫和首字母大寫
+                const originalRegex = new RegExp(`\\b${phrase.replace(/\s+/g, '\\s+')}\\b`, 'gi');
+                const capitalizedRegex = new RegExp(`\\b${phrase.split(' ').map(w => 
+                    w.charAt(0).toUpperCase() + w.slice(1)
+                ).join('\\s+')}\\b`, 'g');
+
+                return {
+                    originalRegex,
+                    capitalizedRegex,
+                    phrase
+                };
+            });
+
+            // 分段處理文本
+            const paragraphs = originalText.split('\n\n').map((paragraph, paragraphIndex) => {
+                let paragraphWords = [];
+                let remainingText = paragraph;
+                let matchedPhrases = new Set();
+
+                // 先嘗試匹配片語
+                phraseRegexes.forEach(({originalRegex, capitalizedRegex, phrase}) => {
+                    // 嘗試匹配原始和首字母大寫的形式
+                    const matchRegexes = [originalRegex, capitalizedRegex];
+                    
+                    matchRegexes.forEach(regex => {
+                        while (true) {
+                            const match = remainingText.match(regex);
+                            if (!match) break;
+
+                            const index = remainingText.indexOf(match[0]);
+                            
+                            // 處理匹配前的文本
+                            if (index > 0) {
+                                const beforeWords = remainingText.slice(0, index).split(/\s+/);
+                                beforeWords.forEach(word => {
+                                    if (word) {
+                                        const cleanWord = word.toLowerCase().replace(/[^a-z]/g, '');
+                                        paragraphWords.push({
+                                            type: 'word',
+                                            text: word,
+                                            cleanWord: cleanWord
+                                        });
+                                    }
+                                });
+                            }
+
+                            // 添加片語
+                            paragraphWords.push({
+                                type: 'phrase',
+                                text: match[0],
+                                original: phrase
+                            });
+
+                            // 標記已匹配的片語
+                            matchedPhrases.add(phrase);
+
+                            // 更新剩餘文本
+                            remainingText = remainingText.slice(index + match[0].length).trim();
+                        }
+                    });
+                });
+
+                // 調試輸出
+                console.log(`第 ${paragraphIndex + 1} 段落匹配的片語:`, Array.from(matchedPhrases));
+
+                // 添加剩餘的單詞
+                if (remainingText) {
+                    const remainingWords = remainingText.split(/\s+/);
+                    remainingWords.forEach(word => {
+                        if (word) {
+                            const cleanWord = word.toLowerCase().replace(/[^a-z]/g, '');
+                            paragraphWords.push({
+                                type: 'word',
+                                text: word,
+                                cleanWord: cleanWord
+                            });
+                        }
+                    });
+                }
+
+                return {
+                    words: paragraphWords,
+                    index: paragraphIndex
+                };
+            });
+
+            // 調試輸出：所有未匹配的片語
+            const allPhrases = new Set(phrases);
+            paragraphs.forEach(paragraph => {
+                paragraph.words.forEach(item => {
+                    if (item.type === 'phrase') {
+                        allPhrases.delete(item.original);
+                    }
+                });
+            });
+            console.log('未匹配的片語:', Array.from(allPhrases));
+
+            // 渲染 HTML
+            article.innerHTML = paragraphs.map(paragraph => {
+                const paragraphHTML = paragraph.words.map(item => {
+                    if (item.type === 'phrase') {
+                        const classes = ['phrase', 'clickable'];
+                        if (wordInfo[item.original]) {
+                            classes.push('bold');
+                        }
+                        return `<span class="${classes.join(' ')}" data-phrase="${item.original}">${item.text}</span>`;
+                    } else {
+                        const classes = ['clickable'];
+                        if (wordInfo[item.cleanWord]) {
+                            classes.push('bold');
+                        }
+                        return `<span id="word${globalWordIndex++}" class="${classes.join(' ')}">${item.text}</span>`;
+                    }
+                }).join(' ');
+
+                // 添加翻譯區塊
+                const translationKey = `paragraph${paragraph.index + 1}`;
+                const translation = chineseTranslation[translationKey] || '';
+                
+                return `
+                    <p>${paragraphHTML}</p>
+                    <div class="translation">${translation}</div>
+                `;
+            }).join('\n\n');
+
+            // 為所有可點擊元素添加事件監聽器
+            document.querySelectorAll('.clickable').forEach(element => {
+                element.addEventListener('click', function() {
+                    // 處理單字點擊
+                    if (this.classList.contains('phrase')) {
+                        const phrase = this.getAttribute('data-phrase');
+                        if (phrase && wordInfo[phrase]) {
+                            showPhraseInfo(phrase);
+                        }
+                        speakWord(this.textContent);
+                    } else {
+                        const word = this.textContent;
+                        const cleanWord = word.toLowerCase().replace(/[^a-z]/g, '');
+                        if (wordInfo[cleanWord]) {
+                            showWordInfo(word);
+                        }
+                        speakWord(word);
+                    }
+
+                    // 如果正在播放全文，暫停播放
+                    if (isPlaying) {
+                        synth.pause();
+                        isPlaying = false;
+                        playPauseBtn.textContent = '▶';
+                    }
+                });
+            });
+
+            // 添加點擊按鈕功能
+            speedBtn.addEventListener('click', toggleSpeedControl);
+            
+            // 初始化翻譯開關事件
+            document.getElementById('translationToggle').addEventListener('change', function() {
+                translationVisible = this.checked;
+                const translations = document.querySelectorAll('.translation');
+                translations.forEach(translation => {
+                    translation.style.display = translationVisible ? 'block' : 'none';
+                });
+            });
+
+            return paragraphs.map(p => p.words).flat();
+        }
+
+        function initializeSpeedControl() {
+            const speedBtn = document.getElementById('speedBtn');
+            const speedModal = document.getElementById('speedModal');
+            const speedControlModal = document.getElementById('speedControlModal');
+            const modalSpeedValue = document.getElementById('modalSpeedValue');
+            const speedPresetBtns = document.querySelectorAll('.speed-preset-btn');
+            
+            // 初始速度設置
+            currentRate = 1.0;
+            document.getElementById('speedValue').textContent = currentRate.toFixed(1) + 'x';
+            
+            // 速度按鈕點擊事件 - 打開模態窗
+            speedBtn.addEventListener('click', function() {
+                speedModal.style.display = 'block';
+                // 更新滑動條位置
+                speedControlModal.value = currentRate;
+                modalSpeedValue.textContent = currentRate + 'x';
+                updateSpeedPresetActive(currentRate);
+                updateSpeedLabel(currentRate);
+            });
+            
+            // 點擊模態窗背景關閉
+            speedModal.addEventListener('click', function(e) {
+                if (e.target === speedModal) {
+                    speedModal.style.display = 'none';
+                }
+            });
+            
+            // 滑動條事件
+            speedControlModal.addEventListener('input', function() {
+                const newRate = parseFloat(this.value);
+                // 四捨五入到最近的0.05
+                const roundedRate = Math.round(newRate * 20) / 20;
+                
+                currentRate = roundedRate;
+                modalSpeedValue.textContent = currentRate.toFixed(2) + 'x';
+                document.getElementById('speedValue').textContent = currentRate.toFixed(1) + 'x';
+                
+                updateSpeedPresetActive(currentRate);
+                updateSpeedLabel(currentRate);
+                
+                // 如果正在播放，更新速度
+                updatePlaybackSpeed();
+            });
+            
+            // 預設速度按鈕
+            speedPresetBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const presetSpeed = parseFloat(this.dataset.speed);
+                    currentRate = presetSpeed;
+                    
+                    // 更新UI
+                    speedControlModal.value = presetSpeed;
+                    modalSpeedValue.textContent = presetSpeed.toFixed(2) + 'x';
+                    document.getElementById('speedValue').textContent = presetSpeed.toFixed(1) + 'x';
+                    
+                    // 更新按鈕激活狀態
+                    updateSpeedPresetActive(presetSpeed);
+                    updateSpeedLabel(presetSpeed);
+                    
+                    // 如果正在播放，更新速度
+                    updatePlaybackSpeed();
+                });
+            });
+            
+            // 更新播放速度
+            function updatePlaybackSpeed() {
+                if (synth.speaking && isPlaying) {
+                    // 儲存當前位置
+                    const currentText = utterance.text;
+                    const currentPosition = synth.speaking ? 
+                        Math.floor(currentText.length * (1 - synth.speaking / 100)) : 
+                        0;
+                    
+                    // 取消當前播放
+                    synth.cancel();
+                    
+                    // 用新的速度重新開始播放
+                    if (isPlaying) {
+                        speak(currentPosition);
+                    }
+                }
+            }
+        }
+
+        function showPhraseInfo(phrase) {
+            const info = wordInfo[phrase];
+            if (info) {
+                wordInfoDiv.innerHTML = `
+                    <h3>片語資訊</h3>
+                    <p>片語：${phrase}</p>
+                    <p>音標：${info.phonetic}</p>
+                    <p>詞性：${info.partOfSpeech}</p>
+                    <p>中文意思：${info.meaning}</p>
+                `;
+                wordInfoDiv.style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            }
+        }
+
+        function togglePlayPause() {
+            if (isPlaying) {
+                synth.pause();
+                currentPosition = synth.speaking ? utterance.text.length - utterance.text.length : 0;
+                playPauseBtn.textContent = '▶';
+                isPlaying = false;
+            } else {
+                if (synth.paused) {
+                    synth.resume();
+                } else {
+                    speak(currentPosition);
+                }
+                playPauseBtn.textContent = '❚❚';
+                isPlaying = true;
+            }
+        }
+
+        function getWordIndexFromPosition(position) {
+            let words = originalText.substring(0, position).split(/\s+/);
+            return words.length - 1;
+        }
+
+        function handleWordClick(word, index) {
+            const cleanWord = word.toLowerCase().replace(/[^a-z]/g, '');
+            if (wordInfo[cleanWord]) {
+                showWordInfo(word);
+            }
+            speakWord(word);
+            if (isPlaying) {
+                synth.pause();
+                isPlaying = false;
+                playPauseBtn.textContent = '▶';
+            }
+            currentIndex = index;
+        }
+
+        function showWordInfo(word) {
+            currentWord = word;
+            const cleanWord = word.toLowerCase().replace(/[^a-z]/g, '');
+            const info = wordInfo[cleanWord];
+
+            if (info) {
+                wordInfoDiv.innerHTML = `
+                    <h3>單字資訊</h3>
+                    <p>單字：${word}</p>
+                    <p>音標：${info.phonetic}</p>
+                    <p>音節：${info.syllable}</p>
+                    <p>詞性：${info.partOfSpeech}</p>
+                    <p>中文意思：${info.meaning}</p>
+                `;
+                wordInfoDiv.style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+            }
+        }
+
+        function closeWordInfo() {
+            wordInfoDiv.style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+
+        function toggleInstructions() {
+            const instructionsModal = document.getElementById('instructionsModal');
+            instructionsModal.style.display = instructionsModal.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function restartFromCurrentPosition() {
+            const currentText = utterance.text;
+            const currentPosition = synth.speaking ? 
+                Math.floor(currentText.length * (1 - synth.speaking / 100)) : 
+                0;
+            
+            synth.cancel();
+            speak(currentPosition);
+        }
+
+        function checkBrowserSupport() {
+            let support = {
+                speechSynthesis: 'speechSynthesis' in window,
+                speechSynthesisUtterance: 'SpeechSynthesisUtterance' in window,
+                onvoiceschanged: 'onvoiceschanged' in speechSynthesis
+            };
+            
+            console.log('Browser support:', support);
+        }
+
+        let defaultVoice = null;
+        let defaultPitch = 1.0;
+        let defaultRate = 1.0;
+
+        function initializeSpeech() {
+            if ('speechSynthesis' in window) {
+                synth = window.speechSynthesis;
+                
+                // 檢測是否為 iOS 設備
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                
+                // 獲取並設置預設語音
+                let voices = synth.getVoices();
+                if (voices.length === 0) {
+                    synth.onvoiceschanged = () => {
+                        voices = synth.getVoices();
+                        setPreferredVoice(voices, isIOS);
+                    };
+                } else {
+                    setPreferredVoice(voices, isIOS);
+                }
+            } else {
+                console.log('This browser does not support speech synthesis');
+                document.getElementById('playPauseBtn').disabled = true;
+            }
+        }
+
+        function setPreferredVoice(voices, isIOS) {
+            // 為 iOS 設備選擇最佳語音
+            if (isIOS) {
+                // 嘗試找到 Samantha 語音 (iOS 的高質量語音之一)
+                defaultVoice = voices.find(voice => 
+                    voice.name.includes('Samantha') && voice.lang === 'en-US'
+                ) || voices.find(voice => 
+                    voice.name.includes('Karen') && voice.lang === 'en-US'
+                ) || voices.find(voice => 
+                    voice.lang === 'en-US' && !voice.localService
+                );
+                
+                // iOS 特定的語音設置
+                defaultPitch = 1.1;  // 稍微提高音調
+                defaultRate = 0.9;   // 稍微降低速度
+            } else {
+                // Android 和其他設備使用 Google 語音
+                defaultVoice = voices.find(voice => 
+                    voice.lang === 'en-US' && 
+                    voice.name.includes('Google')
+                ) || voices.find(voice => 
+                    voice.lang === 'en-US'
+                );
+                
+                defaultPitch = 1.0;
+                defaultRate = 1.0;
+            }
+        }
+
+        function speakWord(word) {
+    synth.cancel();
+    let wordUtterance = new SpeechSynthesisUtterance(word);
+    
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    
+    if (defaultVoice) {
+        wordUtterance.voice = defaultVoice;
+    }
+    
+    wordUtterance.lang = 'en-US';
+    wordUtterance.pitch = defaultPitch;
+    
+    // iOS 設備特別處理
+    if (isIOS) {
+        // 根據單字長度動態調整速率
+        if (word.length <= 4) {
+            wordUtterance.rate = currentRate * 0.9;  // 短單字稍慢
+        } else {
+            wordUtterance.rate = currentRate * 0.95; // 長單字接近正常速度
+        }
+    } else {
+        wordUtterance.rate = currentRate;
+    }
+    
+    // 重點單字的特殊處理
+    const cleanWord = word.toLowerCase().replace(/[^a-z]/g, '');
+    if (wordInfo[cleanWord]) {
+        if (isIOS) {
+            wordUtterance.rate *= 0.8;  // iOS 設備上的重點單字更慢
+            wordUtterance.pitch = 1.2;  // 稍微提高音調以增加清晰度
+        } else {
+            wordUtterance.rate = Math.min(currentRate, 0.8);
+        }
+    }
+    
+    synth.speak(wordUtterance);
+}
+
+        function speak(startPosition = 0) {
+            // 清除現有高亮
+            document.querySelectorAll('.highlight').forEach(el => {
+                el.classList.remove('highlight');
+            });
+            
+            const text = originalText.substring(startPosition);
+            utterance = new SpeechSynthesisUtterance(text);
+            
+            // 基本設置
+            if (defaultVoice) {
+                utterance.voice = defaultVoice;
+            }
+            utterance.lang = 'en-US';
+            utterance.rate = currentRate;
+            
+            // 獲取所有單字元素
+            const wordElements = document.querySelectorAll('.clickable');
+            let charCount = 0;
+            let elementIndexMap = new Map();
+            
+            // 建立字符位置到元素索引的映射
+            wordElements.forEach((element, index) => {
+                const text = element.textContent;
+                const start = charCount;
+                charCount += text.length + 1; // +1 for space
+                elementIndexMap.set(start, index);
+            });
+            
+            // 處理邊界事件
+            utterance.onboundary = function(event) {
+                if (event.name === 'word') {
+                    const charIndex = event.charIndex;
+                    
+                    // 找到最接近的元素索引
+                    let closestStart = 0;
+                    let elementIndex = 0;
+                    
+                    for (let [start, index] of elementIndexMap) {
+                        if (start <= charIndex && start > closestStart) {
+                            closestStart = start;
+                            elementIndex = index;
+                        }
+                    }
+                    
+                    // 使用 requestAnimationFrame 更新高亮
+                    requestAnimationFrame(() => {
+                        // 移除前一個高亮
+                        document.querySelectorAll('.highlight').forEach(el => {
+                            el.classList.remove('highlight');
+                        });
+                        
+                        // 添加新的高亮
+                        const currentElement = wordElements[elementIndex];
+                        if (currentElement) {
+                            currentElement.classList.add('highlight');
+                            
+                            // 滾動到當前元素
+                            const scrollableContent = document.getElementById('scrollable-content');
+                            const elementTop = currentElement.offsetTop;
+                            const containerTop = scrollableContent.scrollTop;
+                            const containerHeight = scrollableContent.clientHeight;
+                            
+                            if (elementTop < containerTop || 
+                                elementTop > containerTop + containerHeight - 100) {
+                                scrollableContent.scrollTo({
+                                    top: elementTop - containerHeight / 2,
+                                    behavior: 'smooth'
+                                });
+                            }
+                        }
+                    });
+                }
+            };
+            
+            utterance.onend = function() {
+                playPauseBtn.textContent = '▶';
+                isPlaying = false;
+                currentIndex = 0;
+                currentPosition = 0;
+                document.querySelectorAll('.highlight').forEach(el => {
+                    el.classList.remove('highlight');
+                });
+            };
+            
+            synth.cancel();
+            synth.speak(utterance);
+            isPlaying = true;
+            playPauseBtn.textContent = '❚❚';
+        }
+
+        function highlightNext() {
+            const wordElements = document.querySelectorAll('.clickable');
+            
+            if (currentIndex > 0) {
+                const previousWord = wordElements[currentIndex - 1];
+                if (previousWord) {
+                    previousWord.classList.remove('highlight');
+                }
+            }
+
+            if (currentIndex < wordElements.length) {
+                const currentWordElement = wordElements[currentIndex];
+                if (currentWordElement) {
+                    currentWordElement.classList.add('highlight');
+                    
+                    // 滾動邏輯
+                    const scrollableContent = document.getElementById('scrollable-content');
+                    const wordPosition = currentWordElement.offsetTop;
+                    const scrollPosition = scrollableContent.scrollTop;
+                    const scrollableHeight = scrollableContent.clientHeight;
+
+                    if (wordPosition < scrollPosition || wordPosition > scrollPosition + scrollableHeight - 100) {
+                        scrollableContent.scrollTo({
+                            top: wordPosition - scrollableHeight / 2,
+                            behavior: 'smooth'
+                        });
+                    }
+
+                    currentIndex++;
+                }
+            }
+        }
+
+        // 初始化頁面
+        window.onload = function() {
+            initializePage();
+            initializeSpeech();
+            initializeSpeedControl();
+            
+            // 為 overlay 添加點擊事件
+            document.getElementById('overlay').addEventListener('click', function(event) {
+                if (event.target === this) {
+                    closeWordInfo();
+                }
+            });
+
+            // 為 wordInfo div 添加點擊事件，防止點擊內容時關閉
+            document.getElementById('wordInfo').addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
+            
+            // 添加點擊背景關閉功能
+            document.getElementById('instructionsModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    toggleInstructions();
+                }
+            });
+            
+            // 確保速度模態窗在按ESC時關閉
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    document.getElementById('speedModal').style.display = 'none';
+                }
+            });
+        };
+    </script>
+</body>
+</html>

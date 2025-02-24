@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>課文問答</title>
+    <style>
+         body, html {
+            margin: 0;
+            padding: 0;
+            font-family: "Times New Roman", Times, serif;
+            background: #f8f9fa;
+            line-height: 1.6;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e0e0e0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 101;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #2196f3;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .header {
+    background: white;
+    padding: 12px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.subtitle-banner {
+    background: #f8f9fa;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.subtitle-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.subtitle {
+    font-size: 20px;
+    color: #2c3e50;
+    margin: 0;
+    font-weight: normal;
+}
+
+@media (max-width: 600px) {
+    .subtitle {
+        font-size: 18px;
+    }
+    
+    .subtitle-banner {
+        padding: 8px 0;
+    }
+}
+
+.header-content {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    padding: 0 20px;
+}
+
+.title-container {
+    text-align: left;  
+    flex-grow: 0;      
+}
+
+.title {
+    font-size: 20px;
+    margin: 0;
+    color: #2c3e50;
+}
+
+.bilingual-button {
+    padding: 8px 16px;
+    background: #f8f9fa;
+    color: #2c3e50;
+    border: 2px solid #2c3e50;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: auto;
+}
+
+        .bilingual-button:hover {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .article-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-bottom: 80px;
+            background: white;
+        }
+
+        .paragraph {
+            margin-bottom: 24px;
+            position: relative;
+            padding: 20px;
+            border-radius: 8px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .paragraph:hover {
+            border-color: #90caf9;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .paragraph.active {
+            border-color: #2196f3;
+            box-shadow: 0 2px 12px rgba(33,150,243,0.2);
+        }
+
+        .paragraph-number {
+            position: absolute;
+            left: -12px;
+            top: 20px;
+            width: 24px;
+            height: 24px;
+            background: #2c3e50;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .paragraph-content {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .chinese-text {
+            display: none;
+            color: #666;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .chinese-text.show {
+            display: block;
+        }
+
+        .options-container {
+            display: none;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .paragraph.active .options-container {
+            display: block;
+        }
+
+        .matching-prompt {
+    font-size: 18px;  
+    font-weight: bold;  
+    color: #2c3e50;    
+    margin-bottom: 16px; 
+    padding: 8px 0;    
+    border-bottom: 1px solid #eee; 
+}
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .option {
+    padding: 12px;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px; 
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+        .option:hover {
+            background: #e3f2fd;
+            border-color: #90caf9;
+        }
+
+        .option.selected {
+            background: #2196f3;
+            border-color: #1976d2;
+            color: white;
+        }
+
+        .option-label {
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .option-chinese {
+            display: none;
+            margin-top: 5px;
+            color: #666;
+            border-top: 1px solid #eee;
+            padding-top: 5px;
+        }
+
+        .option-chinese.show {
+            display: block;
+        }
+
+        .submit-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 16px;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .submit-button {
+            width: 90%;
+            max-width: 400px;
+            padding: 12px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: "Times New Roman", Times, serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .submit-button:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .answer-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #e3f2fd;
+            color: #1976d2;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .result-correct {
+            border-left: 4px solid #4caf50 !important;
+        }
+
+        .result-incorrect {
+            border-left: 4px solid #f44336 !important;
+        }
+
+        .result-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .result-badge.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .result-badge.incorrect {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e0e0e0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 101;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #2196f3;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .paragraph.answered {
+            border-color: #e0e0e0;
+            background: #fafafa;
+        }
+
+        @keyframes celebrateComplete {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .paragraph.completed {
+            animation: celebrateComplete 0.5s ease;
+        }
+
+        .helper-text {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background: #e3f2fd;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .helper-text.visible {
+            display: block;
+        }
+        .question {
+            font-weight: bold;
+            margin-bottom: 16px;
+            padding: 10px;
+            background: #f0f7ff;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .paragraph.active .question {
+            display: block;
+        }
+        .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-left: auto; 
+}
+
+@media (max-width: 600px) {
+    .header-content {
+        padding: 0 10px;
+    }
+    
+    .title {
+        font-size: 18px;
+    }
+    
+    .button-group {
+        gap: 5px;
+    }
+}
+
+.home-button, #instructionsBtn {
+    background: none;
+    border: none;
+    color: #2c3e50;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px;
+    transition: transform 0.2s ease;
+}
+
+.home-button:hover, #instructionsBtn:hover {
+    transform: scale(1.1);
+}
+
+#instructionsModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+}
+
+#instructionsContent {
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 24px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.instructions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 12px;
+}
+
+.instruction-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    transition: all 0.2s ease;
+}
+
+.instruction-icon {
+    font-size: 20px;
+    width: 28px;
+    margin-right: 16px;
+}
+
+.got-it-button {
+    width: 100%;
+    padding: 12px;
+    background: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 16px;
+}
+    </style>
+</head>
+<body>
+    <div class="progress-bar">
+    <div class="progress-fill"></div>
+</div>
+    <div class="header">
+    <div class="header-content">
+        <div class="title-container">
+            <h1 class="title">L06 You Can Do It!</h1>
+        </div>
+        <div class="button-group">
+            <a href="menu.html" target="_blank" class="home-button">🏠</a>
+            <button id="instructionsBtn" onclick="toggleInstructions()">💡</button>
+            <button class="bilingual-button">中英對照</button>
+        </div>
+    </div>
+</div>
+
+<!-- subtitle banner -->
+<div class="subtitle-banner">
+    <div class="subtitle-content">
+        <h2 class="subtitle">課文問答</h2>
+    </div>
+</div>
+
+     <div id="instructionsModal">
+    <div id="instructionsContent">
+        <div class="instructions-header">
+            <h2>使用說明</h2>
+            <button class="close-button" onclick="toggleInstructions()">×</button>
+        </div>
+        <div class="instructions-body">
+            <div class="instruction-item">
+                <span class="instruction-icon">📝</span>
+                <p>點擊每個段落來展開問題選項</p>
+            </div>
+            <div class="instruction-item">
+                <span class="instruction-icon">🎯</span>
+                <p>仔細閱讀課文內容，選擇最適合的答案</p>
+            </div>
+            <div class="instruction-item">
+                <span class="instruction-icon">🌏</span>
+                <p>點擊右側中英對照按鈕可切換顯示中文</p>
+            </div>
+            <div class="instruction-item">
+                <span class="instruction-icon">✅</span>
+                <p>完成所有題目後點擊下方按鈕檢查答案</p>
+            </div>
+        </div>
+        <button class="got-it-button" onclick="toggleInstructions()">知道了！</button>
+    </div>
+</div>
+
+    <div class="helper-text">
+        點擊每個段落並選擇最適合的描述
+    </div>
+
+    <div class="article-container">
+    <!-- 段落1 -->
+    <div class="paragraph" data-paragraph="1">
+        <span class="paragraph-number">1</span>
+        <div class="paragraph-content">
+            Joe Whale was a 9-year-old boy in England. He was always bored in class, so he doodled all the time. He enjoyed drawing pictures a lot and drew all kinds of things, such as animals, robots, aliens, and so on.
+            <div class="chinese-text">
+                Joe Whale是一名英國的9歲男孩。他在課堂上總是感到無聊，所以他一直在塗鴉。他很喜歡畫畫，畫了各種事物，像是動物、機器人、外星人等等。
+            </div>
+        </div>
+        <div class="options-container">
+            <div class="matching-prompt">Q: What did Joe do most of the time in class?</div>
+            <div class="options-grid">
+                <div class="option" data-option="A">They put Joe in an art class.</div>
+                <div class="option" data-option="B">Joe’s parents set up a website to share Joe’s creative doodles, and soon his doodle wall became famous.</div>
+                <div class="option" data-option="C">He thought his son would just give up.</div>
+                <div class="option" data-option="D">His parents’ support.</div>
+                <div class="option" data-option="E">He doodled all the time.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 段落2 -->
+    <div class="paragraph" data-paragraph="2">
+        <span class="paragraph-number">2</span>
+        <div class="paragraph-content">
+            His teachers couldn’t understand his love of drawing. Therefore, they complained to his parents. However, this didn’t make his parents angry; instead, they put him in an art class! Soon after, Joe’s talent was recognized by his art teacher. Later, Joe’s art teacher posted his drawings on Instagram. A restaurant owner saw these pictures and asked Joe to doodle on his restaurant wall.
+            <div class="chinese-text">
+                他的老師們無法理解他對於畫畫的熱愛。因此，他們向他的父母親抱怨。然而，這並未使他的父母生氣，相反地，他們讓他去上藝術課！不久之後，Joe的天賦被他的美術老師認可了。之後，Joe的美術老師把他的畫作發布在Instagram上面。一名餐廳老闆看到了這些照片，並且要求Joe在他的餐廳牆上塗鴉。
+            </div>
+        </div>
+        <div class="options-container">
+            <div class="matching-prompt">Q: What did Joe’s parents do after Joe’s teachers complained about him?</div>
+            <div class="options-grid">
+                <div class="option" data-option="A">They put Joe in an art class.</div>
+                <div class="option" data-option="B">Joe’s parents set up a website to share Joe’s creative doodles, and soon his doodle wall became famous.</div>
+                <div class="option" data-option="C">He thought his son would just give up.</div>
+                <div class="option" data-option="D">His parents’ support.</div>
+                <div class="option" data-option="E">He doodled all the time.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 段落3 -->
+    <div class="paragraph" data-paragraph="3">
+        <span class="paragraph-number">3</span>
+        <div class="paragraph-content">
+            At first, Joe’s family was worried. They knew Joe had difficulty focusing for a long time. Also, the restaurant wall was big, so Joe would have to create lots of new doodles.
+            <div class="chinese-text">
+                起初，Joe的家人很擔心。他們知道Joe沒辦法長時間集中精神。此外，那家餐廳的牆面很大，因此Joe將必須創作出大量的新塗鴉。
+            </div>
+        </div>
+        <div class="options-container">
+            <div class="matching-prompt">Q: What was Joe’s father worried about?</div>
+            <div class="options-grid">
+                <div class="option" data-option="A">They put Joe in an art class.</div>
+                <div class="option" data-option="B">Joe’s parents set up a website to share Joe’s creative doodles, and soon his doodle wall became famous.</div>
+                <div class="option" data-option="C">He thought his son would just give up.</div>
+                <div class="option" data-option="D">His parents’ support.</div>
+                <div class="option" data-option="E">He doodled all the time.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 段落4 -->
+    <div class="paragraph" data-paragraph="4">
+        <span class="paragraph-number">4</span>
+        <div class="paragraph-content">
+            Joe’s father thought his son would just give up. However, Joe was not only patient but also very determined. After days of drawing, the wall was covered with hundreds of fun little doodles! The restaurant owner and his customers loved them. After that, Joe’s parents set up a website to share Joe’s creative doodles. Soon, his doodle wall became famous!
+            <div class="chinese-text">
+                Joe的父親認為他的兒子會放棄。然而，Joe不但有耐心，而且非常堅定。在幾天的繪畫之後，整面牆畫滿了數百個有趣的小塗鴉！餐廳老闆與顧客都很喜愛這些塗鴉。在那之後，Joe的父母親建立了一個網站來分享Joe那些充滿創意的塗鴉。很快的，他的塗鴉牆就變得遠近聞名了！
+            </div>
+        </div>
+        <div class="options-container">
+            <div class="matching-prompt">Q: How did Joe’s doodles become famous?</div>
+            <div class="options-grid">
+                <div class="option" data-option="A">They put Joe in an art class.</div>
+                <div class="option" data-option="B">Joe’s parents set up a website to share Joe’s creative doodles, and soon his doodle wall became famous.</div>
+                <div class="option" data-option="C">He thought his son would just give up.</div>
+                <div class="option" data-option="D">His parents’ support.</div>
+                <div class="option" data-option="E">He doodled all the time.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 段落5 -->
+    <div class="paragraph" data-paragraph="5">
+        <span class="paragraph-number">5</span>
+        <div class="paragraph-content">
+            In the end, Joe’s parents’ support made his art a great success. With a little encouragement, anyone can do amazing things!
+            <div class="chinese-text">
+                最後，Joe父母親的支持讓他的藝術大獲成功。只要一點鼓勵，任何人都可以做到令人驚歎的事！
+            </div>
+        </div>
+        <div class="options-container">
+            <div class="matching-prompt">Q: What made Joe’s art a great success?</div>
+            <div class="options-grid">
+                <div class="option" data-option="A">They put Joe in an art class.</div>
+                <div class="option" data-option="B">Joe’s parents set up a website to share Joe’s creative doodles, and soon his doodle wall became famous.</div>
+                <div class="option" data-option="C">He thought his son would just give up.</div>
+                <div class="option" data-option="D">His parents’ support.</div>
+                <div class="option" data-option="E">He doodled all the time.</div>
+            </div>
+        </div>
+    </div>
+</div>
+    </div> 
+
+    <div class="submit-section">
+        <button class="submit-button" disabled>Check Understanding (0/5)</button>
+    </div>
+
+    <script>
+        const correctAnswers = {
+    '1': 'E',
+    '2': 'A',
+    '3': 'C',
+    '4': 'B',
+    '5': 'D'
+};
+
+        let selectedAnswers = {};
+
+        // 中英對照功能
+        document.querySelector('.bilingual-button').addEventListener('click', function() {
+            const chineseTexts = document.querySelectorAll('.chinese-text');
+            const optionChinese = document.querySelectorAll('.option-chinese');
+            
+            chineseTexts.forEach(text => {
+                text.classList.toggle('show');
+            });
+            
+            optionChinese.forEach(text => {
+                text.classList.toggle('show');
+            });
+        });
+
+        // 為所有段落添加點擊事件
+        document.querySelectorAll('.paragraph').forEach(paragraph => {
+            paragraph.addEventListener('click', function(e) {
+                if (e.target.closest('.option')) {
+                    return;
+                }
+                
+                document.querySelectorAll('.paragraph.active').forEach(p => {
+                    if (p !== this) {
+                        p.classList.remove('active');
+                    }
+                });
+                
+                this.classList.toggle('active');
+            });
+        });
+
+        // 為所有選項添加點擊事件
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.stopPropagation();
+
+                const paragraphElement = this.closest('.paragraph');
+                const paragraphId = paragraphElement.dataset.paragraph;
+                const optionId = this.dataset.option;
+
+                paragraphElement.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+
+                this.classList.add('selected');
+                selectedAnswers[paragraphId] = optionId;
+                markAnswered(paragraphElement);
+                updateProgress();
+                updateSubmitButton();
+            });
+        });
+        document.querySelector('.submit-button').addEventListener('click', function() {
+            if (!this.disabled) {
+                checkAnswers();
+            }
+        });
+
+        function updateSubmitButton() {
+            const submitButton = document.querySelector('.submit-button');
+            const selectedCount = Object.keys(selectedAnswers).length;
+            submitButton.disabled = selectedCount < 5;
+            submitButton.textContent = `Check Understanding (${selectedCount}/5)`;
+        }
+
+        function checkAnswers() {
+            let correct = 0;
+            const paragraphs = document.querySelectorAll('.paragraph');
+            
+            paragraphs.forEach(paragraph => {
+                paragraph.classList.remove('result-correct', 'result-incorrect');
+                const oldBadge = paragraph.querySelector('.result-badge');
+                if (oldBadge) oldBadge.remove();
+            });
+
+            // 檢查答案並顯示結果
+            Object.entries(correctAnswers).forEach(([paragraphId, correctAnswer], index) => {
+                const paragraph = document.querySelector(`[data-paragraph="${paragraphId}"]`);
+                const userAnswer = selectedAnswers[paragraphId];
+                const isCorrect = userAnswer === correctAnswer;
+
+                setTimeout(() => {
+                    if (isCorrect) {
+                        correct++;
+                        paragraph.classList.add('result-correct');
+                        const badge = document.createElement('div');
+                        badge.className = 'result-badge correct';
+                        badge.textContent = 'Correct!';
+                        paragraph.querySelector('.paragraph-content').appendChild(badge);
+                    } else {
+                        paragraph.classList.add('result-incorrect');
+                        const badge = document.createElement('div');
+                        badge.className = 'result-badge incorrect';
+                        badge.textContent = `Incorrect. Correct answer: ${correctAnswer}`;
+                        paragraph.querySelector('.paragraph-content').appendChild(badge);
+                    }
+                }, 200 * index);
+            });
+
+            // 更新提交按鈕
+            const submitButton = document.querySelector('.submit-button');
+            submitButton.textContent = `Score: ${correct}/5`;
+            submitButton.disabled = true;
+
+            // 顯示最終結果
+            setTimeout(() => {
+                let message = `You got ${correct} out of 5 correct!\n\n`;
+                if (correct === 5) {
+                    message += 'Excellent! Perfect score! 🎉';
+                } else if (correct >= 3) {
+                    message += 'Good job! Keep practicing! 👍';
+                } else {
+                    message += 'Try again to improve your understanding. 💪';
+                }
+                alert(message);
+            }, 1500);
+        }
+        
+        function toggleInstructions() {
+    const modal = document.getElementById('instructionsModal');
+    if (modal.style.display === 'none' || !modal.style.display) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    } else {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// 點擊背景關閉導覽
+document.getElementById('instructionsModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        toggleInstructions();
+    }
+});
+        function updateProgress() {
+            const total = 5;
+            const answered = Object.keys(selectedAnswers).length;
+            const percentage = (answered / total) * 100;
+            document.querySelector('.progress-fill').style.width = `${percentage}%`;
+        }
+
+        function markAnswered(paragraphElement) {
+    paragraphElement.classList.add('answered');
+}
+
+        // 初始化
+        updateProgress();
+        updateSubmitButton();
+    </script>
+</body>
+</html>

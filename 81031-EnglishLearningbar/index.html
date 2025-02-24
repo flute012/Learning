@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>英文自學霸</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+
+        }
+
+        :root {
+            --safe-area-top: env(safe-area-inset-top, 0px);
+            --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        
+        html, body {
+        width: 100%;
+        height: 100%;
+    }
+        body {
+
+            background: linear-gradient(135deg, #43389F 0%, #4ec6ca 100%);
+            /* background-color: #43389F; */
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;   
+            height: 100vh;
+            height: calc(100vh - var(--safe-area-top)) - var(--safe-area-bottom);
+            color: #fff;
+            overflow: hidden;
+            position: fixed;
+            padding-top: var(--safe-area-top);    
+        }
+
+        .app-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+        }
+
+        .platform-header {
+    text-align: center;
+    padding: 0.5rem;
+    flex-shrink: 0;
+    margin-bottom: 2rem;
+}
+
+.platform-header img {
+    max-width: 380px;
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+}
+        .platform-subtitle {
+            font-size: 0.7em;
+            color: rgba(255,255,255,0.8);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 0.3rem;
+        }
+
+        .content-area {
+            position: relative;
+            flex-grow: 1;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1rem;
+        }
+
+        .books-view {
+            height: 100%;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+            align-content: start;
+            row-gap: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .books-view.shifted {
+            transform: translateX(-100%);
+        }
+
+        .book-item {
+            position: relative;
+            width: 100%;
+            max-width: 140px;
+            margin: 0 auto;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .book-cover {
+            width: 100%;
+            padding-bottom: 130%;
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            margin-bottom: 0.5rem;
+        }
+
+        .book-cover img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .book-title {
+            font-size: 1em;
+            font-weight: 600;
+            text-align: center;
+            width: 100%;
+        }
+
+        .book-item:active {
+            transform: scale(0.95);
+        }
+
+        .lessons-panel {
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .lessons-panel.active {
+            transform: translateX(-100%);
+        }
+
+        .panel-header {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, rgba(67, 56, 159, 0.8) 0%, rgba(78, 198, 202, 0.6) 100%);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .back-btn {
+            padding: 0.8rem;
+            margin-right: 0.8rem;
+            font-size: 1.4em;
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .panel-header h2 {
+            font-size: 1.3em;
+            font-weight: 800;
+            background: linear-gradient(45deg, #fff, #4ec6ca);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .lessons-scroll {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1rem 1.5rem;
+        }
+
+        .lessons-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .lesson-item,
+        .review-item {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 15px;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .lesson-item {
+            justify-content: flex-start;
+        }
+
+        .review-item {
+            justify-content: center;
+        }
+
+        .lesson-badge {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+        }
+
+        .lesson-title {
+            flex-grow: 1;
+            text-align: left;
+            padding-left: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            color: #fff;
+        }
+
+        .review-container {
+            display: flex;
+            justify-content: flex-end;
+            padding: 0.5rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 0.8rem;
+            width: 100%;
+        }
+
+        .lesson-item:hover,
+        .review-item:hover {
+            transform: translateX(5px);
+            filter: brightness(1.1);
+        }
+
+        /* Book 1 Theme */
+        .lessons-panel[data-book="1"] .lesson-item {
+            background: linear-gradient(135deg, rgba(67, 56, 159, 0.8) 0%, rgba(78, 198, 202, 0.6) 100%);
+        }
+        .lessons-panel[data-book="1"] .review-item {
+            background: linear-gradient(135deg, rgba(67, 56, 159, 0.4) 0%, rgba(78, 198, 202, 0.2) 100%);
+        }
+
+        /* Book 2 Theme */
+        .lessons-panel[data-book="2"] .lesson-item {
+            background: linear-gradient(135deg, rgba(22, 160, 133, 0.8) 0%, rgba(39, 174, 96, 0.6) 100%);
+        }
+        .lessons-panel[data-book="2"] .review-item {
+            background: linear-gradient(135deg, rgba(22, 160, 133, 0.4) 0%, rgba(39, 174, 96, 0.2) 100%);
+        }
+
+        /* Book 3 Theme */
+        .lessons-panel[data-book="3"] .lesson-item {
+            background: linear-gradient(135deg, rgba(230, 126, 34, 0.8) 0%, rgba(231, 76, 60, 0.6) 100%);
+        }
+        .lessons-panel[data-book="3"] .review-item {
+            background: linear-gradient(135deg, rgba(230, 126, 34, 0.4) 0%, rgba(231, 76, 60, 0.2) 100%);
+        }
+
+        /* Book 4 Theme */
+        .lessons-panel[data-book="4"] .lesson-item {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.8) 0%, rgba(142, 68, 173, 0.6) 100%);
+        }
+        .lessons-panel[data-book="4"] .review-item {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.4) 0%, rgba(142, 68, 173, 0.2) 100%);
+        }
+
+        /* Book 5 Theme */
+        .lessons-panel[data-book="5"] .lesson-item {
+            background: linear-gradient(135deg, rgba(41, 128, 185, 0.8) 0%, rgba(52, 152, 219, 0.6) 100%);
+        }
+        .lessons-panel[data-book="5"] .review-item {
+            background: linear-gradient(135deg, rgba(41, 128, 185, 0.4) 0%, rgba(52, 152, 219, 0.2) 100%);
+        }
+
+        @media (max-width: 360px) {
+            .platform-header {
+                padding: 0.3rem;
+            }
+            .platform-header img {
+        max-width: 200px;
+    }
+            
+            .books-view {
+                gap: 0.3rem;
+                row-gap: 0.8rem;
+            }
+            
+            .book-item {
+                max-width: 120px;
+            }
+
+            .app-container {
+                padding: 0.5rem;
+            }
+
+            .content-area {
+                padding: 0.5rem;
+            }
+            
+            .lesson-item,
+            .review-item {
+                padding: 0.8rem;
+            }
+            
+            .lesson-badge {
+                width: 24px;
+                height: 24px;
+                font-size: 0.8em;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .books-view {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+.book-item.locked {
+            opacity: 0.7;
+            cursor: not-allowed;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .book-item.locked .book-cover {
+            filter: grayscale(100%);
+            transition: all 0.3s ease;
+        }
+        
+        .book-item.locked:hover {
+            transform: translateY(-2px);
+        }
+        
+        .book-item.locked:hover::after {
+            content: "尚未開放";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px;
+            font-size: 0.9em;
+            text-align: center;
+            animation: slideUp 0.3s ease;
+        }
+
+        .lock-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2em;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            z-index: 2;
+        }
+
+        .lesson-item.locked {
+            opacity: 0.7;
+            cursor: not-allowed;
+            position: relative;
+            overflow: hidden;
+            background: rgba(128, 128, 128, 0.3) !important;
+            transition: all 0.3s ease;
+        }
+
+        .lesson-item.locked:hover {
+            transform: translateX(0) !important;
+            background: rgba(128, 128, 128, 0.4) !important;
+        }
+
+        .lesson-item.locked:hover::after {
+            content: "課程尚未開放";
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 0 15px 0 15px;
+            font-size: 0.8em;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .lesson-item:not(.locked) {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lesson-item:not(.locked)::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            animation: shine 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes shine {
+            0% {
+                left: -100%;
+            }
+            20% {
+                left: 100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        .book-item:not(.locked):hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .lesson-item:not(.locked):hover {
+            transform: translateX(10px) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+    </style>
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="platform-header">
+    <img src="https://hackmd.io/_uploads/HJyGTVJuye.png" alt="英文自學霸">
+</div>
+
+        <div class="content-area">
+            <div class="books-view" id="booksView">
+                <div class="book-item" onclick="toggleLessons(1)">
+                    <div class="book-cover">
+                        <img src=" https://hackmd.io/_uploads/B1yuGuLE1x.jpg " alt="Book 1">
+                    </div>
+                    <div class="book-title">第一冊</div>
+                </div>
+
+                <div class="book-item locked">
+                    <div class="book-cover">
+                        <img src="https://hackmd.io/_uploads/B1_30-QmJe.jpg" alt="Book 2">
+                        <span class="lock-icon">🔒</span>
+                    </div>
+                    <div class="book-title">第二冊</div>
+                </div>
+
+                <div class="book-item locked">
+                    <div class="book-cover">
+                        <img src=" https://hackmd.io/_uploads/rJNufuUNyx.jpg " alt="Book 3">
+                        <span class="lock-icon">🔒</span>
+                    </div>
+                    <div class="book-title">第三冊</div>
+                </div>
+
+                <div class="book-item locked">
+                    <div class="book-cover">
+                        <img src=" https://hackmd.io/_uploads/Hku_fdUVkl.jpg " alt="Book 4">
+                        <span class="lock-icon">🔒</span>
+                    </div>
+                    <div class="book-title">第四冊</div>
+                </div>
+
+                <div class="book-item locked">
+                    <div class="book-cover">
+                        <img src=" https://hackmd.io/_uploads/BycOMu8EJg.jpg " alt="Book 5">
+                        <span class="lock-icon">🔒</span>
+                    </div>
+                    <div class="book-title">第五冊</div>
+                </div>
+
+                <div class="book-item locked">
+                    <div class="book-cover">
+                        <img src=" https://hackmd.io/_uploads/H1jOfuLVyl.jpg " alt="Book 6">
+                        <span class="lock-icon">🔒</span>
+                    </div>
+                    <div class="book-title">第六冊</div>
+                </div>
+            </div>
+
+            <div class="lessons-panel" id="lessonsPanel">
+                <div class="panel-header">
+                    <button class="back-btn" onclick="closeLessons()">←</button>
+                    <h2 id="panelTitle">選擇課程</h2>
+                </div>
+                <div class="lessons-scroll">
+                    <div class="lessons-list" id="lessonsList">
+                        <!-- 課程內容會由 JavaScript 動態生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+        const booksView = document.getElementById('booksView');
+        const lessonsPanel = document.getElementById('lessonsPanel');
+        const panelTitle = document.getElementById('panelTitle');
+        const lessonsList = document.getElementById('lessonsList');
+
+        function generateLessonsList(bookId) {
+    const lessons = bookLessons[bookId];
+    let html = '';
+    
+    lessons.forEach((lesson, index) => {
+        // 修改這裡：改為第六課可點擊 (index === 5)
+        const isLocked = !(bookId === 1 && index === 5);
+        const lockedClass = isLocked ? 'locked' : '';
+        
+        html += `
+            <div class="lesson-item ${lockedClass}" ${!isLocked ? `onclick="openLesson(${index + 1})"` : ''}>
+                <div class="lesson-badge">${index + 1}</div>
+                <div class="lesson-title">${lesson}</div>
+                ${isLocked ? '<span class="lock-icon">🔒</span>' : ''}
+            </div>
+        `;
+    });
+
+    return html;
+}
+
+        function toggleLessons(bookId) {
+            console.log('toggleLessons called with bookId:', bookId); // 添加這行來除錯
+            if (bookId === 1) {
+                booksView.classList.add('shifted');
+                lessonsPanel.classList.add('active');
+                lessonsPanel.setAttribute('data-book', bookId);
+                panelTitle.textContent = `第${bookId}冊 - 課程`;
+                lessonsList.innerHTML = generateLessonsList(bookId);
+            }
+        }
+
+        function closeLessons() {
+            booksView.classList.remove('shifted');
+            lessonsPanel.classList.remove('active');
+        }
+
+        function openLesson(lesson) {
+    // 修改這裡：改為第六課可點擊
+    if (lesson === 6) {
+        window.open('menu.html', '_blank');
+    }
+}
+
+        const bookLessons = {
+    1: [
+    "It’s Just a Zit!",
+    "What’s in the Pot?",
+    "Now I Can See",
+    "Wake Up on Time!",
+    "Home for Good",
+    "You Can Do It!"
+],
+2: [
+    "A Letter to a Friend",
+    "Dreams Come True",
+    "The Man and the Old Jar",
+    "Unique Eating Customs",
+    "Life in Space",
+    "How Do They Make It?"
+],
+3: [
+    "Culture Shock: Shocking but Fun",
+    "Walt Disney’s Inspirational Message",
+    "A Bag’s Life",
+    "A Feast to Remember",
+    "Mind the Gap",
+    "Change Can Be Fun"
+],
+4: [
+    "You Are a Wonder",
+    "How Do You Take Your Tea?",
+    "Eighteen-Minute Ideas",
+    "A Girl Who Changed the World",
+    "High Tummy, Still Yummy?",
+    "In Prayer and Love Forever"
+],
+5: [
+    "A Special Gift: Lady Liberty",
+    "Break a Rule or Break a Heart?",
+    "Mythology Behind Modern Brands",
+    "Why Bees Are Disappearing",
+    "Classrooms That Float",
+    "The Effects of Overtourism"
+],
+6: [
+    "Share a Cola, Make a Friend",
+    "Breathing New Life into Old Buildings",
+    "Eat Up and Eat Ugly",
+    "A Fair Share for Everyone"
+    ]
+}; 
+
+        document.addEventListener('touchmove', function(e) {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // 初始化頁面
+        document.addEventListener('DOMContentLoaded', function() {
+            const bookItems = document.querySelectorAll('.book-item');
+            bookItems.forEach((item, index) => {
+                if (index !== 0) {
+                    item.classList.add('locked');
+                    const lockIcon = document.createElement('span');
+                    lockIcon.className = 'lock-icon';
+                    lockIcon.textContent = '🔒';
+                    item.querySelector('.book-cover').appendChild(lockIcon);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

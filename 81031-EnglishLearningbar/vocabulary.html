@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>單字卡學習</title>
+    <style>
+        body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+}
+
+.tv-container {
+    width: 375px;
+    height: 700px;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 
+        0 10px 20px rgba(0,0,0,0.08),
+        0 0 0 1px rgba(0,0,0,0.04);
+    padding: 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.tv-screen {
+    width: 100%;
+    height: 460px;
+    background: #f8fafc;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 
+        inset 0 2px 4px rgba(0, 0, 0, 0.05),
+        0 1px 3px rgba(0, 0, 0, 0.08);
+    padding: 2px;
+    box-sizing: border-box;
+}
+
+.flashcard-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    perspective: 1500px;
+}
+
+.flashcard {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.flashcard.flip-right,
+.flashcard.flip-left {
+    transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* 為不同狀態的卡片添加微妙的邊框顏色變化 */
+.card:nth-child(1) {
+    border-color: rgba(79, 70, 229, 0.3);
+}
+
+.card:nth-child(2) {
+    border-color: rgba(79, 70, 229, 0.4);
+}
+
+.card:nth-child(3) {
+    border-color: rgba(79, 70, 229, 0.5);
+}
+
+.card {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+    /* 加強邊框和陰影效果 */
+    border: 2px solid #e2e8f0;
+    box-shadow: 
+        0 4px 6px rgba(0, 0, 0, 0.05),
+        0 10px 15px rgba(0, 0, 0, 0.1),
+        0 0 0 2px rgba(79, 70, 229, 0.1);
+    /* 添加漸變背景 */
+    background: linear-gradient(
+        to bottom right,
+        #ffffff 0%,
+        #fafaff 100%
+    );
+}
+
+/* 當卡片翻轉時保持邊框效果 */
+.card.back {
+    transform: rotateY(180deg);
+    border: 2px solid #e2e8f0;
+}
+
+.flashcard:hover .card {
+    box-shadow: 
+        0 6px 8px rgba(0, 0, 0, 0.07),
+        0 12px 17px rgba(0, 0, 0, 0.12),
+        0 0 0 3px rgba(79, 70, 229, 0.15);
+    border: 2px solid #d1d5f0;
+    transition: all 0.3s ease;
+}
+
+.word {
+    font-size: clamp(24px, 5vw, 40px);
+    font-weight: 700;
+    text-align: center;
+    color: #1a1a1a;
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    line-height: 1.2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+    transition: transform 0.3s ease;
+}
+
+.meaning {
+    font-size: clamp(18px, 4vw, 24px);
+    margin-top: 20px;
+    color: #1a1a1a;
+    text-align: center;
+    padding: 0 16px;
+    line-height: 1.4;
+}
+
+.example-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.image-container {
+    width: 100%;
+    height: 35%;
+    min-height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 16px;
+    border-radius: 16px;
+    background: #f4f4f5;
+    overflow: hidden;
+}
+
+.image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.example-text {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 8px;
+}
+
+.example {
+    font-size: clamp(16px, 3.5vw, 18px);
+    line-height: 1.6;
+    color: #1a1a1a;
+    margin: 0 0 12px 0;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    text-align: justify;
+    hyphens: none;
+}
+
+.translation-container {
+    border-radius: 0.75rem;
+    background: linear-gradient(180deg, rgba(79, 70, 229, 0.08) 0%, rgba(255, 255, 255, 1) 100%);
+    transition: all 0.3s ease-out;
+    cursor: pointer;
+    overflow: hidden;
+    min-height: 32px;
+}
+
+.translation-container:hover {
+    background: linear-gradient(180deg, rgba(79, 70, 229, 0.12) 0%, rgba(79, 70, 229, 0.08) 100%);
+}
+
+.translation {
+    display: none;
+    font-size: clamp(14px, 3vw, 16px);
+    text-align: left;
+    color: #4b5563;
+    line-height: 1.6;
+    padding: 12px;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+.translation-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+}
+
+.translation-arrow {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2.5;
+    color: rgba(79, 70, 229, 0.7);
+    transition: all 0.3s;
+    animation: bounce-gentle 1.5s ease-in-out infinite;
+}
+
+.translation-container:hover .translation-arrow {
+    color: rgba(79, 70, 229, 1);
+    transform: translateY(4px);
+}
+
+.translation-container.show {
+    background-color: rgba(79, 70, 229, 0.08);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.translation-container.show .translation {
+    display: block;
+}
+
+.translation-container.show .translation-hint {
+    display: none;
+}
+
+/* 滾動條樣式 */
+.example-text::-webkit-scrollbar {
+    width: 4px;
+}
+
+.example-text::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+}
+
+.example-text::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 2px;
+}
+
+.example-text::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+@keyframes bounce-gentle {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(4px);
+    }
+}
+
+.card-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+}
+
+.indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #e4e4e7;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.indicator.active {
+    background-color: #4f46e5;
+    transform: scale(1.2);
+}
+
+.tv-controls {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px 0 0 0;
+}
+
+.controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.category-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.category-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    background-color: #f4f4f5;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.category-btn.active {
+    background-color: #4f46e5;
+    color: white;
+}
+
+.tv-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 16px;
+    background-color: #4f46e5;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.tv-button:hover {
+    background-color: #4338ca;
+    transform: scale(1.05);
+}
+
+.tv-button.list {
+    background-color: #4f46e5;
+    width: 100%;
+    padding: 0 20px;
+    border-radius: 16px;
+    font-size: 16px;
+    height: 56px;
+    font-weight: 600;
+}
+
+.syllables-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 4px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.syllable {
+    display: inline-block;
+    padding: 2px 4px;
+    font-size: clamp(20px, 4vw, 36px);
+    line-height: 1.2;
+    white-space: normal;
+    text-align: center;
+    transition: color 0.3s, font-size 0.3s;
+}
+
+.syllable-separator {
+    margin: 0 2px;
+    color: #666;
+    font-size: clamp(16px, 3vw, 24px);
+}
+
+.highlight {
+    color: #4f46e5;
+    transform: scale(1.1);
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 24px;
+    border: none;
+    width: 80%;
+    max-width: 300px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    animation: slideIn 0.3s ease;
+}
+
+.close {
+    color: #666;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+    transition: all 0.2s ease;
+}
+
+.close:hover,
+.close:focus {
+    color: #1a1a1a;
+    text-decoration: none;
+}
+
+#wordListItems {
+    list-style-type: none;
+    padding: 0;
+    margin: 16px 0 0 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#wordListItems li {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #f4f4f5;
+    color: #1a1a1a;
+    transition: all 0.2s ease;
+    font-size: 16px;
+}
+
+#wordListItems li:last-child {
+    border-bottom: none;
+}
+
+#wordListItems li:hover {
+    background-color: #f4f4f5;
+    padding-left: 20px;
+}
+
+
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes flipRight {
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(-180deg); }
+}
+
+@keyframes flipLeft {
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(180deg); }
+}
+
+/* Responsive design */
+@media screen and (max-width: 375px) {
+    .tv-container {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+        padding: 16px;
+    }
+    
+    .word {
+        font-size: clamp(20px, 4.5vw, 32px);
+        padding: 0 12px;
+    }
+    
+    .syllable {
+        font-size: clamp(18px, 3.5vw, 28px);
+        padding: 1px 2px;
+    }
+    
+    .category-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+    
+    .tv-button {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+}
+
+/* Utility classes */
+.auto-scale {
+    transform-origin: center center;
+    transition: transform 0.3s ease;
+}
+
+.prevent-select {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.smooth-transition {
+    transition: all 0.3s ease;
+}
+    .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    position: relative;
+    padding: 0 4px;
+    min-height: 32px; /* 確保標題有足夠的空間 */
+}
+
+.header h1 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-size: 16px; /* 稍微縮小字體 */
+    color: #1a1a1a;
+    font-weight: 600;
+    white-space: nowrap; /* 防止文字換行 */
+    overflow: hidden; /* 防止溢出 */
+    text-overflow: ellipsis; /* 文字溢出時顯示省略號 */
+    max-width: 60%; /* 限制最大寬度，確保不會擋到按鈕 */
+}
+
+.button-group {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+    z-index: 1;
+}
+
+.header-btn {
+    background: none;
+    border: none;
+    font-size: 18px; /* 稍微縮小按鈕大小 */
+    padding: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #4f46e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.header-btn:hover {
+    transform: scale(1.1);
+}
+
+/* 導覽 Modal 樣式 */
+.guide-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    animation: fadeIn 0.3s ease;
+}
+
+.guide-content {
+    position: relative;
+    background-color: white;
+    margin: 15% auto;
+    padding: 24px;
+    width: 80%;
+    max-width: 320px;
+    border-radius: 16px;
+    animation: slideIn 0.3s ease;
+}
+
+.guide-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.guide-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #1a1a1a;
+}
+
+.close-guide {
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.guide-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 12px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+}
+
+.guide-icon {
+    font-size: 20px;
+    width: 24px;
+    text-align: center;
+}
+
+.guide-item p {
+    margin: 0;
+    color: #4a5568;
+    font-size: 14px;
+}
+
+.guide-close-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: background-color 0.2s ease;
+}
+
+.guide-close-btn:hover {
+    background-color: #4338ca;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+    <div class="tv-container">
+    <div class="header">
+        <h1> L06 You Can Do It! </h1>
+        <div class="button-group">
+            <a href="menu.html" class="header-btn home-btn" target="_blank">🏠</a>
+            <button class="header-btn guide-btn" onclick="showGuide()">💡</button>
+        </div>
+    </div>
+    <div class="tv-screen">
+        <div class="flashcard-container">
+            <div class="flashcard" id="flashcard">
+                <div class="card" id="card1">
+                    <div class="word" id="wordDisplay"></div>
+                </div>
+                <div class="card back" id="card2">
+                    <div class="word" id="wordBack"></div>
+                    <div class="meaning" id="meaningDisplay"></div>
+                </div>
+                <div class="card back" id="card3">
+                    <div class="example-container">
+                        <div class="image-container" id="imageContainer">
+                            圖片預留區
+                        </div>
+                        <div class="example-text">
+                            <div class="example" id="exampleDisplay"></div>
+                            <div class="translation" id="translationDisplay"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card back" id="card4">
+                    <div class="example-container">
+                        <div class="image-container" id="imageContainer2">
+                            圖片預留區
+                        </div>
+                        <div class="example-text">
+                            <div class="example" id="exampleDisplay2"></div>
+                            <div class="translation" id="translationDisplay2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-indicators">
+            <span class="indicator"></span>
+            <span class="indicator"></span>
+            <span class="indicator"></span>
+            <span class="indicator"></span>
+        </div>
+    </div>
+    <div class="tv-controls">
+        <div class="controls-row">
+            <button class="tv-button" id="prevWord">◀</button>
+            <div class="category-buttons">
+                <button class="category-btn active" data-category="words">單字</button>
+                <button class="category-btn" data-category="idioms">片語</button>
+                <button class="category-btn" data-category="recognition">認知</button>
+            </div>
+            <button class="tv-button" id="nextWord">▶</button>
+        </div>
+        <div class="controls-row">
+            <button class="tv-button list" id="wordListBtn">單字列表</button>
+        </div>
+    </div>
+</div>
+
+    <div id="wordListModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>單字列表</h2>
+            <ul id="wordListItems"></ul>
+        </div>
+    </div>
+        <div id="guideModal" class="modal guide-modal">
+    <div class="modal-content guide-content">
+        <div class="guide-header">
+            <h2>使用導覽</h2>
+            <span class="close-guide" onclick="hideGuide()">&times;</span>
+        </div>
+        <div class="guide-body">
+            <div class="guide-item">
+                <span class="guide-icon">👆</span>
+                <p>左右滑動切換單字卡面</p>
+            </div>
+            <div class="guide-item">
+                <span class="guide-icon">🔄</span>
+                <p>點擊箭頭按鈕切換單字</p>
+            </div>
+            <div class="guide-item">
+                <span class="guide-icon">🔊</span>
+                <p>自動播放單字發音</p>
+            </div>
+            <div class="guide-item">
+                <span class="guide-icon">📝</span>
+                <p>可切換單字、片語、認知詞彙</p>
+            </div>
+        </div>
+        <button class="guide-close-btn" onclick="hideGuide()">知道了！</button>
+    </div>
+</div>
+    
+    <script>
+        const vocabularyData = {
+    words: [
+        {
+            word: "complain",
+            meaning: "vi. vt. 抱怨",
+            example: "Tim complained to the police about the noise from his neighbor’s house.",
+            translation: "Tim向警方抱怨他鄰居房子裡的噪音。",
+            syllables: ["com", "plain"],
+            pronunciationGuide: ["kəm", "plen"],
+            image: "https://hackmd.io/_uploads/SkHkwLtN1x.png"
+        },
+        {
+            word: "complaint",
+            meaning: "n. [C, U] 抱怨",
+            example: "The waiter was fired after many complaints about his bad service.",
+            translation: "在許多關於他服務不佳的抱怨之後，那名服務生被開除了。",
+            syllables: ["com", "plaint"],
+            pronunciationGuide: ["kəm", "plent"],
+            image: "https://hackmd.io/_uploads/Hk4XvIF41x.png"
+        },
+        {
+            word: "talent",
+            meaning: "n. [C, U] 天賦",
+            example: "Lily plays the piano so well! She has a talent for music.",
+            translation: "Lily鋼琴彈奏得非常棒！她很有音樂的天賦。",
+            syllables: ["tal", "ent"],
+            pronunciationGuide: ["tæ", "lənt"],
+            image: "https://hackmd.io/_uploads/SySrwIKEyl.png"
+        },
+        {
+            word: "recognize",
+            meaning: "vt. 認可",
+            example: "Dr. Wu is recognized as one of the best heart doctors in the city.",
+            translation: "吳醫生被公認為本市最好的心臟科醫生之一。",
+            syllables: ["rec", "og", "nize"],
+            pronunciationGuide: ["rɛk", "əg", "naɪz"],
+            image: "https://hackmd.io/_uploads/B1jLDIFNkl.png"
+        },
+        {
+            word: "post",
+            meaning: "vt. （在網上）發布",
+            example: "Grace posted her love story on her blog.",
+            translation: "Grace在她的部落格上發布了她的愛情故事。",
+            syllables: ["post"],
+            pronunciationGuide: ["post"],
+            image: "https://hackmd.io/_uploads/H1XdvIF4Jl.png"
+        },
+        {
+            word: "focus",
+            meaning: "vi. 集中",
+            example: "Linda has trouble focusing on her studies.",
+            translation: "Linda難以集中精神在她的課業上。",
+            syllables: ["fo", "cus"],
+            pronunciationGuide: ["foʊ", "kəs"],
+            image: "https://hackmd.io/_uploads/r1mKv8tNJg.png"
+        },
+        {
+            word: "patient",
+            meaning: "adj. 有耐心的",
+            example: "Parents must be very patient with their children.",
+            translation: "家長必須對自己的孩子非常有耐心。",
+            syllables: ["pa", "tient"],
+            pronunciationGuide: ["peɪ", "ʃənt"],
+            image: "https://hackmd.io/_uploads/BJ2AP8KNyl.png"
+        },
+        {
+            word: "patience",
+            meaning: "n. [U] 耐心",
+            example: "After hours of waiting at the bank, Justin ran out of patience.",
+            translation: "在銀行等了好幾個小時之後，Justin耗盡了耐心。",
+            syllables: ["pa", "tience"],
+            pronunciationGuide: ["peɪ", "ʃəns"],
+            image: "https://hackmd.io/_uploads/r12XOUYVJg.png"
+        },
+        {
+            word: "determined",
+            meaning: "adj. 堅決的",
+            example: "Max was determined to quit smoking after his daughter was born.",
+            translation: "在他的女兒出生之後，Max下定決心要戒菸。",
+            syllables: ["de", "ter", "mined"],
+            pronunciationGuide: ["dɪ", "tɝ", "mɪnd"],
+            image: "https://hackmd.io/_uploads/H1MXKIFEyl.png"
+        },
+        {
+            word: "customer",
+            meaning: "n. [C] 顧客",
+            example: "The store is always full of customers on weekends.",
+            translation: "這家店在週末時總是擠滿了顧客。",
+            syllables: ["cus", "to", "mer"],
+            pronunciationGuide: ["kʌs", "tə", "mɚ"],
+            image: "https://hackmd.io/_uploads/ryert8YN1g.png"
+        },
+        {
+            word: "support",
+            meaning: "n. vt. 支持",
+            example: "With May’s help and support, Rosa was able to start her own business.",
+            translation: "有著May的幫助及支持，Rosa得以自己創業。",
+            syllables: ["sup", "port"],
+            pronunciationGuide: ["sə", "port"],
+            image: "https://hackmd.io/_uploads/SkUst8YNJe.png"
+        },
+        {
+            word: "success",
+            meaning: "n. [C, U] 成功",
+            example: "The magic show was a big success. Everyone enjoyed it.",
+            translation: "這場魔術表演很成功，每個人都享受其中。",
+            syllables: ["suc", "cess"],
+            pronunciationGuide: ["sək", "sɛs"],
+            image: "https://hackmd.io/_uploads/rkMxqIYVJe.png"
+        },
+        {
+            word: "encouragement",
+            meaning: "n. [U] 鼓勵",
+            example: "Mike is thinking of changing his job, so he really needs some encouragement.",
+            translation: "Mike正在考慮換工作，所以他真的需要一些鼓勵。",
+            syllables: ["en", "cour", "age", "ment"],
+            pronunciationGuide: ["ɪn", "kɝ", "ɪdʒ", "mənt"],
+            image: "https://hackmd.io/_uploads/HkkM98KE1g.png"
+        }
+    ],
+    idioms: [
+        {
+            word: "such as",
+            meaning: "例如",
+            example: "Some months, such as June and November, have only 30 days.",
+            translation: "有一些月份，例如六月和十一月，只有30天。",
+            image: "https://hackmd.io/_uploads/HJcwhPtVyl.png"
+        },
+        {
+            word: "and so on",
+            meaning: "等等；諸如此類",
+            example: "If you go camping, don’t forget to pack water, food, clothes, and so on.",
+            translation: "如果你要去露營，不要忘記打包水、食物、衣服等等物品。",
+            image: "https://hackmd.io/_uploads/rJVK3PtNkl.png"
+        },
+        {
+            word: "at first",
+            meaning: "起初",
+            example: "At first, the students were all scared of Ms. Lin, but now they love her.",
+            translation: "起初，學生們都很害怕林老師，但是現在他們都很愛她。",
+            image: "https://hackmd.io/_uploads/Hy-inPYE1l.png"
+        },
+        {
+            word: "give up",
+            meaning: "放棄",
+            example: "Becoming a successful lawyer wasn’t easy, but Rita never gave up.",
+            translation: "雖然成為一名成功的律師並不容易，但是Rita從未放棄。",
+            image: "https://hackmd.io/_uploads/Bkmh2vt4yg.png"
+        },
+        {
+            word: "set up",
+            meaning: "建立",
+            example: "My husband encouraged me to set up our own company.",
+            translation: "我先生鼓勵我成立一家我們自己的公司。",
+            image: "https://hackmd.io/_uploads/Bk8ThwKV1l.png"
+        },
+        {
+            word: "in the end",
+            meaning: "最後",
+            example: "You don’t have to be worried. I’m sure our plan will work well in the end.",
+            translation: "你不必擔心。我確信我們的計畫最後會進行得很順利的。",
+            image: "https://hackmd.io/_uploads/SJBR3vt41g.png"
+        }
+    ] 
+};
+
+        let currentCategory = 'words';
+        let currentCard = 0;
+        let currentWordIndex = 0;
+        const totalCards = 3;
+
+        function getTotalCards(category) {
+    if (category === 'recognition') {
+        return 2;
+    }
+    // 目前的資料結構中沒有多例句，所以最多顯示3張卡片
+    return 3;
+}
+
+        function initializeFlashcards() {
+            updateCardVisibility();
+            updateCardContent();
+            updateCardIndicators();
+            playCardAudio();
+        }
+
+        function changeCard(direction) {
+    stopSpeaking();
+    const flashcard = document.getElementById('flashcard');
+    flashcard.classList.remove('flip-right', 'flip-left');
+    void flashcard.offsetWidth;
+    flashcard.classList.add(direction > 0 ? 'flip-right' : 'flip-left');
+    
+    const totalCards = getTotalCards(currentCategory);
+    
+    setTimeout(() => {
+        currentCard = (currentCard + direction + totalCards) % totalCards;
+        updateCardVisibility();
+        updateCardContent();
+        updateCardIndicators();
+        playCardAudio();
+        flashcard.classList.remove('flip-right', 'flip-left');
+        
+        // 添加這行重置翻譯狀態的代碼
+        document.querySelectorAll('.translation-container').forEach(container => {
+            container.classList.remove('show');
+        });
+    }, 300);
+}
+
+        function changeWord(direction) {
+            stopSpeaking();
+            const categoryWords = vocabularyData[currentCategory];
+            const flashcard = document.getElementById('flashcard');
+            flashcard.classList.remove('flip-right', 'flip-left');
+            void flashcard.offsetWidth; // 觸發重排
+            flashcard.classList.add(direction > 0 ? 'flip-right' : 'flip-left');
+
+            setTimeout(() => {
+        currentWordIndex = (currentWordIndex + direction + categoryWords.length) % categoryWords.length;
+        currentCard = 0;
+        updateCardVisibility();
+        updateCardContent();
+        updateCardIndicators();
+        flashcard.classList.remove('flip-right', 'flip-left');
+        
+        // 添加這行重置翻譯狀態的代碼
+        document.querySelectorAll('.translation-container').forEach(container => {
+            container.classList.remove('show');
+        });
+        
+        setTimeout(() => {
+            playCardAudio();
+        }, 100);
+    }, 300);
+}
+
+        function updateCardVisibility() {
+            document.querySelectorAll('.card').forEach((card, index) => {
+                if (index === currentCard) {
+                    card.classList.remove('back');
+                } else {
+                    card.classList.add('back');
+                }
+            });
+        }
+
+		function createTranslationContainer(translation) {
+    const container = document.createElement('div');
+    container.className = 'translation-container';
+    container.innerHTML = `
+        <div class="translation-hint">
+            <svg class="translation-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+        </div>
+        <div class="translation">${translation}</div>
+    `;
+    
+    container.addEventListener('click', function() {
+        this.classList.toggle('show');
+    });
+    
+    // 阻止觸控事件的傳播
+    container.addEventListener('touchstart', function(event) {
+        event.stopPropagation();
+    });
+    
+    container.addEventListener('touchmove', function(event) {
+        event.stopPropagation();
+    });
+    
+    container.addEventListener('touchend', function(event) {
+        event.stopPropagation();
+    });
+    
+    return container;
+}
+
+        function updateCardContent() {
+    const currentWord = vocabularyData[currentCategory][currentWordIndex];
+    const wordDisplay = document.getElementById('wordDisplay');
+    const wordBack = document.getElementById('wordBack');
+    const meaningDisplay = document.getElementById('meaningDisplay');
+    const exampleDisplay = document.getElementById('exampleDisplay');
+    const exampleDisplay2 = document.getElementById('exampleDisplay2');
+    const translationDisplay = document.getElementById('translationDisplay');
+    const translationDisplay2 = document.getElementById('translationDisplay2');
+    const imageContainer = document.getElementById('imageContainer');
+    const imageContainer2 = document.getElementById('imageContainer2');
+
+    // 先清空圖片容器
+    imageContainer.innerHTML = '圖片預留區';
+    imageContainer2.innerHTML = '圖片預留區';
+
+    requestAnimationFrame(() => {
+        // Update basic content
+        wordDisplay.textContent = currentWord.word;
+        wordBack.textContent = currentWord.word;
+        meaningDisplay.textContent = currentWord.meaning;
+
+        // Handle examples and translations
+        if (currentWord.examples) {
+            // Handle first example
+            if (currentWord.examples.length > 0) {
+                const example1 = currentWord.examples[0];
+                const boldedExample1 = example1.sentence.replace(
+                    new RegExp(currentWord.word, 'gi'),
+                    match => `<strong>${match}</strong>`
+                );
+                exampleDisplay.innerHTML = boldedExample1;
+
+                // Create new translation container for first example
+                const translationDisplay = document.querySelector('#translationDisplay');
+                if (translationDisplay) {
+                    const newTranslation1 = createTranslationContainer(example1.translation);
+                    translationDisplay.parentNode.replaceChild(newTranslation1, translationDisplay);
+                    newTranslation1.id = 'translationDisplay';
+                }
+
+                if (example1.image) {
+                    imageContainer.innerHTML = `<img src="${example1.image}" alt="${currentWord.word}" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+                }
+            }
+
+            // Handle second example if exists
+            if (currentWord.examples.length > 1) {
+                const example2 = currentWord.examples[1];
+                const boldedExample2 = example2.sentence.replace(
+                    new RegExp(currentWord.word, 'gi'),
+                    match => `<strong>${match}</strong>`
+                );
+                exampleDisplay2.innerHTML = boldedExample2;
+
+                // Create new translation container for second example
+                const translationDisplay2 = document.querySelector('#translationDisplay2');
+                if (translationDisplay2) {
+                    const newTranslation2 = createTranslationContainer(example2.translation);
+                    translationDisplay2.parentNode.replaceChild(newTranslation2, translationDisplay2);
+                    newTranslation2.id = 'translationDisplay2';
+                }
+
+                if (example2.image) {
+                    imageContainer2.innerHTML = `<img src="${example2.image}" alt="${currentWord.word}" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+                }
+            }
+        } else if (currentWord.example) {
+            // Handle legacy format
+            const boldedExample = currentWord.example.replace(
+                new RegExp(currentWord.word, 'gi'),
+                match => `<strong>${match}</strong>`
+            );
+            exampleDisplay.innerHTML = boldedExample;
+
+            const translationDisplay = document.querySelector('#translationDisplay');
+            if (translationDisplay) {
+                const newTranslation = createTranslationContainer(currentWord.translation);
+                translationDisplay.parentNode.replaceChild(newTranslation, translationDisplay);
+                newTranslation.id = 'translationDisplay';
+            }
+
+            if (currentWord.image) {
+                imageContainer.innerHTML = `<img src="${currentWord.image}" alt="${currentWord.word}" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
+            }
+        }
+
+        // Update card indicators
+        updateCardIndicators();
+        
+        // Adjust word display after content update
+        setTimeout(adjustWordDisplay, 100);
+    });
+}
+
+        function updateCardIndicators() {
+    const indicators = document.querySelectorAll('.indicator');
+    const totalCards = getTotalCards(currentCategory);
+    
+    // 更新指示器的顯示
+    indicators.forEach((indicator, index) => {
+        if (index < totalCards) {
+            indicator.style.display = 'block';
+            indicator.classList.toggle('active', index === currentCard);
+        } else {
+            indicator.style.display = 'none';
+        }
+    });
+}
+
+        async function playCardAudio() {
+    const currentWord = vocabularyData[currentCategory][currentWordIndex];
+    
+    if (currentCard === 0) {
+        await playAudio();
+    } else if (currentCard === 1) {
+        await speak(currentWord.word, getVoiceSettings());
+    } else if (currentCard === 2) {
+        // 檢查是否使用新的 'examples' 陣列格式
+        if (currentWord.examples && currentWord.examples.length > 0) {
+            await speak(currentWord.examples[0].sentence, getVoiceSettings());
+        } 
+        // 或使用舊的 'example' 字串格式
+        else if (currentWord.example) {
+            await speak(currentWord.example, getVoiceSettings());
+        }
+    } else if (currentCard === 3 && currentWord.examples && currentWord.examples.length > 1) {
+        await speak(currentWord.examples[1].sentence, getVoiceSettings());
+    }
+}
+
+        function getVoiceSettings() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const voices = speechSynthesis.getVoices();
+            
+            // 選擇最佳語音
+            const selectedVoice = isIOS ? 
+                voices.find(voice => 
+                    voice.lang === 'en-US' && 
+                    (voice.name.includes('Samantha') || voice.name.includes('Karen'))
+                ) || voices.find(voice => 
+                    voice.lang === 'en-US'
+                ) :
+                voices.find(voice => 
+                    voice.lang === 'en-US' && 
+                    voice.name.includes('Google')
+                ) || voices.find(voice => 
+                    voice.lang === 'en-US'
+                );
+
+            return {
+                voice: selectedVoice,
+                lang: 'en-US',
+                pitch: isIOS ? 1.1 : 1.0,
+                rate: isIOS ? 0.9 : 0.8
+            };
+        }
+
+        async function playAudio() {
+    const currentWord = vocabularyData[currentCategory][currentWordIndex];
+    const wordDisplay = document.getElementById('wordDisplay');
+    
+    // 檢測是否為 iOS 設備
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    
+    // 獲取並設置預設語音
+    const voices = speechSynthesis.getVoices();
+    const selectedVoice = isIOS ? 
+        voices.find(voice => 
+            voice.lang === 'en-US' && 
+            (voice.name.includes('Samantha') || voice.name.includes('Karen'))
+        ) || voices.find(voice => 
+            voice.lang === 'en-US'
+        ) :
+        voices.find(voice => 
+            voice.lang === 'en-US' && 
+            voice.name.includes('Google')
+        ) || voices.find(voice => 
+            voice.lang === 'en-US'
+        );
+
+    // 基本語音設置
+    const voiceSettings = {
+        voice: selectedVoice,
+        lang: 'en-US',
+        pitch: isIOS ? 1.1 : 1.0,
+    };
+    
+    // 先顯示完整單字並正常速度發音
+    wordDisplay.textContent = currentWord.word;
+    await speak(currentWord.word, { 
+        ...voiceSettings, 
+        rate: isIOS ? 0.9 : 0.8 
+    });
+
+    // 如果是片語類別，直接返回，不進行音節朗讀
+    // 如果是片語類別
+    if (currentCategory === 'idioms') {
+        // 建立片語的音節容器
+        wordDisplay.innerHTML = `
+            <div class="syllables-container" style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-wrap: nowrap;
+                width: 100%;
+                padding: 0 10px;
+                gap: 2px;
+                height: 100%;
+            ">
+            </div>`;
+        const container = wordDisplay.querySelector('.syllables-container');
+        
+        // 將片語分割成單字
+        const words = currentWord.word.split(' ');
+        words.forEach((word, index) => {
+            container.innerHTML += `
+                <span class="syllable" style="
+                    display: inline-block;
+                    white-space: nowrap;
+                    text-align: center;
+                    min-width: min-content;
+                    flex: 0 1 auto;
+                ">${word}</span>`;
+            if (index < words.length - 1) {
+                container.innerHTML += `
+                    <span class="syllable-separator" style="
+                        margin: 0 1px;
+                        color: #666;
+                        flex-shrink: 1;
+                    "> </span>`;
+            }
+        });
+
+        adjustFontSize(container);
+        
+        const syllables = container.querySelectorAll('.syllable');
+        const baseDelay = isIOS ? 500 : 400;
+        
+        // 播放慢速版本並同步 highlight
+        const slowSpeechPromise = new Promise(resolve => {
+            const utterance = new SpeechSynthesisUtterance(currentWord.word);
+            Object.assign(utterance, {
+                ...voiceSettings,
+                rate: isIOS ? 0.25 : 0.3,
+                pitch: isIOS ? 1.1 : 1.0
+            });
+            utterance.onend = resolve;
+            
+            setTimeout(() => {
+                speechSynthesis.speak(utterance);
+            }, 100);
+        });
+
+        // 處理視覺高亮效果
+        for (let i = 0; i < words.length; i++) {
+            syllables.forEach((s, index) => {
+                s.classList.toggle('highlight', index === i);
+            });
+            await new Promise(resolve => setTimeout(resolve, baseDelay));
+        }
+
+        await slowSpeechPromise;
+        
+        // 最後正常速度發音
+        wordDisplay.textContent = currentWord.word;
+        await speak(currentWord.word, { 
+            ...voiceSettings, 
+            rate: isIOS ? 0.9 : 0.8 
+        });
+        return;
+    }
+    
+    // 以下是非片語類別的音節處理
+    wordDisplay.innerHTML = `
+        <div class="syllables-container" style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: nowrap;
+            width: 100%;
+            padding: 0 10px;
+            gap: 2px;
+            height: 100%;
+        ">
+        </div>`;
+    const container = wordDisplay.querySelector('.syllables-container');
+    
+    // 添加音節到容器
+    currentWord.syllables.forEach((syllable, index) => {
+        container.innerHTML += `
+            <span class="syllable" style="
+                display: inline-block;
+                white-space: nowrap;
+                text-align: center;
+                min-width: min-content;
+                flex: 0 1 auto;
+            ">${syllable}</span>`;
+        if (index < currentWord.syllables.length - 1) {
+            container.innerHTML += `
+                <span class="syllable-separator" style="
+                    margin: 0 1px;
+                    color: #666;
+                    flex-shrink: 1;
+                ">．</span>`;
+        }
+    });
+
+    // 調整字體大小
+    adjustFontSize(container);
+    
+    const syllables = container.querySelectorAll('.syllable');
+    
+    // 計算基礎延遲時間（針對 iOS 優化）
+    const baseDelay = isIOS ? 500 : 400;
+    const syllableDurations = currentWord.syllables.map(syllable => 
+        Math.max(baseDelay, Math.round((syllable.length / currentWord.word.length) * baseDelay * 2))
+    );
+    
+    // 計算總持續時間
+    const totalDuration = syllableDurations.reduce((sum, duration) => sum + duration, 0);
+    
+    // 設置語音速率（保留 iOS 的優化）
+    const rateAdjustment = isIOS ? 0.25 : 0.3;
+    
+    // 同步播放慢速語音和顯示音節
+    const slowSpeechPromise = new Promise(resolve => {
+        const utterance = new SpeechSynthesisUtterance(currentWord.word);
+        Object.assign(utterance, {
+            ...voiceSettings,
+            rate: rateAdjustment,
+            pitch: isIOS ? 1.1 : 1.0
+        });
+        utterance.onend = resolve;
+        
+        setTimeout(() => {
+            speechSynthesis.speak(utterance);
+        }, 100);
+    });
+
+    // 處理視覺高亮效果
+    let currentDelay = 0;
+    for (let i = 0; i < currentWord.syllables.length; i++) {
+        syllables.forEach((s, index) => {
+            s.classList.toggle('highlight', index === i);
+        });
+        
+        await new Promise(resolve => setTimeout(resolve, syllableDurations[i]));
+        currentDelay += syllableDurations[i];
+    }
+
+    await slowSpeechPromise;
+    
+    // 最後正常速度發音（保留 iOS 的優化）
+    wordDisplay.textContent = currentWord.word;
+    await speak(currentWord.word, { 
+        ...voiceSettings, 
+        rate: isIOS ? 0.9 : 0.8,
+        pitch: isIOS ? 1.1 : 1.0 
+    });
+}
+        function adjustFontSize(container) {
+            const maxFontSize = 36;
+            const minFontSize = 16;
+            let fontSize = maxFontSize;
+            const syllables = container.querySelectorAll('.syllable');
+            
+            // 設置容器基本樣式
+            container.style.display = 'flex';
+            container.style.justifyContent = 'center';
+            container.style.alignItems = 'center';
+            container.style.width = '100%';
+            container.style.height = '100%';
+            container.style.padding = '0 10px';
+            container.style.boxSizing = 'border-box';
+            container.style.margin = '0';
+            container.style.overflow = 'hidden';
+            
+            // 初始字體大小
+            container.style.fontSize = `${fontSize}px`;
+            
+            // 循環檢查並調整字體大小
+            while (fontSize > minFontSize && 
+                   (container.scrollWidth > container.offsetWidth || 
+                    container.scrollHeight > container.offsetHeight)) {
+                fontSize -= 1;
+                container.style.fontSize = `${fontSize}px`;
+            }
+            
+            // 調整容器內的音節和分隔符樣式
+            syllables.forEach(syllable => {
+                syllable.style.display = 'inline-block';
+                syllable.style.padding = '0 2px';
+                syllable.style.whiteSpace = 'nowrap';
+                syllable.style.textAlign = 'center';
+            });
+
+            const separators = container.querySelectorAll('.syllable-separator');
+            separators.forEach(separator => {
+                separator.style.padding = '0';
+                separator.style.margin = '0 1px';
+            });
+
+            // 如果還是太大，進一步調整
+            if (container.scrollWidth > container.offsetWidth) {
+                separators.forEach(separator => {
+                    separator.style.margin = '0';
+                });
+                container.style.letterSpacing = '-0.5px';
+            }
+        }
+
+        async function speak(text, options = {}) {
+            return new Promise((resolve, reject) => {
+                const utterance = new SpeechSynthesisUtterance(text);
+                Object.assign(utterance, getVoiceSettings(), options);
+                utterance.onend = resolve;
+                utterance.onerror = reject;
+                speechSynthesis.speak(utterance);
+            });
+        }
+
+        function stopSpeaking() {
+            window.speechSynthesis.cancel();
+        }
+
+        function showWordList() {
+            const modal = document.getElementById('wordListModal');
+            const wordList = document.getElementById('wordListItems');
+            wordList.innerHTML = '';
+            vocabularyData[currentCategory].forEach((word, index) => {
+                const li = document.createElement('li');
+                li.textContent = word.word;
+                li.onclick = () => {
+                    stopSpeaking();
+                    currentWordIndex = index;
+                    currentCard = 0;
+                    updateCardVisibility();
+                    updateCardContent();
+                    updateCardIndicators();
+                    modal.style.display = 'none';
+                    setTimeout(() => {
+                        playCardAudio();
+                    }, 100);
+                };
+                wordList.appendChild(li);
+            });
+            modal.style.display = 'block';
+        }
+
+        // 添加類別切換功能
+        document.addEventListener('DOMContentLoaded', () => {
+    const categoryButtons = document.querySelectorAll('.category-btn');
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            stopSpeaking();
+            
+            categoryButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            const newCategory = button.dataset.category;
+            currentCategory = newCategory;
+            currentWordIndex = 0;
+            currentCard = 0;
+            
+            // 確保切換到認知類別時，如果當前在第三張卡片，要重置到第一張
+            if (currentCategory === 'recognition' && currentCard >= 2) {
+                currentCard = 0;
+            }
+            
+            updateCardVisibility();
+            updateCardContent();
+            updateCardIndicators();
+            
+            setTimeout(() => {
+                playCardAudio();
+            }, 100);
+            // 添加初始字體大小調整
+    adjustWordDisplay();
+        });
+    });
+});
+
+        document.getElementById('prevWord').onclick = () => changeWord(-1);
+        document.getElementById('nextWord').onclick = () => changeWord(1);
+        document.getElementById('wordListBtn').onclick = showWordList;
+
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('wordListModal').style.display = 'none';
+        }
+
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        function handleTouchStart(e) {
+    // 檢查是否點擊在翻譯容器上
+    if (e.target.closest('.translation-container')) {
+        return;  // 如果是點擊翻譯容器，直接返回不處理
+    }
+    touchStartX = e.touches[0].clientX;
+}
+
+function handleTouchMove(e) {
+    // 檢查是否點擊在翻譯容器上
+    if (e.target.closest('.translation-container')) {
+        return;  // 如果是點擊翻譯容器，直接返回不處理
+    }
+    touchEndX = e.touches[0].clientX;
+}
+
+function handleTouchEnd(e) {
+    // 檢查是否點擊在翻譯容器上
+    if (e.target.closest('.translation-container')) {
+        return;  // 如果是點擊翻譯容器，直接返回不處理
+    }
+
+    const totalCards = getTotalCards(currentCategory);
+    if (touchStartX - touchEndX > 50) {
+        if (currentCard < totalCards - 1) {
+            changeCard(1);
+        }
+    }
+    if (touchEndX - touchStartX > 50) {
+        if (currentCard > 0) {
+            changeCard(-1);
+        }
+    }
+    touchStartX = 0;
+    touchEndX = 0;
+}
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const flashcard = document.getElementById('flashcard');
+            flashcard.addEventListener('touchstart', handleTouchStart, false);
+            flashcard.addEventListener('touchmove', handleTouchMove, false);
+            flashcard.addEventListener('touchend', handleTouchEnd, false);
+
+            const indicators = document.querySelectorAll('.indicator');
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => {
+                    if (index !== currentCard) {
+                        changeCard(index - currentCard);
+                    }
+                });
+            });
+        });
+function adjustWordDisplay() {
+    const wordElements = document.querySelectorAll('.word');
+    
+    wordElements.forEach(element => {
+        // 重置任何之前的轉換
+        element.style.transform = 'scale(1)';
+        element.style.fontSize = ''; // 重置字體大小
+        
+        const maxWidth = element.parentElement.offsetWidth - 40; // 考慮 padding
+        const maxHeight = element.parentElement.offsetHeight / 3; // 預留空間給其他元素
+        
+        // 檢查是否溢出
+        const isOverflowing = element.scrollWidth > maxWidth || 
+                            element.scrollHeight > maxHeight;
+        
+        if (isOverflowing) {
+            // 計算縮放比例
+            const widthRatio = maxWidth / element.scrollWidth;
+            const heightRatio = maxHeight / element.scrollHeight;
+            const scale = Math.min(widthRatio, heightRatio, 1) * 0.95;
+            
+            // 應用縮放
+            element.style.transform = `scale(${scale})`;
+            element.classList.add('auto-scale');
+            
+            // 調整容器高度以確保居中
+            element.style.height = `${maxHeight}px`;
+            element.style.display = 'flex';
+            element.style.alignItems = 'center';
+            element.style.justifyContent = 'center';
+        }
+    });
+}
+   function showGuide() {
+    document.getElementById('guideModal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function hideGuide() {
+    document.getElementById('guideModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// 點擊背景關閉導覽
+window.onclick = function(event) {
+    const modal = document.getElementById('guideModal');
+    if (event.target == modal) {
+        hideGuide();
+    }
+}
+   window.onload = function() {
+    try {
+        initializeFlashcards();
+        initializeSpeech();
+        
+        // 設置預設分類按鈕
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        categoryButtons[0].classList.add('active');
+        
+        // 初始化指示器
+        updateCardIndicators();
+        
+        // 添加觸控事件監聽
+        const flashcard = document.getElementById('flashcard');
+        flashcard.addEventListener('touchstart', handleTouchStart, false);
+        flashcard.addEventListener('touchmove', handleTouchMove, false);
+        flashcard.addEventListener('touchend', handleTouchEnd, false);
+        	
+        // 添加指示器點擊事件
+        const indicators = document.querySelectorAll('.indicator');
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                if (index !== currentCard) {
+                    changeCard(index - currentCard);
+                }
+            });
+        });
+    } catch (error) {
+        console.error('Initialization error:', error);
+    }
+};
+    </script>
+</body>
+</html>

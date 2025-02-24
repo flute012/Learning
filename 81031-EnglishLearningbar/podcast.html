@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>You Can Do It! - Podcast Player</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide-icons/0.263.1/lucide-icons.min.js">
+    <style>
+        * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(to bottom, #1a365d, #1e1b4b, #0a0a0a);
+    min-height: 100vh;
+}
+
+.transcript-section {
+    margin-top: 16px;
+    padding: 10px;
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+    scroll-behavior: smooth;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+}
+
+.timestamp-block {
+    margin: 8px 0;
+    padding: 12px 10px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.timestamp-block:hover {
+    background: rgba(255, 255, 255, 1);
+}
+
+.timestamp-block.current-block {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+}
+
+.timestamp {
+    color: #666;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dialogue-line {
+    margin-bottom: 8px;
+    padding-left: 4px;
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.speaker {
+    display: inline-block;
+    margin-right: 6px;
+    font-weight: 500;
+    font-size: 0.75rem;
+}
+
+.speaker.host {
+    color: #2563eb;
+}
+
+.speaker.guest {
+    color: #059669;
+}
+
+.english-text {
+    color: #000;
+    margin-bottom: 2px;
+}
+
+.chinese-text {
+    color: #333;
+    display: none;
+    margin-top: 2px;
+    padding-left: 6px;
+    border-left: 2px solid rgba(59, 130, 246, 0.5);
+    font-size: 0.8125rem;
+}
+
+.bilingual-mode .chinese-text {
+    display: block;
+}
+
+.speed-slider {
+    width: 100%;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.1);
+    outline: none;
+    border-radius: 5px;
+    height: 10px;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.speed-slider:hover {
+    opacity: 1;
+}
+
+.speed-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #3b82f6;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 2px 0 rgba(0,0,0,0.2);
+}
+
+.speed-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #3b82f6;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 2px 0 rgba(0,0,0,0.2);
+}
+
+.speed-slider::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(168, 85, 247, 0.5);
+    z-index: 1;
+}
+
+.speed-slider::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to right,
+        rgba(239, 68, 68, 0.5) 0%,
+        rgba(168, 85, 247, 0.5) 50%,
+        rgba(34, 197, 94, 0.5) 100%
+    );
+    border-radius: 2px;
+    z-index: 0;
+}
+
+.speed-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 1.5rem;
+}
+
+#speedDisplay {
+    min-width: 3em;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.progress-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(to right, rgb(59, 130, 246), rgb(147, 51, 234));
+}
+
+.language-btn {
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-align: center;
+    background: #4B5563;
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.language-btn:hover {
+    background: #6B7280;
+    color: white;
+}
+
+.language-btn.active {
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    color: white;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.play-button {
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
+    transition: all 0.3s ease;
+}
+
+.play-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.6);
+}
+
+#forwardBtn, #backwardBtn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+#forwardBtn:hover, #backwardBtn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.auto-scroll-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 12px auto;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 25px;
+    font-size: 14px;
+    max-width: 250px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.auto-scroll-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .transcript-section {
+        margin-top: 12px;
+        padding: 8px;
+    }
+
+    .timestamp-block {
+        padding: 10px 8px;
+        margin: 6px 0;
+    }
+
+    .dialogue-line {
+        font-size: 0.8125rem;
+        padding-left: 2px;
+    }
+
+    .speaker {
+        font-size: 0.75rem;
+    }
+
+    .chinese-text {
+        font-size: 0.75rem;
+        padding-left: 4px;
+    }
+
+    .timestamp {
+        font-size: 0.7rem;
+        margin-bottom: 4px;
+    }
+}
+    .header {
+    background: white;
+    padding: 12px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.title-container {
+    text-align: center;
+}
+
+.title {
+    font-size: 20px;
+    margin: 0;
+    color: #2c3e50;
+    font-weight: bold; 
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.home-button, #instructionsBtn {
+    background: none;
+    border: none;
+    color: #2c3e50;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px;
+    transition: transform 0.2s ease;
+}
+
+.home-button:hover, #instructionsBtn:hover {
+    transform: scale(1.1);
+}
+
+.subtitle-banner {
+    background: #f8f9fa;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.subtitle-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.subtitle {
+    font-size: 16px;
+    color: #2c3e50;
+    margin: 0;
+}
+
+/* Instructions Modal */
+#instructionsModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+}
+
+#instructionsContent {
+    position: fixed;
+    top: 100px; 
+    left: 50%;
+    transform: translateX(-50%); 
+    background: rgba(255, 255, 255, 0.95);
+    padding: 24px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    max-height: calc(100vh - 120px); 
+    overflow-y: auto; 
+}
+
+.instructions-header h2 {
+    font-size: 20px;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    padding: 0 8px;
+    transition: all 0.2s ease;
+}
+
+.close-button:hover {
+    color: #2c3e50;
+}
+
+.instruction-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    transition: all 0.2s ease;
+}
+
+.instruction-item:hover {
+    background: #e3f2fd;
+    border-color: #90caf9;
+}
+
+.instruction-item p {
+    color: #2c3e50;
+    font-size: 16px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.instruction-icon {
+    font-size: 20px;
+    width: 28px;
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.got-it-button {
+    width: 100%;
+    padding: 12px;
+    background: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 16px;
+}
+
+.got-it-button:hover {
+    background: #1e2a37;
+    transform: translateY(-1px);
+}
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-blue-950 via-gray-900 to-black">
+    <div class="absolute inset-0 bg-gradient-to-tr from-blue-900/20 via-purple-900/20 to-transparent pointer-events-none"></div>
+    
+    <div class="header">
+        <div class="header-content">
+            <div class="title-container">
+                <h1 class="title">L06 You Can Do It!</h1>
+            </div>
+            <div class="button-group">
+                <a href="menu.html" target="_blank" class="home-button">🏠</a>
+                <button id="instructionsBtn" onclick="toggleInstructions()">💡</button>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="max-w-4xl mx-auto p-6">
+        <div class="backdrop-blur-xl bg-gray-900/60 rounded-2xl p-6 shadow-2xl">
+            <!-- Header Section -->
+            <div class="flex flex-col md:flex-row gap-8 mb-8">
+                <!-- Cover Image -->
+                <div class="w-full md:w-64 h-64 shrink-0 relative group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
+                    <img src="https://hackmd.io/_uploads/SkT-eKFV1l.png" alt="Goodbye John" class="w-full h-full object-cover rounded-lg shadow-2xl relative">
+                </div>
+
+<div id="instructionsModal">
+        <div id="instructionsContent">
+            <div class="instructions-header">
+                <h2>使用說明</h2>
+                <button class="close-button" onclick="toggleInstructions()">×</button>
+            </div>
+            <div class="instructions-body">
+                <div class="instruction-item">
+                    <span class="instruction-icon">📝</span>
+                    <p>點擊時間戳記可以跳至相應的音頻位置</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="instruction-icon">🎯</span>
+                    <p>可以使用播放、暫停、快進與後退功能控制音頻</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="instruction-icon">🌐</span>
+                    <p>點擊右上角的按鈕可以切換英文或雙語模式</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="instruction-icon">🔊</span>
+                    <p>可以調整音量與播放速度</p>
+                </div>
+            </div>
+            <button class="got-it-button" onclick="toggleInstructions()">知道了！</button>
+        </div>
+    </div>
+
+                <!-- Player Controls -->
+                <div class="flex flex-col justify-between flex-grow">
+                    <div>
+                        <span class="text-sm font-medium text-blue-600">PODCAST</span>
+                        <h1 class="text-3xl font-bold mt-1 mb-2 text-white">Goodbye John</h1>
+                        <p class="text-gray-400 mb-4"> The story of Joe Whale and the power of encouragement</p>
+                    </div>
+
+                    <!-- Audio Player -->
+                    <audio class="hidden" id="audioPlayer">
+                        <source src="https://www.ltedu.com.tw/Web/Sharefile/LT/81031_SelfLearning/B1L6_Podcast.wav" type="audio/mpeg">
+                    </audio>
+
+                    <div class="space-y-6">
+                        <!-- Progress Bar -->
+                        <div class="space-y-2">
+                            <div class="w-full bg-gray-700 rounded-full h-1">
+                                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span id="currentTime">0:00</span>
+                                <span id="duration">0:00</span>
+                            </div>
+                        </div>
+
+                        <!-- Playback Controls -->
+                        <div class="flex items-center justify-center gap-4">
+                            <button class="text-gray-400 hover:text-white transition-colors" id="backwardBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line></svg>
+                            </button>
+                            <button id="playBtn" class="play-button flex items-center justify-center w-14 h-14 rounded-full text-white shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="play-icon"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pause-icon hidden"><line x1="6" y1="4" x2="6" y2="20"></line><line x1="18" y1="4" x2="18" y2="20"></line></svg>
+                            </button>
+                            <button class="text-gray-400 hover:text-white transition-colors" id="forwardBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
+                            </button>
+                        </div>
+
+                        <!-- Controls Container -->
+<div class="flex justify-between items-center px-2">
+    <!-- Volume Control -->
+
+    <!-- Speed Control -->
+    <div class="flex items-center gap-3">
+        <button class="text-gray-400 hover:text-white transition-colors" id="speedBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+            </svg>
+        </button>
+        <input type="range" id="speedSlider" class="volume-slider w-36" min="50" max="200" value="100" step="25">
+        <span id="speedDisplay" class="text-sm text-gray-400">1.0x</span>
+    </div>
+</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls Panel -->
+            <div class="bg-gray-800/50 border-gray-700 rounded-lg">
+                <div class="p-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <button id="englishBtn" class="language-btn active">
+                            English
+                        </button>
+                        <button id="bilingualBtn" class="language-btn">
+                            中英對照
+                        </button>
+                    </div>
+                </div>
+            </div>
+                    
+       
+
+            <!-- Transcript Section -->
+            <div class="transcript-section" id="transcriptSection">
+            <div class="timestamp-block" data-start="0" data-end="36">
+    <div class="timestamp">[00:00-00:36]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> All right, everybody. Welcome back. We are about to take a deep dive on something pretty inspiring today.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>大家好，歡迎回來。我們今天要深入探討一個非常激勵人心的主題。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Definitely inspiring. The power of encouragement. How about that? And particularly when it comes to creativity.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>的確很激勵人心。這就是鼓勵的力量，特別是在創意方面。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> You got it. We're going to be exploring this whole story of Joe Whale, this young boy from England, and his passion for doodling and how that took him on this, I don't know, unexpected adventure.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>沒錯。我們要探討一個關於 Joe Whale 的故事。他是一個來自英國的小男孩，熱愛塗鴉，這份熱情帶他展開了一段意想不到的冒險。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Yeah, yeah. He's got quite a story. What's fascinating about it to me is that it highlights how important it is, you know, to recognize and support those creative sparks, those little things, especially in kids.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>是啊，他的故事真的很有趣。我覺得最吸引人的是，它突顯了識別並支持那些創意火花的重要性，尤其是在孩子身上。
+        </div>
+    </div>
+</div>
+
+<div class="timestamp-block" data-start="36" data-end="72">
+    <div class="timestamp">[00:36-01:12]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Especially in kids. Yeah, for sure. So our sources tell us about Joe at nine years old, just completely, you know, absorbed in his world of doodles. And, you know, we've all been there doodling away in our notebooks. But for Joe, it was more than just, you know, passing the time. It was a real passion.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>尤其是孩子們。是的，我們的消息來源告訴我們，Joe 在九歲時就完全沉浸在他的塗鴉世界中。我們都曾經在筆記本上隨手塗鴉過。但對 Joe 來說，這不只是打發時間，而是一份真正的熱情。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> It was. And here's where things get interesting. You know, his teachers, not exactly thrilled. They saw it as a distraction, even going as far as complaining to his parents about it. Now, you know, many parents in that situation might have reacted differently, you know, maybe discouraged the doodling, pushed him to focus on academics instead, that kind of thing.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>是的，這裡變得有趣了。他的老師並不滿意，認為這是一種干擾，甚至還向他的父母抱怨。很多父母可能會因此而採取不同的反應，可能會阻止他塗鴉，要求他專注於學業。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Oh, yeah, for sure.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>哦，的確。
+        </div>
+    </div>
+</div>
+
+<div class="timestamp-block" data-start="72" data-end="112">
+    <div class="timestamp">[01:13-01:59]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Yeah. But Joe's parents.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>是的，但 Joe 的父母。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> We took a different route.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>我們採取了不同的方式。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Totally different approach. They saw his passion, this unique talent, and instead of stifling it, what did they do? They enrolled him in an art class.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>完全不同的方法。他們看到了他的熱情和獨特才能，沒有抑制它，而是讓他參加了一門藝術課。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Oh, yeah. It makes you think, doesn't it? Like sometimes what we think is a distraction is actually, you know, like a pathway to something else, a hidden talent.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>是啊，這讓人深思。很多時候，我們認為的干擾其實可能是一條通往隱藏才能的道路。
+        </div>
+    </div>
+</div>
+
+<div class="timestamp-block" data-start="119" data-end="146">
+    <div class="timestamp">[01:59-02:26]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Yeah. And one of those doors led to something incredible.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>是的，其中一扇門通向了非凡的事情。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> It really did.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>確實如此。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> A restaurant owner in England saw Joe's doodles on Instagram and was just blown away by them, contacted Joe's parents and asked if Joe would be interested in, get this, decorating a wall in his restaurant.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>一位英國的餐廳老闆在 Instagram 上看到了 Joe 的塗鴉，深受震撼，聯繫了 Joe 的父母，問他們 Joe 是否有興趣幫忙裝飾他餐廳的一面牆。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Not just, you know, like a small section. We're talking a massive space.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>不僅僅是一小部分，而是一大片空間。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> A whole wall.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>整面牆。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Yeah, a blank canvas begging for Joe's creativity, for his unique touch.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>是的，一個空白畫布，正在等待 Joe 的創意與獨特風格。
+        </div>
+    </div>
+</div>
+
+<div class="timestamp-block" data-start="146" data-end="176">
+    <div class="timestamp">[02:26-02:57]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Imagine that, like at nine years old, getting an opportunity like that.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>想像一下，九歲時就能獲得這樣的機會。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> That's huge.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>這真的很重大。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Yeah. I mean, it must have been a mix of excitement and maybe a little bit of, wait a minute, can I really do this?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>是啊，我想，他應該既興奮又有點懷疑，覺得自己真的能做到嗎？
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Yeah, exactly. You know, it could have been overwhelming. Sure. In fact, you know, Joe's dad, Greg, was worried. How would Joe handle the pressure? Such a big project. Would he be able to stay focused? What if it became too much for him? You know, would his confidence take a hit?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>是的，完全正確。他可能感到壓力很大。事實上，Joe 的爸爸 Greg 也很擔心，Joe 能不能應付這樣的壓力？這麼大的項目，他能專注完成嗎？如果壓力太大怎麼辦？他的自信心會因此受損嗎？
+        </div>
+    </div>
+</div>
+
+<div class="timestamp-block" data-start="176" data-end="211">
+    <div class="timestamp">[02:57-03:31]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> I mean, for Joe, it seems like the challenge fueled his creativity.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>對 Joe 來說，這個挑戰似乎激發了他的創造力。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> It did.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>確實如此。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> He embraced it patiently, you know, filling that wall with hundreds of his whimsical, you know, imaginative doodles.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>他耐心地接受了挑戰，用上百幅充滿想像力和趣味的塗鴉填滿了那面牆。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Yeah. And this is where we see that beautiful blend of natural talent and newfound confidence. He wasn't just doodling anymore. He was creating a world on that restaurant wall.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>是的，在這裡我們看到了自然天賦與新獲得自信的完美結合。他不再僅僅是在塗鴉，而是在那家餐廳的牆上創造了一個世界。
+        </div>
+    </div>
+</div>
+
+<div class="timestamp-block" data-start="211" data-end="235">
+    <div class="timestamp">[03:31-03:55]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> It's great.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>這太棒了。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Yeah. And it was clear that Joe had tapped into something really special. His parents, recognizing this wave of success, took it to the next level, created a website, showcased Joe's art to a wider audience.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>是的，很明顯 Joe 發現了一些非常特別的東西。他的父母意識到這波成功的浪潮，更進一步建立了一個網站，向更廣泛的觀眾展示 Joe 的藝術作品。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> That's awesome.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>這真的很棒。
+        </div>
+    </div>
+</div>
+
+<div class="timestamp-block" data-start="235" data-end="282">
+    <div class="timestamp">[03:55-04:42]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Viral on social media, Joe's story spread like wildfire. This nine-year-old doodler from England suddenly an international sensation.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>Joe 的故事在社交媒體上迅速走紅。這位九歲的英國塗鴉少年突然成為國際轟動的焦點。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> It's incredible. It's a powerful example of what happens when talent meets opportunity. And most importantly, unwavering encouragement.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>這太不可思議了。這是一個有力的例子，說明了當才能遇上機會時會發生什麼。而且最重要的是，那種堅定不移的鼓勵。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> It is. It's inspiring. Yeah. It makes you wonder, like, what talents or passions are maybe lying dormant within us, just waiting for that little spark of encouragement.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>是的，這真的很鼓舞人心。它讓你思考，也許我們內心深處還潛藏著某些才華或熱情，只等待著那一絲鼓勵的火花來點燃。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Yeah. Think about a time when someone truly believed in you, saw your potential, encouraged you to pursue it. How did that impact your path? What dreams or ambitions have you maybe put on hold? And what kind of support might you need to rekindle them? Something to think about, isn't it?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>是的。想想看，當有人真正相信你、看到你的潛力並鼓勵你去追求時，那對你的道路產生了什麼影響？有沒有一些夢想或抱負是你暫時擱置的？你需要什麼樣的支持來重新點燃它們？值得深思，不是嗎？
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> It really is. It's a thought-provoking question to end on.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>的確如此。這是一個發人深省的結尾問題。
+        </div>
+    </div>
+</div>
+
+<div class="timestamp-block" data-start="282" data-end="292">
+    <div class="timestamp">[04:42-04:52]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Yeah.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>是的。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Thank you for joining us on this deep dive into the world of Joe Whale and the power of encouragement. We hope you leave feeling inspired and ready to unleash your own unique talents on the world.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>感謝你加入我們，一起深入了解 Joe Whale 的世界和鼓勵的力量。我們希望你能帶著靈感離開，準備好向世界展現你獨特的才華。
+        </div>
+    </div>
+</div>
+
+
+    <script>
+        const englishBtn = document.getElementById('englishBtn');
+    const bilingualBtn = document.getElementById('bilingualBtn');
+    const transcriptSection = document.getElementById('transcriptSection');
+    const audio = document.getElementById('audioPlayer');
+    const playBtn = document.getElementById('playBtn');
+    const backwardBtn = document.getElementById('backwardBtn');
+    const forwardBtn = document.getElementById('forwardBtn');
+    const volumeBtn = document.getElementById('volumeBtn');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const speedBtn = document.getElementById('speedBtn');
+    const speedSlider = document.getElementById('speedSlider');
+    const speedDisplay = document.getElementById('speedDisplay');
+    const speedPresetBtns = document.querySelectorAll('.speed-preset-btn'); // 加在這裡
+    const progressBar = document.getElementById('progressBar');
+    const currentTimeDisplay = document.getElementById('currentTime');
+    const durationDisplay = document.getElementById('duration');
+    const autoScrollToggle = document.getElementById('autoScrollToggle');
+    const playIcon = playBtn.querySelector('.play-icon');
+    const pauseIcon = playBtn.querySelector('.pause-icon');
+
+        let userScrolling = false;
+        let scrollTimeout;
+
+function updateSpeedSlider() {
+    const value = ((speedSlider.value - speedSlider.min) / (speedSlider.max - speedSlider.min)) * 100;
+    speedSlider.style.setProperty('--value', `${value}%`);
+}
+
+// 為語速滑塊添加事件監聽器
+speedSlider.addEventListener('input', (e) => {
+    const value = e.target.value / 100;
+    audio.playbackRate = value;
+    speedDisplay.textContent = `${value.toFixed(1)}x`;
+    updateSpeedSlider();
+});
+        // Language toggle
+        englishBtn.addEventListener('click', () => {
+            document.body.classList.remove('bilingual-mode');
+            englishBtn.classList.add('active');
+            bilingualBtn.classList.remove('active');
+        });
+
+        bilingualBtn.addEventListener('click', () => {
+            document.body.classList.add('bilingual-mode');
+            bilingualBtn.classList.add('active');
+            englishBtn.classList.remove('active');
+        });
+
+        // Playback controls
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+            } else {
+                audio.pause();
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+            }
+        });
+
+        // Time skip controls
+        backwardBtn.addEventListener('click', () => {
+            audio.currentTime = Math.max(0, audio.currentTime - 10);
+        });
+
+        forwardBtn.addEventListener('click', () => {
+            audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+        });
+
+       
+
+        // Speed controls
+        speedSlider.addEventListener('input', (e) => {
+            const value = e.target.value / 100;
+            audio.playbackRate = value;
+            speedDisplay.textContent = `${value.toFixed(1)}x`;
+        });
+
+        speedBtn.addEventListener('click', () => {
+            audio.playbackRate = 1;
+            speedSlider.value = 100;
+            speedDisplay.textContent = '1.0x';
+        });
+
+
+        // Time formatting
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        // Progress bar updates
+        audio.addEventListener('timeupdate', () => {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+            currentTimeDisplay.textContent = formatTime(audio.currentTime);
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            durationDisplay.textContent = formatTime(audio.duration);
+        });
+
+        // Transcript scrolling
+        transcriptSection.addEventListener('scroll', () => {
+            userScrolling = true;
+            clearTimeout(scrollTimeout);
+            
+            scrollTimeout = setTimeout(() => {
+                userScrolling = false;
+            }, 3000);
+        });
+
+        const blocks = document.querySelectorAll('.timestamp-block');
+        blocks.forEach(block => {
+            block.addEventListener('click', () => {
+                const startTime = parseInt(block.dataset.start);
+                audio.currentTime = startTime;
+                audio.play();
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+            });
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const currentTime = audio.currentTime;
+            
+            blocks.forEach(block => {
+                const startTime = parseInt(block.dataset.start);
+                const endTime = parseInt(block.dataset.end);
+                
+                if (currentTime >= startTime && currentTime < endTime) {
+                    if (!block.classList.contains('current-block')) {
+                        block.classList.add('current-block');
+                        
+                        if (autoScrollToggle.checked && !userScrolling) {
+                            block.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                        }
+                    }
+                } else {
+                    block.classList.remove('current-block');
+                }
+            });
+        });
+
+        // Click progress bar to seek
+        const progressContainer = progressBar.parentElement;
+        progressContainer.addEventListener('click', (e) => {
+            const rect = progressContainer.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = pos * audio.duration;
+        });
+
+        // Initialize volume and speed
+        audio.volume = volumeSlider.value / 100;
+        speedDisplay.textContent = '1.0x';
+
+        function toggleInstructions() {
+    const modal = document.getElementById('instructionsModal');
+    if (modal.style.display === 'none' || !modal.style.display) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    } else {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
+document.getElementById('instructionsModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        toggleInstructions();
+    }
+});
+    </script>
+</body>
+</html>
