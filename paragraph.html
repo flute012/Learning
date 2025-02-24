@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="style-paragraph.css">
+    <title>摘要配對</title>
+</head>
+<body>
+    <div class="header">
+    <div class="header-content">
+        <div class="title-container">
+            <h1 class="title">L02 Goodbye, John</h1>
+        </div>
+        <div class="button-group">
+            <a href="menu.html" target="_blank" class="home-button">🏠</a>
+            <button id="instructionsBtn" onclick="toggleInstructions()">💡</button>
+            <button class="bilingual-button">中英對照</button>
+        </div>
+    </div>
+</div>
+
+<!-- subtitle banner -->
+<div class="subtitle-banner">
+    <div class="subtitle-content">
+        <h2 class="subtitle">摘要配對</h2>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="instructionsModal">
+    <div id="instructionsContent">
+        <div class="instructions-header">
+            <h2>使用說明</h2>
+            <button class="close-button" onclick="toggleInstructions()">×</button>
+        </div>
+        <div class="instructions-body">
+            <div class="instruction-item">
+                <span class="instruction-icon">📝</span>
+                <p>點擊每個段落來展開選項</p>
+            </div>
+            <div class="instruction-item">
+                <span class="instruction-icon">🎯</span>
+                <p>從選項中選擇最適合的描述</p>
+            </div>
+            <div class="instruction-item">
+                <span class="instruction-icon">🌏</span>
+                <p>點擊右側中英對照按鈕可切換顯示中文</p>
+            </div>
+            <div class="instruction-item">
+                <span class="instruction-icon">✅</span>
+                <p>完成所有題目後點擊下方按鈕檢查答案</p>
+            </div>
+        </div>
+        <button class="got-it-button" onclick="toggleInstructions()">知道了！</button>
+    </div>
+</div>
+
+    <div class="helper-text">
+        點擊每個段落並選擇最適合的描述
+    </div>
+
+    <div class="article-container">
+        <!-- 段落1 -->
+        <div class="paragraph" data-paragraph="1">
+            <span class="paragraph-number">1</span>
+            <div class="paragraph-content">
+                Dear John,<br><br>
+                It is not easy to tell you this, but I still need to say it. I'm leaving you. Our relationship has been mostly satisfying, but I'm afraid it's over.
+                <div class="chinese-text">
+                    親愛的約翰：<br><br>
+                    這件事很難啟齒，但我仍不得不告訴你。我要和你分手了。我們的關係大部分的時間都很令人滿意，但恐怕已經結束了。
+                </div>
+            </div>
+            <div class="options-container">
+                <div class="matching-prompt">Select the best description for this paragraph:</div>
+                <div class="options-grid">
+                    <div class="option" data-option="A">
+                        <span class="option-label">A.</span>
+                        Since their relationship began, it had been hard for Sally to focus at school...
+                        <div class="option-chinese">自從他們開始交往後，莎莉就很難專心上課...</div>
+                    </div>
+                    <div class="option" data-option="B">
+                        <span class="option-label">B.</span>
+                        Sally restated her reasons and said goodbye to John.
+                        <div class="option-chinese">莎莉重述了她的理由並向約翰道別。</div>
+                    </div>
+                    <div class="option" data-option="C">
+                        <span class="option-label">C.</span>
+                        Sally wrote John a letter to let him know that she wanted to end their relationship.
+                        <div class="option-chinese">莎莉寫了一封信告訴約翰她想結束這段關係。</div>
+                    </div>
+                    <div class="option" data-option="D">
+                        <span class="option-label">D.</span>
+                        Sally felt heartbroken because she and John had had some great times together.
+                        <div class="option-chinese">莎莉感到心碎因為她和約翰曾經共度美好時光。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 段落2 -->
+        <div class="paragraph" data-paragraph="2">
+            <span class="paragraph-number">2</span>
+            <div class="paragraph-content">
+                Leaving you really breaks my heart because we've had some great times together. When you're around, I am never bored. There is always something to do. You inspire me to connect with others and to communicate better. I can ask you anything, and you will probably help me find the answer. You've introduced me to so much—new music, new games, new knowledge, new friends, and more.
+                <div class="chinese-text">
+                    離開你真的傷了我的心，因為我們曾經共度許多美好時光。有你在身邊，我從不無聊。我總是有事可做。你鼓勵我多認識別人與多跟別人溝通。我什麼都可以問你，你也可能都會幫我找到答案。你帶我大開眼界——認識新音樂、新遊戲、新知識、新朋友等。
+                </div>
+            </div>
+            <div class="options-container">
+                <div class="matching-prompt">Select the best description for this paragraph:</div>
+                <div class="options-grid">
+                    <div class="option" data-option="A">
+                        <span class="option-label">A.</span>
+                        Since their relationship began, it had been hard for Sally to focus at school...
+                        <div class="option-chinese">自從他們開始交往後，莎莉就很難專心上課...</div>
+                    </div>
+                    <div class="option" data-option="B">
+                        <span class="option-label">B.</span>
+                        Sally restated her reasons and said goodbye to John.
+                        <div class="option-chinese">莎莉重述了她的理由並向約翰道別。</div>
+                    </div>
+                    <div class="option" data-option="C">
+                        <span class="option-label">C.</span>
+                        Sally wrote John a letter to let him know that she wanted to end their relationship.
+                        <div class="option-chinese">莎莉寫了一封信告訴約翰她想結束這段關係。</div>
+                    </div>
+                    <div class="option" data-option="D">
+                        <span class="option-label">D.</span>
+                        Sally felt heartbroken because she and John had had some great times together.
+                        <div class="option-chinese">莎莉感到心碎因為她和約翰曾經共度美好時光。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 段落3-4 -->
+        <div class="paragraph" data-paragraph="3-4">
+            <span class="paragraph-number">3-4</span>
+            <div class="paragraph-content">
+                In fact, things have been totally different since you came into my life. When I wake up, you are there to go through my friends' updates on Facebook and Instagram with me. Also, I check my LINE app again and again throughout the day. And when it doesn't show any new messages, I still refresh the screen, just in case I miss something. All this might sound romantic, but it is difficult for me to focus on school, and my grades are getting worse!<br><br>
+                In addition, having you around is really hurting my relationships with my friends and family. When my friends and I hang out, I turn to you for Instagram updates and ignore everyone else. My friends try to talk to me, but I don't even reply because I am too busy paying attention to you. I'm worried that they are going to stop inviting me out! I can't deny that you are always by my side, and I love it when we play games or respond to messages together. But doing this late into the night means I seldom speak to my family! That's really not a good way to build a relationship with anybody,and my parents are both angry and disappointed with me.
+            <div class="chinese-text">
+                其實，自從你走入我的生活，一切都不一樣了。當我睡醒，你就會跟我一起瀏覽臉書和IG上朋友的動態更新。而且，我會一天到晚一再查看LINE。當沒有新訊息時，我會一直刷新螢幕，以免有東西沒看到。這一切聽起來好像很浪漫，卻讓我在學校很難專心，我的成績也每況愈下！<br><br>
+                此外，有你在身旁也真的傷害了我和朋友及家人的關係。跟朋友們出去時，我轉向和你一起看IG的動態更新，把朋友們晾在旁邊。朋友們想跟我聊天，我連回話都沒有，因為我的注意力都放在你身上。我擔心他們以後都不找我出去了。我不否認你一直在我身邊，我也很喜歡和你一起玩遊戲或是回訊息。但是這些都弄得太晚，代表我跟家人都沒講到什麼話！這樣實在不是跟任何人建立關係的好方法，而我爸媽對我很生氣也很失望。
+            </div>
+        </div>
+        <div class="options-container">
+            <div class="matching-prompt">Select the best description for these paragraphs:</div>
+            <div class="options-grid">
+                <div class="option" data-option="A">
+                    <span class="option-label">A.</span>
+                    Since their relationship began, it had been hard for Sally to focus at school...
+                    <div class="option-chinese">自從他們開始交往後，莎莉就很難專心上課...</div>
+                </div>
+                <div class="option" data-option="B">
+                    <span class="option-label">B.</span>
+                    Sally restated her reasons and said goodbye to John.
+                    <div class="option-chinese">莎莉重述了她的理由並向約翰道別。</div>
+                </div>
+                <div class="option" data-option="C">
+                    <span class="option-label">C.</span>
+                    Sally wrote John a letter to let him know that she wanted to end their relationship.
+                    <div class="option-chinese">莎莉寫了一封信告訴約翰她想結束這段關係。</div>
+                </div>
+                <div class="option" data-option="D">
+                    <span class="option-label">D.</span>
+                    Sally felt heartbroken because she and John had had some great times together.
+                    <div class="option-chinese">莎莉感到心碎因為她和約翰曾經共度美好時光。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 段落5-6 -->
+    <div class="paragraph" data-paragraph="5-6">
+        <span class="paragraph-number">5-6</span>
+        <div class="paragraph-content">
+            Please don't take any of this personally. You're truly wonderful, and I'll miss you terribly. But right now, I really need to focus on my studies, spend more time with my friends, and become a real part of my family again.<br><br>
+            I hope you understand. For the last time, goodbye....<br><br>
+            Best wishes,<br>
+            Sally
+            <div class="chinese-text">
+                請別把我說的這些當成針對你。你真的很好，我也會很想念你。只是現在，我真的要專心念書，多和朋友相處，真正回歸家庭。<br><br>
+                我希望你能了解。這是我最後一次跟你說再見了⋯⋯<br><br>
+                祝安好<br>
+                莎莉 上
+            </div>
+        </div>
+        <div class="options-container">
+            <div class="matching-prompt">Select the best description for these paragraphs:</div>
+            <div class="options-grid">
+                <div class="option" data-option="A">
+                    <span class="option-label">A.</span>
+                    Since their relationship began, it had been hard for Sally to focus at school...
+                    <div class="option-chinese">自從他們開始交往後，莎莉就很難專心上課...</div>
+                </div>
+                <div class="option" data-option="B">
+                    <span class="option-label">B.</span>
+                    Sally restated her reasons and said goodbye to John.
+                    <div class="option-chinese">莎莉重述了她的理由並向約翰道別。</div>
+                </div>
+                <div class="option" data-option="C">
+                    <span class="option-label">C.</span>
+                    Sally wrote John a letter to let him know that she wanted to end their relationship.
+                    <div class="option-chinese">莎莉寫了一封信告訴約翰她想結束這段關係。</div>
+                </div>
+                <div class="option" data-option="D">
+                    <span class="option-label">D.</span>
+                    Sally felt heartbroken because she and John had had some great times together.
+                    <div class="option-chinese">莎莉感到心碎因為她和約翰曾經共度美好時光。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="submit-section">
+    <button class="submit-button" disabled>Check Understanding (0/4)</button>
+</div>
+
+<script>
+    const correctAnswers = {
+        '1': 'C',
+        '2': 'D',
+        '3-4': 'A',
+        '5-6': 'B'
+    };
+
+    let selectedAnswers = {};
+
+    // 中英對照功能
+    document.querySelector('.bilingual-button').addEventListener('click', function() {
+        const chineseTexts = document.querySelectorAll('.chinese-text');
+        const optionChinese = document.querySelectorAll('.option-chinese');
+        
+        chineseTexts.forEach(text => {
+            text.classList.toggle('show');
+        });
+        
+        optionChinese.forEach(text => {
+            text.classList.toggle('show');
+        });
+    });
+
+    // 為所有段落添加點擊事件
+    document.querySelectorAll('.paragraph').forEach(paragraph => {
+        paragraph.addEventListener('click', function(e) {
+            if (e.target.closest('.option')) {
+                return;
+            }
+            
+            document.querySelectorAll('.paragraph.active').forEach(p => {
+                if (p !== this) {
+                    p.classList.remove('active');
+                }
+            });
+            
+            this.classList.toggle('active');
+        });
+    });
+
+    // 為所有選項添加點擊事件
+    document.querySelectorAll('.option').forEach(option => {
+        option.addEventListener('click', function(e) {
+            e.stopPropagation();
+
+            const paragraphElement = this.closest('.paragraph');
+            const paragraphId = paragraphElement.dataset.paragraph;
+            const optionId = this.dataset.option;
+
+            paragraphElement.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+
+            this.classList.add('selected');
+            selectedAnswers[paragraphId] = optionId;
+            markAnswered(paragraphElement);
+            updateProgress();
+            updateSubmitButton();
+
+            this.style.transform = 'scale(1.02)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+        });
+    });
+
+    function updateSubmitButton() {
+        const submitButton = document.querySelector('.submit-button');
+        const selectedCount = Object.keys(selectedAnswers).length;
+        
+        submitButton.disabled = selectedCount < 4;
+        submitButton.textContent = `Check Understanding (${selectedCount}/4)`;
+
+        if (selectedCount === 4) {
+            submitButton.onclick = checkAnswers;
+        }
+    }
+
+    function checkAnswers() {
+        let correct = 0;
+        const paragraphs = document.querySelectorAll('.paragraph');
+        
+        paragraphs.forEach(paragraph => {
+            paragraph.classList.remove('result-correct', 'result-incorrect');
+            const oldBadge = paragraph.querySelector('.result-badge');
+            if (oldBadge) {
+                oldBadge.remove();
+            }
+        });
+
+        for (let paragraphId in correctAnswers) {
+            const paragraph = document.querySelector(`.paragraph[data-paragraph="${paragraphId}"]`);
+            const userAnswer = selectedAnswers[paragraphId];
+            const isCorrect = userAnswer === correctAnswers[paragraphId];
+            
+            setTimeout(() => {
+                if (isCorrect) {
+                    correct++;
+                    paragraph.classList.add('result-correct', 'completed');
+                    const badge = document.createElement('div');
+                    badge.className = 'result-badge correct';
+                    badge.textContent = 'Correct!';
+                    paragraph.querySelector('.paragraph-content').appendChild(badge);
+                } else {
+                    paragraph.classList.add('result-incorrect');
+                    const badge = document.createElement('div');
+                    badge.className = 'result-badge incorrect';
+                    badge.textContent = `Incorrect. Correct answer: ${correctAnswers[paragraphId]}`;
+                    paragraph.querySelector('.paragraph-content').appendChild(badge);
+                }
+            }, 200 * parseInt(paragraphId));
+        }
+
+        const submitButton = document.querySelector('.submit-button');
+        submitButton.textContent = `Score: ${correct}/4`;
+        submitButton.disabled = true;
+
+        document.querySelectorAll('.paragraph.active').forEach(p => {
+            p.classList.remove('active');
+        });
+
+        setTimeout(() => {
+            let message = `You got ${correct} out of 4 correct!\n\n`;
+            if (correct === 4) {
+                message += 'Excellent! Perfect score! 🎉';
+            } else if (correct >= 2) {
+                message += 'Good job! Keep practicing! 👍';
+            } else {
+                message += 'Try again to improve your understanding. 💪';
+            }
+            alert(message);
+        }, 1000);
+    }
+
+    function markAnswered(paragraphElement) {
+        paragraphElement.classList.add('answered');
+    }
+
+    function updateProgress() {
+    const total = 4;
+    const answered = Object.keys(selectedAnswers).length;
+    const percentage = (answered / total) * 100;
+    const progressFill = document.querySelector('.progress-fill');
+    if (progressFill) {
+        progressFill.style.width = percentage + '%';
+    }
+}
+
+    showHelper(true);
+    setTimeout(() => showHelper(false), 3000);
+
+    function showHelper(show) {
+        const helper = document.querySelector('.helper-text');
+        if (show) {
+            helper.classList.add('visible');
+        } else {
+            helper.classList.remove('visible');
+        }
+    }
+     // 在現有的 script 標籤內添加以下代碼
+function toggleInstructions() {
+    const modal = document.getElementById('instructionsModal');
+    if (modal.style.display === 'none' || !modal.style.display) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    } else {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// 點擊背景關閉導覽
+document.getElementById('instructionsModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        toggleInstructions();
+    }
+});
+</script>
+</body>
+</html>
+

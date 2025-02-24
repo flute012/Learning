@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goodbye, John - English Learning</title>
+    <script src="https://w.soundcloud.com/player/api.js"></script>
+    <style>
+    * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Times New Roman', Times, serif;
+    line-height: 1.6;
+    color: #e1e1e1;
+    min-height: 100vh;
+    margin: 0;
+    background-image: linear-gradient(
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+    ), url('https://hackmd.io/_uploads/B1t9aeiZyl.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    position: relative;
+    z-index: 0;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, 
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0.5) 100%
+    );
+    z-index: -1;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 10px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 播放器相關樣式 */
+.player-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    background: rgba(17, 24, 39, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.player-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.progress-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.time-display {
+    display: flex;
+    justify-content: space-between;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    padding: 0 1px;  /* 改小這個值，原本是 2px */
+}
+/* 播放按鈕樣式 */
+.play-button {
+    min-width: 40px;  /* 加入最小寬度 */
+    min-height: 40px; /* 加入最小高度 */
+    width: 40px;      /* 固定寬度 */
+    height: 40px;     /* 固定高度，與寬度相同 */
+    flex-shrink: 0;   /* 防止按鈕被壓縮 */
+    border-radius: 50%;
+}
+
+.play-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.play-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.play-path, .pause-path {
+    transition: opacity 0.3s ease;
+}
+
+.hidden {
+    opacity: 0;
+    position: absolute;
+}
+
+.progress-bar {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+}
+
+.controls-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 40px;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+
+    
+    .progress-section {
+        margin: 0 10px;
+    }
+}
+
+.progress {
+    position: absolute;
+    height: 100%;
+    background: linear-gradient(90deg, #60a5fa 0%, #3b82f6 100%);
+    border-radius: 4px;
+    width: 0%;
+    transition: width 0.1s ease;
+}
+
+.time-display {
+    display: flex;
+    justify-content: space-between;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+}
+
+.controls-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.volume-slider {
+    width: 80px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+/* 翻譯按鈕樣式 */
+.translation-toggle {
+    text-align: right;
+    margin: 20px 0;
+}
+
+.translation-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.translation-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.translation-button.active {
+    background: rgba(255, 255, 255, 0.3);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.translate-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .player-content {
+        gap: 12px;
+    }
+    
+    .play-button {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .translation-button {
+        padding: 8px;
+    }
+    
+    .translation-button .button-text {
+        display: none;
+    }
+}
+/* 歌詞容器樣式 */
+.lyrics-container {
+    background: linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(17, 24, 39, 0.7) 100%);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    width: 100%;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.lyrics-pair {
+    margin-bottom: 15px;
+}
+
+.lyrics-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+    gap: 5px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.lyrics-line.chinese {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.85em;
+    margin-top: 4px;
+    padding-left: 20px;
+    font-family: 'Microsoft YaHei', '微軟正黑體', sans-serif;
+}
+
+/* 填空格樣式 */
+.blank {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 90px;
+    height: 36px;
+    margin: 0 5px;
+    padding: 0 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: inherit;
+    color: #fff;
+}
+
+.blank:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+.blank.selected {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.blank.correct {
+    background: rgba(34, 197, 94, 0.2);
+    border-color: #22c55e;
+}
+
+.blank.incorrect {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: #ef4444;
+}
+
+.blank.correct::after {
+    content: '✓';
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    color: #22c55e;
+    font-size: 20px;
+    background-color: rgba(17, 24, 39, 0.9);
+    border-radius: 50%;
+    padding: 2px;
+    transform: scale(1);
+    transition: transform 0.2s ease;
+}
+
+.blank.incorrect::after {
+    content: '✗';
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    color: #ef4444;
+    font-size: 20px;
+    background-color: rgba(17, 24, 39, 0.9);
+    border-radius: 50%;
+    padding: 2px;
+    transform: scale(1);
+    transition: transform 0.2s ease;
+}
+
+/* 單字選項樣式 */
+.word-options {
+    background: linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(17, 24, 39, 0.7) 100%);
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.word-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    min-height: 60px;
+    transition: all 0.3s ease;
+}
+
+.word {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 15px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: #fff;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    border: none;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.word:hover {
+    background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+}
+
+.word.correct {
+    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    opacity: 0.7;
+}
+
+/* 輔助類 */
+.hidden {
+    display: none !important;
+}
+
+.dimmed {
+    opacity: 0.3;
+}
+
+/* 動畫 */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .player-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 10px;
+}
+
+.top-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+}
+.time-text {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    font-family: monospace;
+}
+
+.time-separator {
+    color: rgba(255, 255, 255, 0.5);
+}
+    
+    .progress-section {
+        max-width: none;
+        width: 100%;
+    }
+    
+    .volume-control {
+        display: none;
+    }
+    
+    .translation-button {
+        padding: 8px;
+    }
+    
+    .translation-button span {
+        display: none;
+    }
+    
+    .lyrics-line {
+        font-size: 0.85em;
+    }
+    
+    .blank {
+        min-width: 80px;
+        height: 32px;
+        margin: 0 2px;
+    }
+    
+    .word {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+}
+
+/* Header 樣式 */
+.header-row {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+    margin-bottom: 20px;
+}
+
+.header-row h1 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    color: #ffffff;
+    font-size: 20px;
+    white-space: nowrap;
+}
+
+.button-group {
+    position: absolute;
+    right: 0;
+    display: flex;
+    gap: 10px;
+    z-index: 2;
+}
+
+.home-button, #instructionsBtn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px;
+}
+
+/* 導覽 Modal 樣式 */
+#instructionsModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1001;
+}
+
+#instructionsModal.show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+#instructionsContent {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.instructions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.instruction-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 12px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+}
+
+.instruction-item p {
+    color: #333333;
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.instruction-icon {
+    font-size: 20px;
+    width: 28px;
+    margin-right: 16px;
+}
+
+.got-it-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* 歌曲選擇區域 */
+.song-selection {
+    margin: 20px auto;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(17, 24, 39, 0.7) 100%);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    max-width: 800px;
+    min-height: 70px;
+    position: relative;
+}
+
+.song-buttons-container {
+    display: flex;
+    gap: 15px;
+    min-width: 80px;
+    padding-left: 15px;
+    transition: all 0.3s ease;
+    /* 初始狀態下置中 */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* 當播放器顯示時的按鈕容器樣式 */
+.song-selection.playing .song-buttons-container {
+    position: relative;
+    left: 0;
+    transform: none;
+}
+
+.song-circle-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 15px;
+    /* 改用綠色系的漸層 */
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #fff;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    border: none;
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+}
+
+.song-circle-button:hover {
+    /* 懸停時的顏色稍深 */
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4);
+}
+
+.song-circle-button.hide {
+    opacity: 0;
+    transform: scale(0.8);
+    pointer-events: none;
+    position: absolute;
+}
+
+.song-circle-button.active {
+    background: linear-gradient(135deg, #047857 0%, #065f46 100%);
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+}
+
+/* 播放器樣式 */
+.song-player {
+    flex: 1;
+    background: rgba(17, 24, 39, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateX(20px);
+    max-height: 0;
+    overflow: hidden;
+}
+
+.song-player.show {
+    opacity: 1;
+    transform: translateX(0);
+    max-height: 200px;
+}
+
+.song-player.hidden {
+    display: none;
+}
+
+.player-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.song-title {
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.close-player {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    line-height: 1;
+}
+
+.close-player:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.player-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.play-button {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(59, 130, 246, 0.2);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.play-button:hover {
+    background: rgba(59, 130, 246, 0.3);
+}
+
+.play-icon {
+    width: 24px;
+    height: 24px;
+    color: white;
+}
+
+.progress-section {
+    flex: 1;
+}
+
+.progress-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    cursor: pointer;
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.progress {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+    border-radius: 3px;
+    transition: width 0.1s linear;
+}
+
+.time-display {
+    display: flex;
+    justify-content: space-between;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    font-family: monospace;
+}
+
+.song-player.hidden {
+    display: none;
+}
+
+/* 動畫效果 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.song-player:not(.hidden) {
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .song-selection {
+        padding: 15px;
+    }
+    
+    .song-circle-button {
+        width: 60px;
+        height: 60px;
+        font-size: 16px;
+    }
+    
+    .song-player {
+        padding: 15px;
+    }
+    
+    .song-title {
+        font-size: 16px;
+    }
+}
+</style>
+</head>
+<body>
+    <div class="container">
+    <div class="header-row">
+        <h1>L02 Goodbye, John</h1>
+        <div class="button-group">
+            <a href="menu.html" target="_blank" class="home-button">🏠</a>
+            <button id="instructionsBtn" onclick="toggleInstructions()">💡</button>
+        </div>
+    </div>
+
+    <div class="player-container">
+    <div class="player-content">
+        <div class="top-controls">
+            <!-- 播放/暫停按鈕 -->
+            <button id="playPauseBtn" class="play-button">
+                <svg class="play-icon" viewBox="0 0 24 24">
+                    <path class="play-path" d="M8 5v14l11-7z" fill="currentColor"/>
+                    <path class="pause-path hidden" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="currentColor"/>
+                </svg>
+            </button>
+            
+            <!-- 進度條區域 -->
+            <div class="progress-section">
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress" id="progress"></div>
+                </div>
+            </div>
+
+            <!-- 右側控制區 -->
+            <div class="controls-right">
+                <button id="toggleTranslation" class="translation-button">
+                    <svg class="translate-icon" viewBox="0 0 24 24">
+                        <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12z" fill="currentColor"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- 時間顯示 -->
+        <div class="time-display-container">
+            <span id="currentTime" class="time-text">0:00</span>
+            <span class="time-separator">/</span>
+            <span id="duration" class="time-text">0:00</span>
+        </div>
+    </div>
+</div>
+
+    <!-- 隱藏的音頻元素 -->
+    <audio id="audioPlayer" preload="metadata">
+        <source src="https://www.ltedu.com.tw/Web/Sharefile/LT/english2025/GoodbyeJohn.mp3" type="audio/mpeg">
+    </audio>
+</div>
+
+        <!-- 導覽 Modal 放在這裡 -->
+        <div id="instructionsModal">
+    <div id="instructionsContent">
+        <div class="instructions-header">
+            <h2>使用說明</h2>
+            <button class="close-button" onclick="toggleInstructions()">×</button>
+        </div>
+        <div class="instructions-body">
+            <div class="instruction-item">
+                <span class="instruction-icon">▶️</span>
+                <p>點擊播放按鈕開始播放歌曲，再次點擊暫停</p>
+            </div>
+            <div class="instruction-item">
+                <span class="instruction-icon">🎯</span>
+                <p>點擊空格選取要填寫的位置</p>
+            </div>
+            <div class="instruction-item">
+                <span class="instruction-icon">📝</span>
+                <p>從下方選擇正確的單字填入空格</p>
+            </div>
+            <div class="instruction-item">
+                <span class="instruction-icon">🌏</span>
+                <p>點擊右側翻譯按鈕可切換中文歌詞</p>
+            </div>
+            <div class="instruction-item">
+                <span class="instruction-icon">⏩</span>
+                <p>可拖曳進度條調整播放位置</p>
+            </div>
+        </div>
+        <button class="got-it-button" onclick="toggleInstructions()">知道了！</button>
+    </div>
+</div>
+
+        <!-- Part 1 -->
+<div id="part1" class="lyrics-container">
+    <div class="lyrics-pair">
+        <p class="lyrics-line">I thought our <span class="blank" data-word="relationship"></span> was fine,</p>
+        <p class="lyrics-line chinese hidden">我以為我們的關係還不錯，</p>
+    </div>
+    <div class="lyrics-pair">
+        <p class="lyrics-line">Mostly <span class="blank" data-word="satisfying"></span>, but I see the signs.</p>
+        <p class="lyrics-line chinese hidden">大部分是滿足的，但我看到了跡象。</p>
+    </div>
+    <div class="lyrics-pair">
+        <p class="lyrics-line">You used to <span class="blank" data-word="inspire"></span> me every day,</p>
+        <p class="lyrics-line chinese hidden">你曾經每天都激勵著我，</p>
+    </div>
+    <div class="lyrics-pair">
+        <p class="lyrics-line">But now it's hard to <span class="blank" data-word="find my way"></span>.</p>
+        <p class="lyrics-line chinese hidden">但現在我找不到前進的路。</p>
+    </div>
+</div>
+
+        <!-- Part 2 -->
+        <div id="part2" class="lyrics-container hidden">
+            <div class="lyrics-pair">
+                <p class="lyrics-line">You're always there, <span class="blank" data-word="throughout"></span> the night,</p>
+                <p class="lyrics-line chinese hidden">你總是在夜裡陪伴著我，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">But something's wrong, it doesn't feel right.</p>
+                <p class="lyrics-line chinese hidden">但某些不對勁的感覺難以忽視。</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">I need to <span class="blank" data-word="focus"></span>, can't <span class="blank" data-word="ignore"></span>,</p>
+                <p class="lyrics-line chinese hidden">我需要專注，不能再忽略，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">The things I used to care for more.</p>
+                <p class="lyrics-line chinese hidden">那些我曾經更在乎的事物。</p>
+            </div>
+        </div>
+
+        <!-- Part 3 -->
+        <div id="part3" class="lyrics-container hidden">
+            <div class="lyrics-pair">
+                <p class="lyrics-line">I <span class="blank" data-word="refresh"></span> my mind, clear the screen,</p>
+                <p class="lyrics-line chinese hidden">我刷新我的思緒，清空螢幕，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line"><span class="blank" data-word="In case"></span> I miss what life could've been.</p>
+                <p class="lyrics-line chinese hidden">以防錯過本來可能擁有的生活。</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line"><span class="blank" data-word="Turn to"></span> my friends, not just to you,</p>
+                <p class="lyrics-line chinese hidden">轉向我的朋友，而不只是你，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">It's time to start something new.</p>
+                <p class="lyrics-line chinese hidden">是時候開始新的生活。</p>
+            </div>
+        </div>
+
+        <!-- Part 4 -->
+        <div id="part4" class="lyrics-container hidden">
+            <div class="lyrics-pair">
+                <p class="lyrics-line">No more <span class="blank" data-word="hangin' out"></span>, just me and you,</p>
+                <p class="lyrics-line chinese hidden">不再只是我們兩個在一起，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">I need to <span class="blank" data-word="reconnect"></span>, it's true.</p>
+                <p class="lyrics-line chinese hidden">我需要重新連結，這是真的。</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line"><span class="blank" data-word="In addition"></span>, my heart's been torn,</p>
+                <p class="lyrics-line chinese hidden">此外，我的心已經受傷，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">But I can't <span class="blank" data-word="deny"></span>—I need to be reborn.</p>
+                <p class="lyrics-line chinese hidden">但我無法否認——我需要重生。</p>
+            </div>
+        </div>
+
+        <!-- Part 5 -->
+        <div id="part5" class="lyrics-container hidden">
+            <div class="lyrics-pair">
+                <p class="lyrics-line">You helped me <span class="blank" data-word="connect"></span>, <span class="blank" data-word="communicate"></span>,</p>
+                <p class="lyrics-line chinese hidden">你幫助我連結，溝通交流，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">But now I feel I'm running late.</p>
+                <p class="lyrics-line chinese hidden">但現在我覺得自己已經落後。</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line"><span class="blank" data-word="Messages"></span> don't fill the space,</p>
+                <p class="lyrics-line chinese hidden">訊息無法填滿空白，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">I've lost myself in this digital race.</p>
+                <p class="lyrics-line chinese hidden">我在這數位競賽中迷失了自己。</p>
+            </div>
+        </div>
+
+        <!-- Part 6 -->
+        <div id="part6" class="lyrics-container hidden">
+            <div class="lyrics-pair">
+                <p class="lyrics-line">I used to <span class="blank" data-word="respond"></span>, but now I see,</p>
+                <p class="lyrics-line chinese hidden">我曾經會回應，但現在我看到了，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">My family, friends are waiting for me.</p>
+                <p class="lyrics-line chinese hidden">家人和朋友正在等我。</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">I'm <span class="blank" data-word="disappointed"></span> in the way things turned,</p>
+                <p class="lyrics-line chinese hidden">對這段關係有些失望，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">It's time to take the lessons I've learned.</p>
+                <p class="lyrics-line chinese hidden">是時候接受我所學到的教訓。</p>
+            </div>
+        </div>
+
+        <!-- Part 7 -->
+        <div id="part7" class="lyrics-container hidden">
+            <div class="lyrics-pair">
+                <p class="lyrics-line">I <span class="blank" data-word="refresh"></span> my mind, clear the screen,</p>
+                <p class="lyrics-line chinese hidden">我刷新我的思緒，清空螢幕，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line"><span class="blank" data-word="In case"></span> I miss what life could've been.</p>
+                <p class="lyrics-line chinese hidden">以防錯過本來可能擁有的生活。</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line"><span class="blank" data-word="Turn to"></span> my friends, not just to you,</p>
+                <p class="lyrics-line chinese hidden">轉向我的朋友，而不只是你，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">It's time to start something new.</p>
+                <p class="lyrics-line chinese hidden">是時候開始新的生活。</p>
+            </div>
+        </div>
+
+        <!-- Part 8 -->
+        <div id="part8" class="lyrics-container hidden">
+            <div class="lyrics-pair">
+                <p class="lyrics-line">No more <span class="blank" data-word="hangin' out"></span>, just me and you,</p>
+                <p class="lyrics-line chinese hidden">不再只是我們兩個在一起，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">I need to <span class="blank" data-word="reconnect"></span>, it's true.</p>
+                <p class="lyrics-line chinese hidden">我需要重新連結，這是真的。</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line"><span class="blank" data-word="In addition"></span>, my heart's been torn,</p>
+                <p class="lyrics-line chinese hidden">此外，我的心已經受傷，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">But I can't <span class="blank" data-word="deny"></span>—I need to be reborn.</p>
+                <p class="lyrics-line chinese hidden">但我無法否認——我需要重生。</p>
+            </div>
+        </div>
+
+        <!-- Part 9 -->
+        <div id="part9" class="lyrics-container hidden">
+            <div class="lyrics-pair">
+                <p class="lyrics-line">Please don't <span class="blank" data-word="take this personally"></span>,</p>
+                <p class="lyrics-line chinese hidden">請不要把這看得太個人，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">It's just something I need to be.</p>
+                <p class="lyrics-line chinese hidden">這只是我需要的改變。</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">I'll miss the way we used to be,</p>
+                <p class="lyrics-line chinese hidden">我會懷念我們曾經的樣子，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">But I need to set myself free.</p>
+                <p class="lyrics-line chinese hidden">但我需要釋放自己，自由自在。</p>
+            </div>
+        </div>
+
+        <!-- Part 10 -->
+        <div id="part10" class="lyrics-container hidden">
+            <div class="lyrics-pair">
+                <p class="lyrics-line">I <span class="blank" data-word="refresh"></span> my mind, clear the screen,</p>
+                <p class="lyrics-line chinese hidden">我刷新我的思緒，清空螢幕，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line"><span class="blank" data-word="In case"></span> I miss what life could've been.</p>
+                <p class="lyrics-line chinese hidden">以防錯過本來可能擁有的生活。</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line"><span class="blank" data-word="Turn to"></span> my friends, not just to you,</p>
+                <p class="lyrics-line chinese hidden">轉向我的朋友，而不只是你，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">It's time to start something new.</p>
+                <p class="lyrics-line chinese hidden">是時候開始新的生活。</p>
+            </div>
+        </div>
+
+        <!-- Part 11 -->
+        <div id="part11" class="lyrics-container hidden">
+            <div class="lyrics-pair">
+                <p class="lyrics-line">No more <span class="blank" data-word="hangin' out"></span>, just me and you,</p>
+                <p class="lyrics-line chinese hidden">不再只是我們兩個在一起，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">I need to <span class="blank" data-word="reconnect"></span>, it's true.</p>
+                <p class="lyrics-line chinese hidden">我需要重新連結，這是真的。</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line"><span class="blank" data-word="In addition"></span>, my heart's been torn,</p>
+                <p class="lyrics-line chinese hidden">此外，我的心已經受傷，</p>
+            </div>
+            <div class="lyrics-pair">
+                <p class="lyrics-line">But I can't <span class="blank" data-word="deny"></span>—I need to be reborn.</p>
+                <p class="lyrics-line chinese hidden">但我無法否認——我需要重生。</p>
+            </div>
+        </div>
+
+        <div class="word-options">
+            <h3>Click the correct words:</h3>
+            <div class="word-container" id="wordContainer"></div>
+        </div>
+    </div>
+
+		<<div class="song-selection">
+    <div class="song-buttons-container">
+        <button class="song-circle-button" data-song="B1L1">B1L1</button>
+        <button class="song-circle-button" data-song="B1L3">B1L3</button>
+    </div>
+    <div id="extraPlayer" class="song-player hidden">
+        <div class="player-header">
+            <span id="songTitle" class="song-title"></span>
+            <button class="close-player">×</button>
+        </div>
+        <div class="player-controls">
+            <button class="play-button">
+                <svg class="play-icon" viewBox="0 0 24 24">
+                    <path class="play-path" d="M8 5v14l11-7z" fill="white"/>
+                    <path class="pause-path hidden" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="white"/>
+                </svg>
+            </button>
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress"></div>
+                </div>
+                <div class="time-display">
+                    <span class="current-time">0:00</span>
+                    <span>/</span>
+                    <span class="duration">0:00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script>
+class AudioManager {
+    constructor() {
+        this.audio = document.getElementById('audioPlayer');
+        this.progressBar = document.getElementById('progressBar');
+        this.progress = document.getElementById('progress');
+        this.currentTimeDisplay = document.getElementById('currentTime');
+        this.durationDisplay = document.getElementById('duration');
+        this.playPauseBtn = document.getElementById('playPauseBtn');
+        this.isPlaying = false;
+        this.isDragging = false;
+        
+        this.initialize();
+    }
+
+    initialize() {
+        this.audio.addEventListener('loadedmetadata', () => {
+            this.updateDuration();
+        });
+
+        this.audio.addEventListener('timeupdate', () => {
+            if (!this.isDragging) {
+                this.updateProgress();
+                this.checkPartTransition(this.audio.currentTime);
+            }
+        });
+
+        this.playPauseBtn.addEventListener('click', () => {
+            this.togglePlayPause();
+        });
+
+        this.progressBar.addEventListener('mousedown', (e) => {
+            this.startDragging(e.clientX);
+        });
+
+        this.progressBar.addEventListener('touchstart', (e) => {
+            this.startDragging(e.touches[0].clientX);
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (this.isDragging) {
+                this.updateTimeFromPosition(e.clientX);
+            }
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (this.isDragging) {
+                e.preventDefault();
+                this.updateTimeFromPosition(e.touches[0].clientX);
+            }
+        }, { passive: false });
+
+        document.addEventListener('mouseup', () => {
+            this.stopDragging();
+        });
+
+        document.addEventListener('touchend', () => {
+            this.stopDragging();
+        });
+
+        this.audio.addEventListener('ended', () => {
+    this.isPlaying = false;
+    const playPath = this.playPauseBtn.querySelector('.play-path');
+    const pausePath = this.playPauseBtn.querySelector('.pause-path');
+    playPath.classList.remove('hidden');
+    pausePath.classList.add('hidden');
+});
+    }
+
+    startDragging(clientX) {
+        this.isDragging = true;
+        this.updateTimeFromPosition(clientX);
+    }
+
+    stopDragging() {
+        if (this.isDragging) {
+            this.isDragging = false;
+        }
+    }
+
+    updateTimeFromPosition(clientX) {
+        const rect = this.progressBar.getBoundingClientRect();
+        const pos = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+        this.audio.currentTime = pos * this.audio.duration;
+        this.updateProgress();
+        this.checkPartTransition(this.audio.currentTime);
+    }
+
+    updateDuration() {
+        const duration = Math.floor(this.audio.duration);
+        const minutes = Math.floor(duration / 60);
+        const seconds = duration % 60;
+        this.durationDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    updateProgress() {
+        const currentTime = Math.floor(this.audio.currentTime);
+        const minutes = Math.floor(currentTime / 60);
+        const seconds = currentTime % 60;
+        this.currentTimeDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
+        const progress = (this.audio.currentTime / this.audio.duration) * 100;
+        this.progress.style.width = `${progress}%`;
+    }
+
+    togglePlayPause() {
+        const playPath = this.playPauseBtn.querySelector('.play-path');
+        const pausePath = this.playPauseBtn.querySelector('.pause-path');
+        
+        if (this.isPlaying) {
+            this.audio.pause();
+            playPath.classList.remove('hidden');
+            pausePath.classList.add('hidden');
+        } else {
+            this.audio.play();
+            playPath.classList.add('hidden');
+            pausePath.classList.remove('hidden');
+        }
+        this.isPlaying = !this.isPlaying;
+    }
+
+    checkPartTransition(currentTime) {
+        const newPart = partTimings.find(timing => 
+            currentTime >= timing.startTime && currentTime < timing.endTime
+        );
+
+        if (newPart && newPart.part !== currentPart) {
+            switchToPart(newPart.part);
+        }
+    }
+}
+
+let currentPart = 1;
+let selectedBlank = null;
+let isPlaying = false;
+
+const words = {
+    1: ['relationship', 'satisfying', 'inspire', 'find my way'],
+    2: ['throughout', 'focus', 'ignore'],
+    3: ['refresh', 'In case', 'Turn to'],
+    4: ['hangin\' out', 'reconnect', 'In addition', 'deny'],
+    5: ['connect', 'communicate', 'Messages'],
+    6: ['respond', 'disappointed'],
+    7: ['refresh', 'In case', 'Turn to'],
+    8: ['hangin\' out', 'reconnect', 'In addition', 'deny'],
+    9: ['take this personally'],
+    10: ['refresh', 'In case', 'Turn to'],
+    11: ['hangin\' out', 'reconnect', 'In addition', 'deny']
+};
+
+const partTimings = [
+    {part: 1, startTime: 0, endTime: 21},
+    {part: 2, startTime: 21, endTime: 42},
+    {part: 3, startTime: 43, endTime: 53},
+    {part: 4, startTime: 53, endTime: 66},
+    {part: 5, startTime: 71, endTime: 91},
+    {part: 6, startTime: 93, endTime: 114},
+    {part: 7, startTime: 114, endTime: 124},
+    {part: 8, startTime: 124, endTime: 137},
+    {part: 9, startTime: 142, endTime: 162},
+    {part: 10, startTime: 165, endTime: 176},
+    {part: 11, startTime: 176, endTime: 190}
+];
+
+const savedAnswers = {};
+
+function saveCurrentAnswers(part) {
+    const blanks = document.querySelectorAll(`#part${part} .blank`);
+    savedAnswers[part] = Array.from(blanks).map(blank => ({
+        content: blank.textContent,
+        classes: Array.from(blank.classList)
+    }));
+}
+
+function restoreAnswers(part) {
+    if (!savedAnswers[part]) return;
+    
+    const blanks = document.querySelectorAll(`#part${part} .blank`);
+    blanks.forEach((blank, index) => {
+        const savedState = savedAnswers[part][index];
+        blank.textContent = savedState.content;
+        blank.className = 'blank';
+        savedState.classes.forEach(cls => {
+            if (cls !== 'blank') blank.classList.add(cls);
+        });
+    });
+}
+
+function switchToPart(newPart) {
+    saveCurrentAnswers(currentPart);
+    
+    // 重置選擇狀態
+    if (selectedBlank) {
+        selectedBlank.classList.remove('selected');
+        undimLines();
+        selectedBlank = null;
+    }
+
+    // 隱藏所有部分
+    document.querySelectorAll('.lyrics-container').forEach(container => {
+        container.classList.add('hidden');
+    });
+    
+    // 顯示新部分
+    const nextPart = document.getElementById(`part${newPart}`);
+    if (nextPart) {
+        nextPart.classList.remove('hidden');
+        
+        if (savedAnswers[newPart]) {
+            restoreAnswers(newPart);
+        } else {
+            resetPart(newPart);
+        }
+        
+        currentPart = newPart;
+        loadWords(currentPart);
+
+        // 重新綁定新部分的空格點擊事件
+        nextPart.querySelectorAll('.blank').forEach(blank => {
+            blank.addEventListener('click', handleBlankClick);
+        });
+    }
+}
+
+function resetPart(part) {
+    const blanks = document.querySelectorAll(`#part${part} .blank`);
+    blanks.forEach(blank => {
+        blank.textContent = '';
+        blank.classList.remove('filled', 'selected', 'correct', 'incorrect');
+        blank.style.transform = '';
+    });
+    
+    undimLines();
+}
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function loadWords(part) {
+    const wordContainer = document.getElementById('wordContainer');
+    wordContainer.innerHTML = '';
+    
+    if (!words[part]) return;
+
+    shuffleArray([...words[part]]).forEach(word => {
+        const wordElem = document.createElement('div');
+        wordElem.classList.add('word');
+        wordElem.textContent = word;
+        wordElem.addEventListener('click', () => handleWordClick(word, wordElem));
+        wordContainer.appendChild(wordElem);
+    });
+}
+
+function handleWordClick(word, wordElement) {
+    if (!selectedBlank) return;
+
+    if (selectedBlank.dataset.word === word) {
+        selectedBlank.textContent = word;
+        selectedBlank.classList.remove('incorrect', 'selected');
+        selectedBlank.classList.add('correct');
+        wordElement.classList.add('correct');
+        wordElement.style.pointerEvents = 'none';
+        
+        selectedBlank.style.transform = 'scale(1.05)';
+        setTimeout(() => {
+            selectedBlank.style.transform = 'scale(1)';
+        }, 200);
+    } else {
+        selectedBlank.textContent = word;
+        selectedBlank.classList.remove('correct', 'selected');
+        selectedBlank.classList.add('incorrect');
+        
+        selectedBlank.classList.add('shake');
+        wordElement.classList.add('shake');
+        setTimeout(() => {
+            selectedBlank.textContent = '';
+            selectedBlank.classList.remove('incorrect', 'shake');
+            wordElement.classList.remove('shake');
+        }, 1000);
+    }
+    
+    selectedBlank.classList.remove('selected');
+    undimLines();
+    selectedBlank = null;
+    
+    checkCompletion();
+}
+
+function handleBlankClick(event) {
+    event.stopPropagation();
+    
+    if (selectedBlank) {
+        selectedBlank.classList.remove('selected');
+        undimLines();
+    }
+    
+    if (event.target.classList.contains('blank')) {
+        selectedBlank = event.target;
+        selectedBlank.classList.add('selected');
+        dimOtherLines(selectedBlank);
+    }
+}
+
+function dimOtherLines(selectedBlank) {
+    const allLines = document.querySelectorAll(`#part${currentPart} .lyrics-line`);
+    allLines.forEach(line => {
+        if (!line.contains(selectedBlank)) {
+            line.classList.add('dimmed');
+        }
+    });
+}
+
+function undimLines() {
+    const allLines = document.querySelectorAll('.lyrics-line');
+    allLines.forEach(line => line.classList.remove('dimmed'));
+}
+
+function checkCompletion() {
+    const currentBlanks = document.querySelectorAll(`#part${currentPart} .blank`);
+    let allCorrect = true;
+    
+    currentBlanks.forEach(blank => {
+        if (!blank.classList.contains('correct')) {
+            allCorrect = false;
+        }
+    });
+
+    if (allCorrect) {
+        const wordOptions = document.querySelector('.word-options');
+        const wordContainer = document.getElementById('wordContainer');
+        const title = wordOptions.querySelector('h3');
+        
+        wordContainer.style.opacity = '0';
+        title.style.opacity = '0';
+        
+        setTimeout(() => {
+            wordContainer.innerHTML = '';
+            title.style.display = 'none';
+            wordContainer.style.display = 'flex';
+            wordContainer.style.justifyContent = 'center';
+            wordContainer.style.alignItems = 'center';
+            wordContainer.style.opacity = '1';
+        }, 300);
+    }
+}
+
+// 初始化
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. 初始化音頻管理器
+    const audioManager = new AudioManager();
+    
+    // 2. 設置翻譯切換功能
+    const toggleBtn = document.getElementById('toggleTranslation');
+    const chineseLyrics = document.querySelectorAll('.lyrics-line.chinese');
+    let translationVisible = false;
+
+    // 修改翻譯按鈕的點擊事件
+    toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();  // 阻止事件冒泡
+        translationVisible = !translationVisible;
+        // 切換中文歌詞的顯示狀態
+        chineseLyrics.forEach(line => {
+            line.classList.toggle('hidden');
+        });
+        // 切換按鈕的視覺效果
+        toggleBtn.classList.toggle('active');
+    });
+    
+    // 3. 設置空格點擊事件
+    document.querySelectorAll('.blank').forEach(blank => {
+        blank.addEventListener('click', handleBlankClick);
+    });
+
+    // 4. 點擊空白區域取消選擇
+    document.addEventListener('click', (event) => {
+        if (!event.target.classList.contains('blank') && 
+            !event.target.classList.contains('word')) {
+            if (selectedBlank) {
+                selectedBlank.classList.remove('selected');
+                undimLines();
+                selectedBlank = null;
+            }
+        }
+    });
+
+    // 5. 載入第一部分的單詞
+    loadWords(currentPart);
+    
+    // 6. 設置初始淡入效果
+    document.querySelector(`#part${currentPart}`).style.opacity = '0';
+    setTimeout(() => {
+        document.querySelector(`#part${currentPart}`).style.opacity = '1';
+    }, 100);
+});
+
+   function toggleInstructions() {
+    const instructionsModal = document.getElementById('instructionsModal');
+    const instructionsContent = document.getElementById('instructionsContent');
+    
+    if (instructionsModal.style.display === 'none' || !instructionsModal.style.display) {
+        instructionsModal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        
+        // 確保內容置中
+        const windowHeight = window.innerHeight;
+        const contentHeight = instructionsContent.offsetHeight;
+        
+        if (contentHeight > windowHeight * 0.9) {
+            instructionsContent.style.top = '5%';
+            instructionsContent.style.transform = 'translateX(-50%)';
+        } else {
+            instructionsContent.style.top = '50%';
+            instructionsContent.style.transform = 'translate(-50%, -50%)';
+        }
+    } else {
+        instructionsModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// 點擊背景關閉導覽
+document.getElementById('instructionsModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        toggleInstructions();
+    }
+});
+
+class ExtraPlayer {
+    constructor() {
+        this.songs = {
+            B1L1: {
+                title: "Firsts in Life",
+                url: "https://www.ltedu.com.tw/Web/Sharefile/LT/english2025/B1L1%20Firsts%20in%20Life.mp3"
+            },
+            B1L3: {
+                title: "Do Animals Sleep like You and Me",
+                url: "https://www.ltedu.com.tw/Web/Sharefile/LT/english2025/B1L3%20Do%20Animals%20Sleep%20like%20You%20and%20Me.mp3"
+            }
+        };
+        
+        this.currentSong = null;
+        this.audio = new Audio();
+        this.isPlaying = false;
+        this.isDragging = false;
+        this.initialize();
+        this.setupAudioEvents();
+    }
+
+    initialize() {
+        // 初始化 DOM 元素
+        this.buttons = document.querySelectorAll('.song-circle-button');
+        this.player = document.getElementById('extraPlayer');
+        this.closeButton = this.player.querySelector('.close-player');
+        this.playButton = this.player.querySelector('.play-button');
+        this.progressBar = this.player.querySelector('.progress-bar');
+        this.progress = this.player.querySelector('.progress');
+        this.currentTimeDisplay = this.player.querySelector('.current-time');
+        this.durationDisplay = this.player.querySelector('.duration');
+
+        // 綁定事件
+        this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+        // 歌曲按鈕點擊事件
+        this.buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const songId = button.dataset.song;
+                this.handleSongClick(songId, button);
+            });
+        });
+
+        // 關閉按鈕事件
+        this.closeButton.addEventListener('click', () => this.closePlayer());
+
+        // 播放/暫停按鈕事件
+        this.playButton.addEventListener('click', () => this.togglePlay());
+
+        // 進度條事件
+        this.setupProgressBarEvents();
+    }
+
+    setupAudioEvents() {
+        // 音頻加載完成事件
+        this.audio.addEventListener('loadedmetadata', () => {
+            this.updateDuration();
+        });
+
+        // 播放時間更新事件
+        this.audio.addEventListener('timeupdate', () => {
+            if (!this.isDragging) {
+                this.updateProgress();
+            }
+        });
+
+        // 播放結束事件
+        this.audio.addEventListener('ended', () => {
+            this.isPlaying = false;
+            this.updatePlayButton(false);
+            this.progress.style.width = '0%';
+        });
+    }
+
+    setupProgressBarEvents() {
+        // 進度條點擊和拖動事件
+        this.progressBar.addEventListener('mousedown', (e) => this.startDragging(e));
+        this.progressBar.addEventListener('touchstart', (e) => this.startDragging(e));
+        
+        document.addEventListener('mousemove', (e) => this.handleDragging(e));
+        document.addEventListener('touchmove', (e) => this.handleDragging(e));
+        
+        document.addEventListener('mouseup', () => this.stopDragging());
+        document.addEventListener('touchend', () => this.stopDragging());
+    }
+
+    handleSongClick(songId, button) {
+    // 添加 playing 類到容器
+    document.querySelector('.song-selection').classList.add('playing');
+    
+    // 移除所有按鈕的 active 狀態
+    this.buttons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn !== button) {
+            btn.classList.add('hide');
+        }
+    });
+
+    // 添加當前按鈕的 active 狀態
+    button.classList.add('active');
+    button.classList.remove('hide');
+
+    if (this.currentSong === songId) {
+        this.togglePlay();
+        return;
+    }
+
+    // 設置新歌曲
+    this.currentSong = songId;
+    document.getElementById('songTitle').textContent = this.songs[songId].title;
+    
+    // 顯示播放器
+    this.player.classList.remove('hidden');
+    setTimeout(() => {
+        this.player.classList.add('show');
+    }, 10);
+
+    // 加載並播放音頻
+    this.audio.src = this.songs[songId].url;
+    this.audio.load();
+    this.audio.play();
+    this.isPlaying = true;
+    this.updatePlayButton(true);
+}
+
+closePlayer() {
+    this.player.classList.remove('show');
+    this.audio.pause();
+    this.isPlaying = false;
+    this.currentSong = null;
+    
+    // 移除 playing 類
+    document.querySelector('.song-selection').classList.remove('playing');
+    
+    // 顯示所有按鈕
+    this.buttons.forEach(btn => {
+        btn.classList.remove('active', 'hide');
+    });
+    
+    // 隱藏播放器
+    setTimeout(() => {
+        this.player.classList.add('hidden');
+    }, 300);
+}
+
+    togglePlay() {
+        if (!this.audio.src) return;
+
+        if (this.isPlaying) {
+            this.audio.pause();
+        } else {
+            this.audio.play();
+        }
+        this.isPlaying = !this.isPlaying;
+        this.updatePlayButton(this.isPlaying);
+    }
+
+    updatePlayButton(isPlaying) {
+        const playPath = this.playButton.querySelector('.play-path');
+        const pausePath = this.playButton.querySelector('.pause-path');
+        
+        if (isPlaying) {
+            playPath.classList.add('hidden');
+            pausePath.classList.remove('hidden');
+        } else {
+            playPath.classList.remove('hidden');
+            pausePath.classList.add('hidden');
+        }
+    }
+
+    startDragging(e) {
+        this.isDragging = true;
+        this.updateTimeFromEvent(e);
+    }
+
+    handleDragging(e) {
+        if (!this.isDragging) return;
+        e.preventDefault();
+        this.updateTimeFromEvent(e);
+    }
+
+    stopDragging() {
+        if (!this.isDragging) return;
+        this.isDragging = false;
+    }
+
+    updateTimeFromEvent(e) {
+        const rect = this.progressBar.getBoundingClientRect();
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const position = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+        
+        this.audio.currentTime = position * this.audio.duration;
+        this.updateProgress();
+    }
+
+    updateProgress() {
+        const currentTime = this.audio.currentTime;
+        const duration = this.audio.duration;
+        const progress = (currentTime / duration) * 100;
+        
+        this.progress.style.width = `${progress}%`;
+        this.currentTimeDisplay.textContent = this.formatTime(currentTime);
+    }
+
+    updateDuration() {
+        const duration = this.audio.duration;
+        this.durationDisplay.textContent = this.formatTime(duration);
+    }
+
+    formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = Math.floor(seconds % 60);
+        return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
+}
+
+// 初始化播放器
+document.addEventListener('DOMContentLoaded', () => {
+    const extraPlayer = new ExtraPlayer();
+});
+</script>
+</body>
+</html>

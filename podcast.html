@@ -1,0 +1,1244 @@
+  <!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Goodbye John  - Podcast Player</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide-icons/0.263.1/lucide-icons.min.js">
+    <link rel="stylesheet" href="style-podcast.css">
+
+</head>
+<body class="min-h-screen bg-gradient-to-b from-blue-950 via-gray-900 to-black">
+    <div class="absolute inset-0 bg-gradient-to-tr from-blue-900/20 via-purple-900/20 to-transparent pointer-events-none"></div>
+    
+    <div class="header">
+        <div class="header-content">
+            <div class="title-container">
+                <h1 class="title">L02 Goodbye, John </h1>
+            </div>
+            <div class="button-group">
+                <a href="menu.html" target="_blank" class="home-button">🏠</a>
+                <button id="instructionsBtn" onclick="toggleInstructions()">💡</button>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="max-w-4xl mx-auto p-6">
+        <div class="backdrop-blur-xl bg-gray-900/60 rounded-2xl p-6 shadow-2xl">
+            <!-- Header Section -->
+            <div class="flex flex-col md:flex-row gap-8 mb-8">
+                <!-- Cover Image -->
+                <div class="w-full md:w-64 h-64 shrink-0 relative group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
+                    <img src="https://hackmd.io/_uploads/B1t9aeiZyl.jpg " alt="Goodbye John" class="w-full h-full object-cover rounded-lg shadow-2xl relative">
+                </div>
+
+<div id="instructionsModal">
+        <div id="instructionsContent">
+            <div class="instructions-header">
+                <h2>使用說明</h2>
+                <button class="close-button" onclick="toggleInstructions()">×</button>
+            </div>
+            <div class="instructions-body">
+                <div class="instruction-item">
+                    <span class="instruction-icon">📝</span>
+                    <p>點擊時間戳記可以跳至相應的音頻位置</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="instruction-icon">🎯</span>
+                    <p>可以使用播放、暫停、快進與後退功能控制音頻</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="instruction-icon">🌐</span>
+                    <p>點擊右上角的按鈕可以切換英文或雙語模式</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="instruction-icon">🔊</span>
+                    <p>可以調整音量與播放速度</p>
+                </div>
+            </div>
+            <button class="got-it-button" onclick="toggleInstructions()">知道了！</button>
+        </div>
+    </div>
+
+                <!-- Player Controls -->
+                <div class="flex flex-col justify-between flex-grow">
+                    <div>
+                        <span class="text-sm font-medium text-blue-600">PODCAST</span>
+                        <h1 class="text-3xl font-bold mt-1 mb-2 text-white">Goodbye John</h1>
+                        <p class="text-gray-400 mb-4">A discussion about breaking free from technology addiction </p>
+                    </div>
+
+                    <!-- Audio Player -->
+                    <audio class="hidden" id="audioPlayer">
+                        <source src="https://www.ltedu.com.tw/Web/Sharefile/LT/english2025/B1L2podcast.mp3 " type="audio/mpeg">
+                    </audio>
+
+                    <div class="space-y-6">
+                        <!-- Progress Bar -->
+                        <div class="space-y-2">
+                            <div class="w-full bg-gray-700 rounded-full h-1">
+                                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span id="currentTime">0:00</span>
+                                <span id="duration">0:00</span>
+                            </div>
+                        </div>
+
+                        <!-- Playback Controls -->
+                        <div class="flex items-center justify-center gap-4">
+                            <button class="text-gray-400 hover:text-white transition-colors" id="backwardBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line></svg>
+                            </button>
+                            <button id="playBtn" class="play-button flex items-center justify-center w-14 h-14 rounded-full text-white shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="play-icon"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pause-icon hidden"><line x1="6" y1="4" x2="6" y2="20"></line><line x1="18" y1="4" x2="18" y2="20"></line></svg>
+                            </button>
+                            <button class="text-gray-400 hover:text-white transition-colors" id="forwardBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
+                            </button>
+                        </div>
+
+                        <!-- Controls Container -->
+<div class="flex justify-between items-center px-2">
+    <!-- Volume Control -->
+
+    <!-- Speed Control -->
+    <div class="flex items-center gap-3">
+        <button class="text-gray-400 hover:text-white transition-colors" id="speedBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+            </svg>
+        </button>
+        <input type="range" id="speedSlider" class="volume-slider w-36" min="50" max="200" value="100" step="25">
+        <span id="speedDisplay" class="text-sm text-gray-400">1.0x</span>
+    </div>
+</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls Panel -->
+            <div class="bg-gray-800/50 border-gray-700 rounded-lg">
+                <div class="p-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <button id="englishBtn" class="language-btn active">
+                            English
+                        </button>
+                        <button id="bilingualBtn" class="language-btn">
+                            中英對照
+                        </button>
+                    </div>
+                </div>
+            </div>
+                    
+       
+
+            <!-- Transcript Section -->
+            <div class="transcript-section" id="transcriptSection">
+            <div class="timestamp-block" data-start="0" data-end="14">
+                <div class="timestamp">[00:00-00:14]</div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker host">🎙️ Host:</span> ever feel like you're in a relationship that's just like totally taking over your life?
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker host">🎙️ 主持人：</span>你有沒有覺得自己現在的關係完全佔據了你的生活？
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker guest">🗣️ Guest:</span> Oh, that's a good one.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker guest">🗣️ 來賓：</span>喔，這個問題問得好。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker host">🎙️ Host:</span> Well, today we're diving deep. Ok. We're going deep into a breakup letter.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker host">🎙️ 主持人：</span>今天我們要深入探討一下。對，我們要深入解析一封分手信。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker guest">🗣️ Guest:</span> Okay.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker guest">🗣️ 來賓：</span>好啊。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker host">🎙️ Host:</span> That's super relatable.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker host">🎙️ 主持人：</span>這封信超有共鳴的。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker guest">🗣️ Guest:</span> Right.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker guest">🗣️ 來賓：</span>沒錯。
+                    </div>
+                </div>
+            </div>
+
+            <div class="timestamp-block" data-start="14" data-end="29">
+                <div class="timestamp">[00:14-00:29]</div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker host">🎙️ Host:</span> But also kind of unusual.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker host">🎙️ 主持人：</span>不過也蠻特別的。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker guest">🗣️ Guest:</span> Interesting.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker guest">🗣️ 來賓：</span>有趣。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker host">🎙️ Host:</span> So it's a heartfelt letter.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker host">🎙️ 主持人：</span>這是一封發自內心的信。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker guest">🗣️ Guest:</span> Okay.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker guest">🗣️ 來賓：</span>嗯。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker host">🎙️ Host:</span> From someone named Sally to someone named John. But here's the thing.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker host">🎙️ 主持人：</span>是一個叫Sally的人寫給John的。但是呢。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker guest">🗣️ Guest:</span> Okay.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker guest">🗣️ 來賓：</span>好。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker host">🎙️ Host:</span> John's not a person.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker host">🎙️ 主持人：</span>John不是人。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker guest">🗣️ Guest:</span> Oh, wow.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker guest">🗣️ 來賓：</span>哇，真的假的。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker host">🎙️ Host:</span> So get this. Sally's pouring her heart out in this letter.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker host">🎙️ 主持人：</span>你聽聽看，Sally在信裡傾訴著她的心情。
+                    </div>
+                </div>
+            </div>
+
+            <div class="timestamp-block" data-start="29" data-end="42">
+                <div class="timestamp">[00:29-00:42]</div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker guest">🗣️ Guest:</span> Oh, ooh.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker guest">🗣️ 來賓：</span>喔，哦。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker host">🎙️ Host:</span> Talking about all the amazing times they had.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker host">🎙️ 主持人：</span>講述著他們之間有多少美好時光。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker guest">🗣️ Guest:</span> Okay, sure, yeah.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker guest">🗣️ 來賓：</span>好，對，嗯。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker host">🎙️ Host:</span> How much John means to her.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker host">🎙️ 主持人：</span>John對她來說有多重要。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker guest">🗣️ Guest:</span> Yeah.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker guest">🗣️ 來賓：</span>嗯。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker host">🎙️ Host:</span> Like, she's gushing.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker host">🎙️ 主持人：</span>就是，她完全沉醉其中。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker guest">🗣️ Guest:</span> Okay, so there are definitely feelings there.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker guest">🗣️ 來賓：</span>喔，所以這裡面確實有感情在。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker host">🎙️ Host:</span> Oh, yeah. Totally head over heels.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker host">🎙️ 主持人：</span>對啊，完全陷進去了。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker guest">🗣️ Guest:</span> What?
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker guest">🗣️ 來賓：</span>什麼？
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker host">🎙️ Host:</span> But this is a breakup letter.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker host">🎙️ 主持人：</span>但這是一封分手信。
+                    </div>
+                </div>
+                <div class="dialogue-line">
+                    <div class="english-text">
+                        <span class="speaker guest">🗣️ Guest:</span> Mm-hmm.
+                    </div>
+                    <div class="chinese-text">
+                        <span class="speaker guest">🗣️ 來賓：</span>嗯哼。
+                    </div>
+                </div>
+            </div>
+
+            <!-- 42-55秒的區塊 -->
+<div class="timestamp-block" data-start="42" data-end="55">
+    <div class="timestamp">[00:42-00:55]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> She's ending it.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>她要結束這段關係了。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> So what's the problem?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>那問題出在哪？
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> That's the thing, right? It's like, she's saying, John, I love you, but this just isn't working.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>重點就在這裡啊，她說，John，我愛你，但這樣下去不行。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> That's fascinating.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>真是迷人的角度。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> I know, right?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>對吧？
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> What's she saying specifically?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>她具體說了什麼？
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Well, she talks about constantly checking line.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>嗯，她提到自己一直在查看Line。
+        </div>
+    </div>
+</div>
+
+<!-- 56-64秒的區塊 -->
+<div class="timestamp-block" data-start="56" data-end="64">
+    <div class="timestamp">[00:56-01:04]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Okay.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>喔。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Neglecting her studies,
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>忽略了課業，
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> ignoring her friends and family.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>不理朋友和家人。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Oh, no.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>天啊。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> All because of John.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>都是因為John。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> I think I see where this is going.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>我想我知道這要說什麼了。
+        </div>
+    </div>
+</div>
+
+<!-- 64-72秒的區塊 -->
+<div class="timestamp-block" data-start="64" data-end="72">
+    <div class="timestamp">[01:04-01:12]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Right. Like you ever feel that way? Like your phone's calling you even when it's not ringing.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>對啊，你有沒有這種感覺？就算手機沒在響，你也覺得它在呼喚你。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Oh, all the time.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>喔，常常這樣。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> It's like it has this hold on us.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>就像被它控制住了一樣。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> That constant need to be connected.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>那種需要一直保持連線的感覺。
+        </div>
+    </div>
+</div>
+
+<!-- 72-89秒的區塊 -->
+<div class="timestamp-block" data-start="72" data-end="89">
+    <div class="timestamp">[01:12-01:29]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Exactly. And Sally even mentions like Facebook, Instagram, line again, games.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>就是這樣。Sally還提到Facebook、Instagram、Line，還有遊戲。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> So is she actually breaking up with her smartphone?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>所以她其實是要跟她的智慧型手機分手嗎？
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> I think so. It's like John is her phone, you know?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>我想是的。就像John就是她的手機，懂嗎？
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> That's a really clever way to personify technology addiction.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>這真是個很巧妙的方式，把科技成癮擬人化。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> It is, isn't it? And it makes you think about how much time we all spend on our phones, right?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>是啊，對吧？而且這讓你不得不想想我們每個人花在手機上的時間。
+        </div>
+    </div>
+</div>
+
+<!-- 90-98秒的區塊 -->
+<div class="timestamp-block" data-start="90" data-end="98">
+    <div class="timestamp">[01:30-01:38]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Definitely makes you think.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>確實讓人深思。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Like, are we missing out on real life because we're too busy with John?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>像是，我們是不是因為太忙著跟John在一起，而錯過了真實的生活？
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> That's a big question, isn't it?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>這個問題很深刻耶，不是嗎？
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> It is.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>確實。
+        </div>
+    </div>
+</div>
+
+<!-- 98-115秒的區塊 -->
+<div class="timestamp-block" data-start="98" data-end="115">
+    <div class="timestamp">[01:38-01:55]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> You know, there's something really interesting here, this push-pull dynamic.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>你知道嗎，這裡有個很有趣的點，就是這種拉扯的關係。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Right. She loves John, but knows it's bad for her.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>對，她愛John，但知道這對她不好。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Exactly. And that speaks to the addictive nature of certain behaviors, how they can impact our lives even if we enjoy them.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>沒錯。這正說明了某些行為的成癮性，即使我們享受其中，它們還是會影響我們的生活。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Oh, totally.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>完全同意。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> I mean, think about it. We've all been there, right?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>想想看嘛，我們都經歷過，對吧？
+        </div>
+    </div>
+</div>
+
+<!-- 115-130秒的區塊 -->
+<div class="timestamp-block" data-start="115" data-end="130">
+    <div class="timestamp">[01:55-02:10]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Scrolling endlessly, refreshing our feeds, even when we know we should be doing something else.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>無止境地滑手機，一直重新整理動態，明明知道應該去做別的事。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Like talking to the person right in front of us.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>比如跟眼前的人說話。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Exactly.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>就是這樣。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> And then you feel bad later.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>然後事後又覺得很糟。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Oh, yeah.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>對啊。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Guilty scrolling is definitely a thing.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>這種罪惡感邊滑的感覺真的很糟。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> It is, but then you do it again the next day.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>是啊，但隔天又會再犯。
+        </div>
+    </div>
+</div>
+
+<!-- 131-148秒的區塊 -->
+<div class="timestamp-block" data-start="131" data-end="148">
+    <div class="timestamp">[02:11-02:28]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> It's a cycle, and it's hard to break free.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>這就是個循環，很難擺脫。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> So how do we do it?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>那我們該怎麼做？
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> How do we set boundaries with technology?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>要怎麼跟科技建立界線？
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Well, I think the first step is awareness, recognizing that there's a problem, just like Sally did.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>我覺得第一步是要有意識，就像Sally一樣，認識到這是個問題。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Okay, so we admit we have a problem.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>好，所以我們要承認自己有問題。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Exactly. Then we can start setting those boundaries.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>沒錯，然後我們才能開始設立那些界線。
+        </div>
+    </div>
+</div>
+
+<!-- 148-163秒的區塊 -->
+<div class="timestamp-block" data-start="148" data-end="163">
+    <div class="timestamp">[02:28-02:43]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Like what? Give me some tips I need to break up with John too.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>比如說？給我一些建議，我也想跟John分手。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Well, think about designating phone free times, like during meals or an hour before bed.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>嗯，可以考慮設定一些不用手機的時間，像是吃飯的時候，或睡前一小時。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Okay, no phone at dinner. Got it.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>好，吃飯不碰手機，懂了。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Disabling those tempting notifications.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>把那些會誘惑你的通知關掉。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> You know, the ones that make your phone light up and buzz.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>你知道的，就是那些會讓你手機亮起來還會震動的通知。
+        </div>
+    </div>
+</div>
+
+<!-- 164-176秒的區塊 -->
+<div class="timestamp-block" data-start="164" data-end="176">
+    <div class="timestamp">[02:44-02:56]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Ugh, yes. Those are the worst.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>唉，對，那些最糟了。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Yeah.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>對啊。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> But also the best.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>但又最吸引人。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Right. It's that dopamine loop I was talking about. But seriously, turning those off can help. And most importantly, prioritizing those face-to-face interactions.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>沒錯，這就是我剛說的多巴胺循環。但說真的，把這些關掉真的有幫助。最重要的是，要把面對面互動放在首位。
+        </div>
+    </div>
+</div>
+
+<!-- 176-191秒的區塊 -->
+<div class="timestamp-block" data-start="176" data-end="191">
+    <div class="timestamp">[02:56-03:11]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Put the phone down and actually talk to people. Radical.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>放下手機，真的去跟人聊天。這想法很激進欸。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> It sounds simple, but it can make a huge difference.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>聽起來很簡單，但真的會有很大的改變。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> You know, it's almost like Sally's letter is a metaphor.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>你知道嗎，Sally的這封信簡直就是個隱喻。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Oh, definitely.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>喔，當然。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> For like all the ways technology can creep in and just like take over.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>比喻科技是怎麼悄悄地滲透進來，然後完全接管我們的生活。
+        </div>
+    </div>
+</div>
+
+<!-- 191-223秒的區塊 -->
+<div class="timestamp-block" data-start="191" data-end="223">
+    <div class="timestamp">[03:11-03:43]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> It's a reminder that even positive things taken to an extreme can become harmful.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>這提醒我們，就算是好東西，過度使用也會變得有害。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> I like that. It's about finding that balance, right?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>我喜歡這種說法。這是在講求平衡，對吧？
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Exactly. It's not about ditching technology completely.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>沒錯，不是要完全放棄科技。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Right, because it's not all bad.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>對，因為它也不是完全不好。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Exactly. It's about using it in a way that enhances our lives, not controls them.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>就是這樣。重點是要用對方式，讓科技豐富我們的生活，而不是控制我們。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Okay, so we've talked about Sally and John, but what about everyone else?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>好，我們講了Sally和John，那其他人呢？
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> That's the real question, isn't it? Like, how do we apply this to our own lives?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>這才是真正的問題，對吧？就是，我們要怎麼把這些應用在自己的生活中？
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Exactly. If you had to write a breakup letter to something that's consuming too much of your time
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>沒錯。如果你要寫一封分手信給某個佔用你太多時間的東西
+        </div>
+    </div>
+</div>
+
+<!-- 224-235秒的區塊 -->
+<div class="timestamp-block" data-start="224" data-end="235">
+    <div class="timestamp">[03:44-03:55]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Oh, that's a good one.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>喔，這問題問得好。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> And energy, what would it be?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>和精力的東西，會是什麼？
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> That's something to think about.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>這真的值得思考。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> I know, right? It's definitely something I would be thinking about after this deep dive.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>對吧？這絕對是我在這次深度討論後會好好想想的。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Me too.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>我也是。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> I think it's time to step away from the mic and write some breakup letters.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>我想是時候離開麥克風，去寫些分手信了。
+        </div>
+    </div>
+</div>
+
+<!-- 235-247秒的區塊 -->
+<div class="timestamp-block" data-start="235" data-end="246">
+    <div class="timestamp">[03:55-04:07]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Sounds good to me.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>聽起來不錯。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> To whatever your John is out there.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>給你生命中的那個John。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Yeah.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>嗯。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> It's time to say goodbye.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>是時候說再見了。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> You heard it here first, folks.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>各位聽眾朋友，你們聽到了。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> And maybe hello to a more balanced life.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>也許該跟更平衡的生活說聲哈囉。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> To a better you.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>為了更好的自己。
+        </div>
+    </div>
+</div>
+
+    <script>
+        const englishBtn = document.getElementById('englishBtn');
+    const bilingualBtn = document.getElementById('bilingualBtn');
+    const transcriptSection = document.getElementById('transcriptSection');
+    const audio = document.getElementById('audioPlayer');
+    const playBtn = document.getElementById('playBtn');
+    const backwardBtn = document.getElementById('backwardBtn');
+    const forwardBtn = document.getElementById('forwardBtn');
+    const volumeBtn = document.getElementById('volumeBtn');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const speedBtn = document.getElementById('speedBtn');
+    const speedSlider = document.getElementById('speedSlider');
+    const speedDisplay = document.getElementById('speedDisplay');
+    const speedPresetBtns = document.querySelectorAll('.speed-preset-btn'); 
+    const progressBar = document.getElementById('progressBar');
+    const currentTimeDisplay = document.getElementById('currentTime');
+    const durationDisplay = document.getElementById('duration');
+    const autoScrollToggle = document.getElementById('autoScrollToggle');
+    const playIcon = playBtn.querySelector('.play-icon');
+    const pauseIcon = playBtn.querySelector('.pause-icon');
+
+        let userScrolling = false;
+        let scrollTimeout;
+
+function updateSpeedSlider() {
+    const value = ((speedSlider.value - speedSlider.min) / (speedSlider.max - speedSlider.min)) * 100;
+    speedSlider.style.setProperty('--value', `${value}%`);
+}
+
+// 為語速滑塊添加事件監聽器
+speedSlider.addEventListener('input', (e) => {
+    const value = e.target.value / 100;
+    audio.playbackRate = value;
+    speedDisplay.textContent = `${value.toFixed(1)}x`;
+    updateSpeedSlider();
+});
+        // Language toggle
+        englishBtn.addEventListener('click', () => {
+            document.body.classList.remove('bilingual-mode');
+            englishBtn.classList.add('active');
+            bilingualBtn.classList.remove('active');
+        });
+
+        bilingualBtn.addEventListener('click', () => {
+            document.body.classList.add('bilingual-mode');
+            bilingualBtn.classList.add('active');
+            englishBtn.classList.remove('active');
+        });
+
+        // Playback controls
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+            } else {
+                audio.pause();
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+            }
+        });
+
+        // Time skip controls
+        backwardBtn.addEventListener('click', () => {
+            audio.currentTime = Math.max(0, audio.currentTime - 10);
+        });
+
+        forwardBtn.addEventListener('click', () => {
+            audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+        });
+
+       
+
+        // Speed controls
+        speedSlider.addEventListener('input', (e) => {
+            const value = e.target.value / 100;
+            audio.playbackRate = value;
+            speedDisplay.textContent = `${value.toFixed(1)}x`;
+        });
+
+        speedBtn.addEventListener('click', () => {
+            audio.playbackRate = 1;
+            speedSlider.value = 100;
+            speedDisplay.textContent = '1.0x';
+        });
+
+
+        // Time formatting
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        // Progress bar updates
+        audio.addEventListener('timeupdate', () => {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+            currentTimeDisplay.textContent = formatTime(audio.currentTime);
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            durationDisplay.textContent = formatTime(audio.duration);
+        });
+
+        // Transcript scrolling
+        transcriptSection.addEventListener('scroll', () => {
+            userScrolling = true;
+            clearTimeout(scrollTimeout);
+            
+            scrollTimeout = setTimeout(() => {
+                userScrolling = false;
+            }, 3000);
+        });
+
+        const blocks = document.querySelectorAll('.timestamp-block');
+        blocks.forEach(block => {
+            block.addEventListener('click', () => {
+                const startTime = parseInt(block.dataset.start);
+                audio.currentTime = startTime;
+                audio.play();
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+            });
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const currentTime = audio.currentTime;
+            
+            blocks.forEach(block => {
+                const startTime = parseInt(block.dataset.start);
+                const endTime = parseInt(block.dataset.end);
+                
+                if (currentTime >= startTime && currentTime < endTime) {
+                    if (!block.classList.contains('current-block')) {
+                        block.classList.add('current-block');
+                        
+                        if (autoScrollToggle.checked && !userScrolling) {
+                            block.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                        }
+                    }
+                } else {
+                    block.classList.remove('current-block');
+                }
+            });
+        });
+
+        // Click progress bar to seek
+        const progressContainer = progressBar.parentElement;
+        progressContainer.addEventListener('click', (e) => {
+            const rect = progressContainer.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = pos * audio.duration;
+        });
+
+        // Initialize volume and speed
+        audio.volume = volumeSlider.value / 100;
+        speedDisplay.textContent = '1.0x';
+
+        function toggleInstructions() {
+    const modal = document.getElementById('instructionsModal');
+    if (modal.style.display === 'none' || !modal.style.display) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    } else {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
+document.getElementById('instructionsModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        toggleInstructions();
+    }
+});
+  </script>
+</body>
+</html>

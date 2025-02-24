@@ -1,0 +1,179 @@
+:root {
+    --primary-color: #2c3e50;
+    --background-color: #f5f6fa;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition-speed: 0.3s;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Microsoft JhengHei", Arial, sans-serif;
+    line-height: 1.6;
+    background-color: var(--background-color);
+    color: var(--primary-color);
+    min-height: 100vh;
+    padding: 0.25rem;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 3px;
+    position: relative;
+}
+
+.welcome-message {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px 15px;
+    margin: 20px 0;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 1s ease-out forwards;
+}
+
+.welcome-text {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    color: var(--primary-color);
+    margin: 0;
+    min-height: 4.8em;
+}
+
+.typing {
+    border-right: 2px solid var(--primary-color);
+    white-space: pre-wrap;
+    overflow: hidden;
+    width: 0;
+    animation: typing 3s steps(60, end) forwards,
+               blink 0.75s step-end infinite;
+    margin: 0 auto;
+}
+
+.here-we-go {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: popIn 0.5s ease-out 3s forwards;
+    color: #3498db;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.home-button {
+    position: absolute;
+    left: 10px;
+    top: 12px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform var(--transition-speed);
+    text-decoration: none;
+}
+
+.home-button:hover {
+    transform: scale(1.1);
+}
+
+.home-button svg {
+    width: 28px;
+    height: 28px;
+}
+
+h1 {
+    text-align: center;
+    color: var(--primary-color);
+    margin: 8px 0 12px;
+    font-size: clamp(1.4rem, 4vw, 1.8rem);
+    font-weight: 700;
+    padding-left: 40px;
+}
+
+.section {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 6px;
+    margin-bottom: 12px;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+}
+
+h2 {
+    font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+    color: var(--primary-color);
+    margin-bottom: 8px;
+    text-align: center;
+    padding-bottom: 6px;
+    border-bottom: 2px solid rgba(44, 62, 80, 0.1);
+}
+
+.section-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    padding: 0 2px;
+}
+
+.section-card {
+    background-color: transparent;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform var(--transition-speed);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    aspect-ratio: 1;
+    display: flex;
+}
+
+.section-card:hover {
+    transform: scale(1.03);
+}
+
+.section-card svg {
+    width: 100%;
+    height: 100%;
+    padding: 15%;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink {
+    from, to { border-color: transparent }
+    50% { border-color: var(--primary-color); }
+}
+
+@keyframes popIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 480px) {
+    .section-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .section {
+        padding: 6px 4px;
+    }
+
+    .section-card svg {
+        padding: 12%;
+    }
+}
