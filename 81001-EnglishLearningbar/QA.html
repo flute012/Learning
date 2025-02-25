@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>課文問答</title>
+    <style>
+         body, html {
+            margin: 0;
+            padding: 0;
+            font-family: "Times New Roman", Times, serif;
+            background: #f8f9fa;
+            line-height: 1.6;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e0e0e0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 101;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #2196f3;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .header {
+    background: white;
+    padding: 12px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.subtitle-banner {
+    background: #f8f9fa;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.subtitle-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.subtitle {
+    font-size: 20px;
+    color: #2c3e50;
+    margin: 0;
+    font-weight: normal;
+}
+
+@media (max-width: 600px) {
+    .subtitle {
+        font-size: 18px;
+    }
+    
+    .subtitle-banner {
+        padding: 8px 0;
+    }
+}
+
+.header-content {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between; /* 使用 space-between 來分散對齊 */
+    align-items: center;
+    padding: 0 20px;
+}
+
+.title-container {
+    text-align: left;
+    flex-grow: 0;
+}
+
+.title {
+    font-size: 20px;
+    margin: 0;
+    color: #2c3e50;
+}
+
+.bilingual-button {
+    padding: 8px 16px;
+    background: #f8f9fa;
+    color: #2c3e50;
+    border: 2px solid #2c3e50;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: auto;
+}
+
+        .bilingual-button:hover {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .article-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-bottom: 80px;
+            background: white;
+        }
+
+        .paragraph {
+            margin-bottom: 24px;
+            position: relative;
+            padding: 20px;
+            border-radius: 8px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .paragraph:hover {
+            border-color: #90caf9;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .paragraph.active {
+            border-color: #2196f3;
+            box-shadow: 0 2px 12px rgba(33,150,243,0.2);
+        }
+
+        .paragraph-number {
+            position: absolute;
+            left: -12px;
+            top: 20px;
+            width: 24px;
+            height: 24px;
+            background: #2c3e50;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .paragraph-content {
+            font-size: 16px;
+            color: #2c3e50;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .chinese-text {
+            display: none;
+            color: #666;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .chinese-text.show {
+            display: block;
+        }
+
+        .options-container {
+            display: none;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .paragraph.active .options-container {
+            display: block;
+        }
+
+        .matching-prompt {
+    font-size: 18px; 
+    font-weight: bold;  
+    color: #2c3e50; 
+    margin-bottom: 16px; 
+    padding: 8px 0; 
+    border-bottom: 1px solid #eee; 
+}
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .option {
+    padding: 12px;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px; 
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+        .option:hover {
+            background: #e3f2fd;
+            border-color: #90caf9;
+        }
+
+        .option.selected {
+            background: #2196f3;
+            border-color: #1976d2;
+            color: white;
+        }
+
+        .option-label {
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .option-chinese {
+            display: none;
+            margin-top: 5px;
+            color: #666;
+            border-top: 1px solid #eee;
+            padding-top: 5px;
+        }
+
+        .option-chinese.show {
+            display: block;
+        }
+
+        .submit-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 16px;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .submit-button {
+            width: 90%;
+            max-width: 400px;
+            padding: 12px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: "Times New Roman", Times, serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .submit-button:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .answer-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #e3f2fd;
+            color: #1976d2;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .result-correct {
+            border-left: 4px solid #4caf50 !important;
+        }
+
+        .result-incorrect {
+            border-left: 4px solid #f44336 !important;
+        }
+
+        .result-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .result-badge.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .result-badge.incorrect {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e0e0e0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 101;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #2196f3;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .paragraph.answered {
+            border-color: #e0e0e0;
+            background: #fafafa;
+        }
+
+        @keyframes celebrateComplete {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .paragraph.completed {
+            animation: celebrateComplete 0.5s ease;
+        }
+
+        .helper-text {
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+            margin: 20px 0;
+            padding: 10px;
+            background: #e3f2fd;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .helper-text.visible {
+            display: block;
+        }
+        .question {
+            font-weight: bold;
+            margin-bottom: 16px;
+            padding: 10px;
+            background: #f0f7ff;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .paragraph.active .question {
+            display: block;
+        }
+        .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-left: auto;  
+}
+
+@media (max-width: 600px) {
+    .header-content {
+        padding: 0 10px;
+    }
+    
+    .title {
+        font-size: 18px;
+    }
+    
+    .button-group {
+        gap: 5px;
+    }
+}
+
+.home-button, #instructionsBtn {
+    background: none;
+    border: none;
+    color: #2c3e50;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px;
+    transition: transform 0.2s ease;
+}
+
+.home-button:hover, #instructionsBtn:hover {
+    transform: scale(1.1);
+}
+
+#instructionsModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+}
+
+#instructionsContent {
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 24px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.instructions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 12px;
+}
+
+.instruction-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    transition: all 0.2s ease;
+}
+
+.instruction-icon {
+    font-size: 20px;
+    width: 28px;
+    margin-right: 16px;
+}
+
+.got-it-button {
+    width: 100%;
+    padding: 12px;
+    background: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 16px;
+}
+    </style>
+</head>
+<body>
+    <div class="progress-bar">
+    <div class="progress-fill"></div>
+</div>
+    <div class="header">
+    <div class="header-content">
+        <div class="title-container">
+            <h1 class="title">L01 Say Hello to Your Future</h1>
+        </div>
+        <div class="button-group">
+            <a href="menu.html" target="_blank" class="home-button">🏠</a>
+            <button id="instructionsBtn" onclick="toggleInstructions()">💡</button>
+            <button class="bilingual-button">中英對照</button>
+        </div>
+    </div>
+</div>
+
+<!--  subtitle banner -->
+<div class="subtitle-banner">
+    <div class="subtitle-content">
+        <h2 class="subtitle">課文問答</h2>
+    </div>
+</div>
+
+     <div id="instructionsModal">
+    <div id="instructionsContent">
+        <div class="instructions-header">
+            <h2>使用說明</h2>
+            <button class="close-button" onclick="toggleInstructions()">×</button>
+        </div>
+        <div class="instructions-body">
+            <div class="instruction-item">
+                <span class="instruction-icon">📝</span>
+                <p>點擊每個段落來展開問題選項</p>
+            </div>
+            <div class="instruction-item">
+                <span class="instruction-icon">🎯</span>
+                <p>仔細閱讀課文內容，選擇最適合的答案</p>
+            </div>
+            <div class="instruction-item">
+                <span class="instruction-icon">🌏</span>
+                <p>點擊右側中英對照按鈕可切換顯示中文</p>
+            </div>
+            <div class="instruction-item">
+                <span class="instruction-icon">✅</span>
+                <p>完成所有題目後點擊下方按鈕檢查答案</p>
+            </div>
+        </div>
+        <button class="got-it-button" onclick="toggleInstructions()">知道了！</button>
+    </div>
+</div>
+
+    <div class="helper-text">
+        點擊每個段落並選擇最適合的描述
+    </div>
+
+    <div class="article-container">
+        <!-- 段落1 -->
+        <div class="paragraph" data-paragraph="1">
+            <span class="paragraph-number">1</span>
+            <div class="paragraph-content">
+                Dear Emma,<br><br>
+                Today is a big day, and you are going to start high school! This is a very exciting in our life, and we are so proud of you. In high school, you are sure to meet new people, try new things, and face new challenges. These will shape you into a "new" you.
+                <div class="chinese-text">
+                    親愛的Emma：<br><br>
+                    今天是個大日子，而你要開始高中生活了！這是你人生中非常令人興奮的時刻，我們很為你感到驕傲。在高中，你肯定會遇到新朋友、嘗試新事物、面臨新的挑戰。這些會把你塑造成一個「新」的你。
+                </div>
+            </div>
+            <div class="options-container">
+                <div class="matching-prompt">Q1. What will shape Emma into a "new" her?</div>
+                <div class="options-grid">
+                    <div class="option" data-option="A">
+                        <span class="option-label">A.</span>
+                        It means high school life.
+                        <div class="option-chinese">「It」表示高中生活。</div>
+                    </div>
+                    <div class="option" data-option="B">
+                        <span class="option-label">B.</span>
+                        Emma herself does.
+                        <div class="option-chinese">艾瑪她自己。</div>
+                    </div>
+                    <div class="option" data-option="C">
+                        <span class="option-label">C.</span>
+                        Her friends, teachers, and parents will.
+                        <div class="option-chinese">她的朋友、老師和父母親將會支持她。</div>
+                    </div>
+                    <div class="option" data-option="D">
+                        <span class="option-label">D.</span>
+                        Meeting new people, trying new things, and facing new changes.
+                        <div class="option-chinese">認識新朋友、嘗試新事物，和面對新挑戰。</div>
+                    </div>
+                    <div class="option" data-option="E">
+                        <span class="option-label">E.</span>
+                        Meeting different people and making new friends.
+                        <div class="option-chinese">認識不同的人和結識新的朋友。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 段落2 -->
+        <div class="paragraph" data-paragraph="2">
+            <span class="paragraph-number">2</span>
+            <div class="paragraph-content">
+                You may be nervous when you are in a new place. But don't worry. You are not alone. Everyone is in the same boat. Many other students might share this same feeling with you. Try to meet different people and make new friends. With them, your school life will be awesome. Also, don't forget to be kind to others. Your kindness could make all the difference.
+                <div class="chinese-text">
+                    當你在一個新的地方時，你可能很緊張。但別擔心。你並不孤單。大家處境相同。許多其他學生可能和你有同樣的感受。試著認識不同的人、結交新的朋友。和他們一起，你的學校生活會很精彩。另外，別忘記要善待他人。你的善意可以讓一切變得不同。
+                </div>
+            </div>
+            <div class="options-container">
+                <div class="matching-prompt">Q2. What will make Emma's school life awesome?</div>
+                <div class="options-grid">
+                    <div class="option" data-option="A">
+                        <span class="option-label">A.</span>
+                        It means high school life.
+                        <div class="option-chinese">「It」表示高中生活。</div>
+                    </div>
+                    <div class="option" data-option="B">
+                        <span class="option-label">B.</span>
+                        Emma herself does.
+                        <div class="option-chinese">艾瑪她自己。</div>
+                    </div>
+                    <div class="option" data-option="C">
+                        <span class="option-label">C.</span>
+                        Her friends, teachers, and parents will.
+                        <div class="option-chinese">她的朋友、老師和父母親將會支持她。</div>
+                    </div>
+                    <div class="option" data-option="D">
+                        <span class="option-label">D.</span>
+                        Meeting new people, trying new things, and facing new changes.
+                        <div class="option-chinese">認識新朋友、嘗試新事物，和面對新挑戰。</div>
+                    </div>
+                    <div class="option" data-option="E">
+                        <span class="option-label">E.</span>
+                        Meeting different people and making new friends.
+                        <div class="option-chinese">認識不同的人和結識新的朋友。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 段落3 -->
+        <div class="paragraph" data-paragraph="3">
+            <span class="paragraph-number">3</span>
+            <div class="paragraph-content">
+                Be open to new things, maybe a new sport, a new club, or a new hobby. You might be surprised to find that you enjoy or have gifts in them. Also, when you are interested in something, don't be afraid to go for it. You can make your own decisions. You have the power to shape your own future.
+                <div class="chinese-text">
+                    對新事物持開放態度，也許是一項新的運動、一個新的社團或一個新的嗜好。你可能很驚訝地發現你很享受這些或擁有天分。另外，當你對某件事感興趣時，不要害怕去追求。你可以自己做決定。你有能力塑造自己的未來。
+                </div>
+            </div>
+            <div class="options-container">
+                <div class="matching-prompt">Q3. Who has the power to shape Emma's future?</div>
+                <div class="options-grid">
+                    <div class="option" data-option="A">
+                        <span class="option-label">A.</span>
+                        It means high school life.
+                        <div class="option-chinese">「It」表示高中生活。</div>
+                    </div>
+                    <div class="option" data-option="B">
+                        <span class="option-label">B.</span>
+                        Emma herself does.
+                        <div class="option-chinese">艾瑪她自己。</div>
+                    </div>
+                    <div class="option" data-option="C">
+                        <span class="option-label">C.</span>
+                        Her friends, teachers, and parents will.
+                        <div class="option-chinese">她的朋友、老師和父母親將會支持她。</div>
+                    </div>
+                    <div class="option" data-option="D">
+                        <span class="option-label">D.</span>
+                        Meeting new people, trying new things, and facing new changes.
+                        <div class="option-chinese">認識新朋友、嘗試新事物，和面對新挑戰。</div>
+                    </div>
+                    <div class="option" data-option="E">
+                        <span class="option-label">E.</span>
+                        Meeting different people and making new friends.
+                        <div class="option-chinese">認識不同的人和結識新的朋友。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 段落4 -->
+        <div class="paragraph" data-paragraph="4">
+            <span class="paragraph-number">4</span>
+            <div class="paragraph-content">
+                Of course, sometimes you will face challenges, but never give up. Keep trying, and everything will be all right. When you are upset, remember those people around you. Your friends and teachers will have your back, and we are here for you all the time.
+                <div class="chinese-text">
+                    當然，有時候你會面臨挑戰，但永遠不要放棄。繼續嘗試，一切都會好起來的。當你難過時，記住你身邊的那些人。你的朋友和師長會支持你，而我們一直在此守候你。
+                </div>
+            </div>
+            <div class="options-container">
+                <div class="matching-prompt">Q4. Who will have Emma's back?</div>
+                <div class="options-grid">
+                    <div class="option" data-option="A">
+                        <span class="option-label">A.</span>
+                        It means high school life.
+                        <div class="option-chinese">「It」表示高中生活。</div>
+                    </div>
+                    <div class="option" data-option="B">
+                        <span class="option-label">B.</span>
+                        Emma herself does.
+                        <div class="option-chinese">艾瑪她自己。</div>
+                    </div>
+                    <div class="option" data-option="C">
+                        <span class="option-label">C.</span>
+                        Her friends, teachers, and parents will.
+                        <div class="option-chinese">她的朋友、老師和父母親將會支持她。</div>
+                    </div>
+                    <div class="option" data-option="D">
+                        <span class="option-label">D.</span>
+                        Meeting new people, trying new things, and facing new changes.
+                        <div class="option-chinese">認識新朋友、嘗試新事物，和面對新挑戰。</div>
+                    </div>
+                    <div class="option" data-option="E">
+                        <span class="option-label">E.</span>
+                        Meeting different people and making new friends.
+                        <div class="option-chinese">認識不同的人和結識新的朋友。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 段落5 -->
+        <div class="paragraph" data-paragraph="5">
+            <span class="paragraph-number">5</span>
+            <div class="paragraph-content">
+                Finally, always remember to trust yourself. We believe that you will have a bright future. High school life may not always be perfect, but it will certainly become an unforgettable memory one day.
+                Love always,
+                Mom and Dad
+                <div class="chinese-text">
+                    最後，永遠記得要信任自己。我們相信你會有一個光明的未來。高中生活也許並不總是完美的，但有一天一定會成為令人難忘的回憶。
+                    永遠愛你的
+                    媽媽和爸爸
+                </div>
+            </div>
+            <div class="options-container">
+                <div class="matching-prompt">Q5. What does "it" in the final sentence mean?</div>
+                <div class="options-grid">
+                    <div class="option" data-option="A">
+                        <span class="option-label">A.</span>
+                        It means high school life.
+                        <div class="option-chinese">「It」表示高中生活。</div>
+                    </div>
+                    <div class="option" data-option="B">
+                        <span class="option-label">B.</span>
+                        Emma herself does.
+                        <div class="option-chinese">艾瑪她自己。</div>
+                    </div>
+                    <div class="option" data-option="C">
+                        <span class="option-label">C.</span>
+                        Her friends, teachers, and parents will.
+                        <div class="option-chinese">她的朋友、老師和父母親將會支持她。</div>
+                    </div>
+                    <div class="option" data-option="D">
+                        <span class="option-label">D.</span>
+                        Meeting new people, trying new things, and facing new changes.
+                        <div class="option-chinese">認識新朋友、嘗試新事物，和面對新挑戰。</div>
+                    </div>
+                    <div class="option" data-option="E">
+                        <span class="option-label">E.</span>
+                        Meeting different people and making new friends.
+                        <div class="option-chinese">認識不同的人和結識新的朋友。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="submit-section">
+        <button class="submit-button" disabled>Check Understanding (0/5)</button>
+    </div>
+
+    <script>
+        const correctAnswers = {
+            '1': 'D',
+            '2': 'E',
+            '3': 'B',
+            '4': 'C',
+            '5': 'A'
+        };
+
+        let selectedAnswers = {};
+
+        // 中英對照功能
+        document.querySelector('.bilingual-button').addEventListener('click', function() {
+            const chineseTexts = document.querySelectorAll('.chinese-text');
+            const optionChinese = document.querySelectorAll('.option-chinese');
+            
+            chineseTexts.forEach(text => {
+                text.classList.toggle('show');
+            });
+            
+            optionChinese.forEach(text => {
+                text.classList.toggle('show');
+            });
+        });
+
+        // 為所有段落添加點擊事件
+        document.querySelectorAll('.paragraph').forEach(paragraph => {
+            paragraph.addEventListener('click', function(e) {
+                if (e.target.closest('.option')) {
+                    return;
+                }
+                
+                document.querySelectorAll('.paragraph.active').forEach(p => {
+                    if (p !== this) {
+                        p.classList.remove('active');
+                    }
+                });
+                
+                this.classList.toggle('active');
+            });
+        });
+
+        // 為所有選項添加點擊事件
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.stopPropagation();
+
+                const paragraphElement = this.closest('.paragraph');
+                const paragraphId = paragraphElement.dataset.paragraph;
+                const optionId = this.dataset.option;
+
+                paragraphElement.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+
+                this.classList.add('selected');
+                selectedAnswers[paragraphId] = optionId;
+                markAnswered(paragraphElement);
+                updateProgress();
+                updateSubmitButton();
+            });
+        });
+        document.querySelector('.submit-button').addEventListener('click', function() {
+            if (!this.disabled) {
+                checkAnswers();
+            }
+        });
+
+        function updateSubmitButton() {
+            const submitButton = document.querySelector('.submit-button');
+            const selectedCount = Object.keys(selectedAnswers).length;
+            submitButton.disabled = selectedCount < 5;
+            submitButton.textContent = `Check Understanding (${selectedCount}/5)`;
+        }
+
+        function checkAnswers() {
+            let correct = 0;
+            const paragraphs = document.querySelectorAll('.paragraph');
+            
+            // 移除所有舊的結果標記
+            paragraphs.forEach(paragraph => {
+                paragraph.classList.remove('result-correct', 'result-incorrect');
+                const oldBadge = paragraph.querySelector('.result-badge');
+                if (oldBadge) oldBadge.remove();
+            });
+
+            // 檢查答案並顯示結果
+            Object.entries(correctAnswers).forEach(([paragraphId, correctAnswer], index) => {
+                const paragraph = document.querySelector(`[data-paragraph="${paragraphId}"]`);
+                const userAnswer = selectedAnswers[paragraphId];
+                const isCorrect = userAnswer === correctAnswer;
+
+                setTimeout(() => {
+                    if (isCorrect) {
+                        correct++;
+                        paragraph.classList.add('result-correct');
+                        const badge = document.createElement('div');
+                        badge.className = 'result-badge correct';
+                        badge.textContent = 'Correct!';
+                        paragraph.querySelector('.paragraph-content').appendChild(badge);
+                    } else {
+                        paragraph.classList.add('result-incorrect');
+                        const badge = document.createElement('div');
+                        badge.className = 'result-badge incorrect';
+                        badge.textContent = `Incorrect. Correct answer: ${correctAnswer}`;
+                        paragraph.querySelector('.paragraph-content').appendChild(badge);
+                    }
+                }, 200 * index);
+            });
+
+            // 更新提交按鈕
+            const submitButton = document.querySelector('.submit-button');
+            submitButton.textContent = `Score: ${correct}/5`;
+            submitButton.disabled = true;
+
+            // 顯示最終結果
+            setTimeout(() => {
+                let message = `You got ${correct} out of 5 correct!\n\n`;
+                if (correct === 5) {
+                    message += 'Excellent! Perfect score! 🎉';
+                } else if (correct >= 3) {
+                    message += 'Good job! Keep practicing! 👍';
+                } else {
+                    message += 'Try again to improve your understanding. 💪';
+                }
+                alert(message);
+            }, 1500);
+        }
+        
+        function toggleInstructions() {
+    const modal = document.getElementById('instructionsModal');
+    if (modal.style.display === 'none' || !modal.style.display) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    } else {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// 點擊背景關閉導覽
+document.getElementById('instructionsModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        toggleInstructions();
+    }
+});
+        function updateProgress() {
+            const total = 5;
+            const answered = Object.keys(selectedAnswers).length;
+            const percentage = (answered / total) * 100;
+            document.querySelector('.progress-fill').style.width = `${percentage}%`;
+        }
+
+        function markAnswered(paragraphElement) {
+    paragraphElement.classList.add('answered');
+}
+
+        // 初始化
+        updateProgress();
+        updateSubmitButton();
+    </script>
+</body>
+</html>

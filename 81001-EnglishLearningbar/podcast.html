@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title> Say Hello to Your Future - Podcast Player</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide-icons/0.263.1/lucide-icons.min.js">
+    <style>
+        * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(to bottom, #1a365d, #1e1b4b, #0a0a0a);
+    min-height: 100vh;
+}
+
+.transcript-section {
+    margin-top: 16px;
+    padding: 10px;
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+    scroll-behavior: smooth;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+}
+
+.timestamp-block {
+    margin: 8px 0;
+    padding: 12px 10px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.timestamp-block:hover {
+    background: rgba(255, 255, 255, 1);
+}
+
+.timestamp-block.current-block {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+}
+
+.timestamp {
+    color: #666;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-bottom: 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dialogue-line {
+    margin-bottom: 8px;
+    padding-left: 4px;
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.speaker {
+    display: inline-block;
+    margin-right: 6px;
+    font-weight: 500;
+    font-size: 0.75rem;
+}
+
+.speaker.host {
+    color: #2563eb;
+}
+
+.speaker.guest {
+    color: #059669;
+}
+
+.english-text {
+    color: #000;
+    margin-bottom: 2px;
+}
+
+.chinese-text {
+    color: #333;
+    display: none;
+    margin-top: 2px;
+    padding-left: 6px;
+    border-left: 2px solid rgba(59, 130, 246, 0.5);
+    font-size: 0.8125rem;
+}
+
+.bilingual-mode .chinese-text {
+    display: block;
+}
+
+.speed-slider {
+    width: 100%;
+    -webkit-appearance: none;
+    background: rgba(255, 255, 255, 0.1);
+    outline: none;
+    border-radius: 5px;
+    height: 10px;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.speed-slider:hover {
+    opacity: 1;
+}
+
+.speed-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #3b82f6;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 2px 0 rgba(0,0,0,0.2);
+}
+
+.speed-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #3b82f6;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 2px 0 rgba(0,0,0,0.2);
+}
+
+.speed-slider::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(168, 85, 247, 0.5);
+    z-index: 1;
+}
+
+.speed-slider::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to right,
+        rgba(239, 68, 68, 0.5) 0%,
+        rgba(168, 85, 247, 0.5) 50%,
+        rgba(34, 197, 94, 0.5) 100%
+    );
+    border-radius: 2px;
+    z-index: 0;
+}
+
+.speed-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 1.5rem;
+}
+
+#speedDisplay {
+    min-width: 3em;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.progress-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(to right, rgb(59, 130, 246), rgb(147, 51, 234));
+}
+
+.language-btn {
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-align: center;
+    background: #4B5563;
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.language-btn:hover {
+    background: #6B7280;
+    color: white;
+}
+
+.language-btn.active {
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    color: white;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.play-button {
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
+    transition: all 0.3s ease;
+}
+
+.play-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.6);
+}
+
+#forwardBtn, #backwardBtn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+#forwardBtn:hover, #backwardBtn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.auto-scroll-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 12px auto;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 25px;
+    font-size: 14px;
+    max-width: 250px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.auto-scroll-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .transcript-section {
+        margin-top: 12px;
+        padding: 8px;
+    }
+
+    .timestamp-block {
+        padding: 10px 8px;
+        margin: 6px 0;
+    }
+
+    .dialogue-line {
+        font-size: 0.8125rem;
+        padding-left: 2px;
+    }
+
+    .speaker {
+        font-size: 0.75rem;
+    }
+
+    .chinese-text {
+        font-size: 0.75rem;
+        padding-left: 4px;
+    }
+
+    .timestamp {
+        font-size: 0.7rem;
+        margin-bottom: 4px;
+    }
+}
+    .header {
+    background: white;
+    padding: 12px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.title-container {
+    text-align: center;
+}
+
+.title {
+    font-size: 20px;
+    margin: 0;
+    color: #2c3e50;
+    font-weight: bold; 
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.home-button, #instructionsBtn {
+    background: none;
+    border: none;
+    color: #2c3e50;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px;
+    transition: transform 0.2s ease;
+}
+
+.home-button:hover, #instructionsBtn:hover {
+    transform: scale(1.1);
+}
+
+.subtitle-banner {
+    background: #f8f9fa;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.subtitle-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.subtitle {
+    font-size: 16px;
+    color: #2c3e50;
+    margin: 0;
+}
+
+/* Instructions Modal */
+#instructionsModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+}
+
+#instructionsContent {
+    position: fixed;
+    top: 100px; 
+    left: 50%;
+    transform: translateX(-50%); 
+    background: rgba(255, 255, 255, 0.95);
+    padding: 24px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    max-height: calc(100vh - 120px); 
+    overflow-y: auto; 
+}
+
+.instructions-header h2 {
+    font-size: 20px;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    padding: 0 8px;
+    transition: all 0.2s ease;
+}
+
+.close-button:hover {
+    color: #2c3e50;
+}
+
+.instruction-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    transition: all 0.2s ease;
+}
+
+.instruction-item:hover {
+    background: #e3f2fd;
+    border-color: #90caf9;
+}
+
+.instruction-item p {
+    color: #2c3e50;
+    font-size: 16px;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.instruction-icon {
+    font-size: 20px;
+    width: 28px;
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.got-it-button {
+    width: 100%;
+    padding: 12px;
+    background: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 16px;
+}
+
+.got-it-button:hover {
+    background: #1e2a37;
+    transform: translateY(-1px);
+}
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-blue-950 via-gray-900 to-black">
+    <div class="absolute inset-0 bg-gradient-to-tr from-blue-900/20 via-purple-900/20 to-transparent pointer-events-none"></div>
+    
+    <div class="header">
+        <div class="header-content">
+            <div class="title-container">
+                <h1 class="title">L01 Say Hello to Your Future </h1>
+            </div>
+            <div class="button-group">
+                <a href="menu.html" target="_blank" class="home-button">🏠</a>
+                <button id="instructionsBtn" onclick="toggleInstructions()">💡</button>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="max-w-4xl mx-auto p-6">
+        <div class="backdrop-blur-xl bg-gray-900/60 rounded-2xl p-6 shadow-2xl">
+            <!-- Header Section -->
+            <div class="flex flex-col md:flex-row gap-8 mb-8">
+                <!-- Cover Image -->
+                <div class="w-full md:w-64 h-64 shrink-0 relative group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg blur opacity-20 group-hover:opacity-30 transition duration-1000"></div>
+                    <img src=" https://hackmd.io/_uploads/Sky1Veq8kl.png " alt="Say Hello to Your Future" class="w-full h-full object-cover rounded-lg shadow-2xl relative">
+                </div>
+
+<div id="instructionsModal">
+        <div id="instructionsContent">
+            <div class="instructions-header">
+                <h2>使用說明</h2>
+                <button class="close-button" onclick="toggleInstructions()">×</button>
+            </div>
+            <div class="instructions-body">
+                <div class="instruction-item">
+                    <span class="instruction-icon">📝</span>
+                    <p>點擊時間戳記可以跳至相應的音頻位置</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="instruction-icon">🎯</span>
+                    <p>可以使用播放、暫停、快進與後退功能控制音頻</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="instruction-icon">🌐</span>
+                    <p>點擊右上角的按鈕可以切換英文或雙語模式</p>
+                </div>
+                <div class="instruction-item">
+                    <span class="instruction-icon">🔊</span>
+                    <p>可以調整音量與播放速度</p>
+                </div>
+            </div>
+            <button class="got-it-button" onclick="toggleInstructions()">知道了！</button>
+        </div>
+    </div>
+
+                <!-- Player Controls -->
+                <div class="flex flex-col justify-between flex-grow">
+                    <div>
+                        <span class="text-sm font-medium text-blue-600">PODCAST</span>
+                        <h1 class="text-3xl font-bold mt-1 mb-2 text-white">Goodbye John</h1>
+                        <p class="text-gray-400 mb-4"> A Deep Dive into a High School Letter: Universal Wisdom in Personal Beginnings</p>
+                    </div>
+
+                    <!-- Audio Player -->
+                    <audio class="hidden" id="audioPlayer">
+                        <source src="https://www.ltedu.com.tw/Web/Sharefile/LT/81001_SelfLearning/B1L1_Podcast.wav" type="audio/mpeg">
+                    </audio>
+
+                    <div class="space-y-6">
+                        <!-- Progress Bar -->
+                        <div class="space-y-2">
+                            <div class="w-full bg-gray-700 rounded-full h-1">
+                                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span id="currentTime">0:00</span>
+                                <span id="duration">0:00</span>
+                            </div>
+                        </div>
+
+                        <!-- Playback Controls -->
+                        <div class="flex items-center justify-center gap-4">
+                            <button class="text-gray-400 hover:text-white transition-colors" id="backwardBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="19" x2="5" y2="5"></line></svg>
+                            </button>
+                            <button id="playBtn" class="play-button flex items-center justify-center w-14 h-14 rounded-full text-white shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="play-icon"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pause-icon hidden"><line x1="6" y1="4" x2="6" y2="20"></line><line x1="18" y1="4" x2="18" y2="20"></line></svg>
+                            </button>
+                            <button class="text-gray-400 hover:text-white transition-colors" id="forwardBtn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="5" x2="19" y2="19"></line></svg>
+                            </button>
+                        </div>
+
+                        <!-- Controls Container -->
+<div class="flex justify-between items-center px-2">
+    <!-- Volume Control -->
+
+    <!-- Speed Control -->
+    <div class="flex items-center gap-3">
+        <button class="text-gray-400 hover:text-white transition-colors" id="speedBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+            </svg>
+        </button>
+        <input type="range" id="speedSlider" class="volume-slider w-36" min="50" max="200" value="100" step="25">
+        <span id="speedDisplay" class="text-sm text-gray-400">1.0x</span>
+    </div>
+</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controls Panel -->
+            <div class="bg-gray-800/50 border-gray-700 rounded-lg">
+                <div class="p-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <button id="englishBtn" class="language-btn active">
+                            English
+                        </button>
+                        <button id="bilingualBtn" class="language-btn">
+                            中英對照
+                        </button>
+                    </div>
+                </div>
+            </div>
+                    
+       
+
+            <!-- Transcript Section -->
+<div class="transcript-section" id="transcriptSection">
+<div class="timestamp-block" data-start="0" data-end="13">
+    <div class="timestamp">[00:00-00:13]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Welcome back to the Deep Dive.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>歡迎回到深度探討。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Yeah.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>是的。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Ready to dive into something a little different today.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>今天準備深入探討一些不一樣的內容。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Oh, absolutely. Always up for a challenge. Right.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>當然好啊，我總是願意接受挑戰。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> So today we're stepping away from, you know, the usual research papers and all those articles.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>今天我們要暫時離開那些研究論文和文章。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Interesting.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>有趣。
+        </div>
+    </div>
+</div>
+
+<div class="timestamp-block" data-start="13" data-end="39">
+    <div class="timestamp">[00:13-00:39]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> What's on the docket today?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>今天要討論什麼呢？
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> We're going deep on something way more personal.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>我們要深入探討一些更個人的內容。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Okay. I'm intrigued. Tell me more.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>好啊，我很感興趣，說來聽聽。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> It's a letter, actually. A letter written to a student named Emma who's about to start high school.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>其實是一封信，寫給一個即將上高中的學生，名叫Emma。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Ah, that's sweet. Beginning a new chapter, huh?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>啊，真貼心。要開始人生的新篇章了，是吧？
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Exactly. And even though it's not, you know, a scientific study or anything, this letter is packed with universal truths about new beginnings. You know, those exciting, but sometimes kind of scary, fresh starts.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>沒錯。雖然這不是什麼科學研究，但這封信包含了關於新開始的普遍真理。你知道的，那種既令人興奮又有點害怕的全新開始。
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="timestamp-block" data-start="40" data-end="83">
+    <div class="timestamp">[00:40-01:23]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> I hear you. Those feelings, the anticipation, the uncertainty, they can definitely get the best of us no matter our age.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>我懂你的意思。那些感受，期待和不確定性，不論年齡大小都會深深影響著我們。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> For sure. And right from the start, the letters just overflowing with warmth and encouragement. Emma's parents, they're just beaming with pride.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>確實如此。從一開始，這封信就充滿了溫暖和鼓勵。Emma的父母在信中流露出滿滿的驕傲。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> That's so important, that foundation of support. You know, we often hear about fight or flight, but research highlights another response to stress, tend and befriend.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>這種支持的基礎非常重要。我們經常聽到「戰或逃」的反應，但研究指出還有另一種應對壓力的方式，就是「照顧和友好」。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Tend and befriend. I haven't heard of that.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>照顧和友好？我還沒聽過這個。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Exactly. It's this instinct to seek out connections, you know, build those support networks, especially when things are tough. It's like Emma's parents, they're creating that safe space for her. It's actually fascinating how our biology pushes us towards connection when we're facing challenges.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>沒錯。這是一種尋求連結的本能，建立支持網絡，特別是在困難時期。就像Emma的父母，他們在為她創造一個安全的空間。有趣的是，當我們面對挑戰時，我們的生理本能會推動我們尋求聯繫。
+        </div>
+    </div>
+</div>
+
+<div class="timestamp-block" data-start="83" data-end="107">
+    <div class="timestamp">[01:23-01:47]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Wow. That makes total sense. And speaking of connection, the letter emphasizes something we all kind of take for granted. Kindness.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>哇。這真的很有道理。說到連結，這封信強調了一件我們都習以為常的事情：善意。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> It's easy to overlook, especially in the whirlwind of a new environment like high school.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>這很容易被忽略，特別是在像高中這樣全新環境的漩渦中。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Yeah. Like amidst all the nerves and excitement, it's easy to forget to just be kind. The letter simply says, don't forget to be kind to others. But man, that's a powerful message.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>是啊。在所有的緊張和興奮中，很容易忘記要保持善意。這封信簡單地說，別忘了要善待他人。但天啊，這是多麼有力的信息。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> It really is.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>確實如此。
+        </div>
+    </div>
+</div>
+
+<div class="timestamp-block" data-start="107" data-end="137">
+    <div class="timestamp">[01:47-02:17]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> And the thing is, kindness isn't just like a nice feeling. It creates a ripple effect. There was this study at UC Berkeley. They were looking at contagious yawning.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>而且，善意不僅僅是一種美好的感覺。它會產生連鎖反應。加州柏克萊大學做過一項研究，他們研究傳染性打哈欠。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Contagious yawning. Interesting.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>傳染性打哈欠。有趣。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Right. And they found that people were more likely to catch a yawn from someone they felt close to socially. It suggests that even our unconscious actions, like yawning, are influenced by our social bonds and, well, empathy. So think about the potential of conscious acts of kindness.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>是的。他們發現人們更容易被社交關係親近的人的哈欠感染。這表明即使是打哈欠這樣的無意識行為，也會受到我們社交關係和同理心的影響。所以想想看，有意識的善意行為會有多大的潛力。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Wow. Small gestures can make a big difference, huh?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>哇。小小的舉動也能產生巨大的影響，是吧？
+        </div>
+    </div>
+</div>
+
+<div class="timestamp-block" data-start="137" data-end="182">
+    <div class="timestamp">[02:17-03:02]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> Absolutely. And this ties into another point the letter brings up, one that's crucial for any new beginning, trying new things.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>當然。這也與信中提到的另一個重點相連，這是任何新開始的關鍵：嘗試新事物。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> It says you might be surprised to find that you enjoy or have gifts in them. I love that. It's like, go explore, discover what you're good at.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>信中說你可能會驚訝地發現自己喜歡或有這方面的天賦。我很喜歡這點。就像是在說，去探索，發現你擅長的事物。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> It perfectly embodies the idea of a growth mindset, the idea that our abilities, they're not fixed, they can evolve. It's like, you know, learning a musical instrument or a new language. It might feel overwhelming at first, but the more you put yourself out there, the more you learn and grow. Stepping outside that comfort zone, that's where the magic happens.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>這完美體現了成長思維的理念，即我們的能力並非固定不變，而是可以發展的。就像學習樂器或新語言一樣。一開始可能會感到不知所措，但你越是投入，就越能學習和成長。走出舒適圈，那裡就是奇蹟發生的地方。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> It's so true. And of course, challenges are going to pop up along the way. The letter acknowledges that, but it also reminds Emma, when you are upset, remember those people around you, her friends, her teachers, her family.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>說得太對了。當然，路上會遇到各種挑戰。這封信承認這一點，但也提醒Emma，當你感到沮喪時，要記得身邊的人，她的朋友、老師和家人。
+        </div>
+    </div>
+</div>
+
+<div class="timestamp-block" data-start="182" data-end="223">
+    <div class="timestamp">[03:02-03:43]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> It's a reminder about the power of those support networks. They're like shock absorbers for life's bumps. Resilience isn't just about, you know, toughing it out alone. It's about knowing when to lean on others, to ask for help and share the weight.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>這提醒了我們支持網絡的力量。它們就像生活顛簸中的減震器。韌性不僅僅是獨自咬牙撐過去，而是要知道什麼時候該依靠他人，尋求幫助，分擔重擔。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Totally. And as the letter wraps up, it leaves Emma with this beautiful message about believing in herself. It reminds her that high school, you know, it may not always be perfect, but it often becomes a really special chapter in life.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>完全同意。在信的結尾，給了Emma一個關於相信自己的美好信息。提醒她高中生活可能不會總是完美，但它往往會成為人生中一個特別的篇章。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> It's all about perspective. You know, we tend to like romanticize the past. We focus on the highlights and kind of forget the struggles. It reminds us that even those tough times, they shape us, help us grow, and they become part of our story.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>這都關乎觀點。我們常常會美化過去，只關注亮點而忘記了掙扎。這提醒我們，即使是那些艱難時期，也塑造了我們，幫助我們成長，成為我們故事的一部分。
+        </div>
+    </div>
+</div>
+
+<div class="timestamp-block" data-start="223" data-end="250">
+    <div class="timestamp">[03:43-04:10]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> Right. It's all about embracing the journey with all its ups and downs. We've seen how the simple letter touches on these universal themes, the importance of support, the power of kindness, the thrill of trying new things, and of course, facing those inevitable challenges.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>沒錯。這就是要擁抱旅程中的起起落落。我們看到這封簡單的信觸及了這些普遍的主題：支持的重要性、善意的力量、嘗試新事物的興奮，當然還有面對那些無可避免的挑戰。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> So as you think about your own life, what's that new beginning that's in front of you? Big or small, it doesn't matter. How can you approach it with that same openness, that resilience, that belief in yourself that Emma's parents shared in their letter?
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>所以當你思考自己的生活時，你面前有什麼新的開始？無論大小，都不重要。你如何能以同樣的開放態度、韌性，以及Emma父母在信中分享的那種自信來面對它？
+        </div>
+    </div>
+</div>
+
+<div class="timestamp-block" data-start="250" data-end="261">
+    <div class="timestamp">[04:10-04:21]</div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> That's a great question to think about. Thanks for joining us for this unique deep dive.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>這是一個值得思考的好問題。感謝你加入我們這次獨特的深度探討。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker guest">🗣️ Guest:</span> It was a pleasure as always.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker guest">🗣️ 來賓：</span>一如既往地很高興。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> We'd love to hear your thoughts on these themes, so feel free to share. Until next time.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>我們很想聽聽你對這些主題的想法，請隨意分享。下次見。
+        </div>
+    </div>
+    <div class="dialogue-line">
+        <div class="english-text">
+            <span class="speaker host">🎙️ Host:</span> See you then.
+        </div>
+        <div class="chinese-text">
+            <span class="speaker host">🎙️ 主持人：</span>再見。
+        </div>
+    </div>
+</div>
+
+
+    <script>
+        const englishBtn = document.getElementById('englishBtn');
+    const bilingualBtn = document.getElementById('bilingualBtn');
+    const transcriptSection = document.getElementById('transcriptSection');
+    const audio = document.getElementById('audioPlayer');
+    const playBtn = document.getElementById('playBtn');
+    const backwardBtn = document.getElementById('backwardBtn');
+    const forwardBtn = document.getElementById('forwardBtn');
+    const volumeBtn = document.getElementById('volumeBtn');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const speedBtn = document.getElementById('speedBtn');
+    const speedSlider = document.getElementById('speedSlider');
+    const speedDisplay = document.getElementById('speedDisplay');
+    const speedPresetBtns = document.querySelectorAll('.speed-preset-btn'); // 加在這裡
+    const progressBar = document.getElementById('progressBar');
+    const currentTimeDisplay = document.getElementById('currentTime');
+    const durationDisplay = document.getElementById('duration');
+    const autoScrollToggle = document.getElementById('autoScrollToggle');
+    const playIcon = playBtn.querySelector('.play-icon');
+    const pauseIcon = playBtn.querySelector('.pause-icon');
+
+        let userScrolling = false;
+        let scrollTimeout;
+
+function updateSpeedSlider() {
+    const value = ((speedSlider.value - speedSlider.min) / (speedSlider.max - speedSlider.min)) * 100;
+    speedSlider.style.setProperty('--value', `${value}%`);
+}
+
+// 為語速滑塊添加事件監聽器
+speedSlider.addEventListener('input', (e) => {
+    const value = e.target.value / 100;
+    audio.playbackRate = value;
+    speedDisplay.textContent = `${value.toFixed(1)}x`;
+    updateSpeedSlider();
+});
+        // Language toggle
+        englishBtn.addEventListener('click', () => {
+            document.body.classList.remove('bilingual-mode');
+            englishBtn.classList.add('active');
+            bilingualBtn.classList.remove('active');
+        });
+
+        bilingualBtn.addEventListener('click', () => {
+            document.body.classList.add('bilingual-mode');
+            bilingualBtn.classList.add('active');
+            englishBtn.classList.remove('active');
+        });
+
+        // Playback controls
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+            } else {
+                audio.pause();
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+            }
+        });
+
+        // Time skip controls
+        backwardBtn.addEventListener('click', () => {
+            audio.currentTime = Math.max(0, audio.currentTime - 10);
+        });
+
+        forwardBtn.addEventListener('click', () => {
+            audio.currentTime = Math.min(audio.duration, audio.currentTime + 10);
+        });
+
+       
+
+        // Speed controls
+        speedSlider.addEventListener('input', (e) => {
+            const value = e.target.value / 100;
+            audio.playbackRate = value;
+            speedDisplay.textContent = `${value.toFixed(1)}x`;
+        });
+
+        speedBtn.addEventListener('click', () => {
+            audio.playbackRate = 1;
+            speedSlider.value = 100;
+            speedDisplay.textContent = '1.0x';
+        });
+
+
+        // Time formatting
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        // Progress bar updates
+        audio.addEventListener('timeupdate', () => {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+            currentTimeDisplay.textContent = formatTime(audio.currentTime);
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            durationDisplay.textContent = formatTime(audio.duration);
+        });
+
+        // Transcript scrolling
+        transcriptSection.addEventListener('scroll', () => {
+            userScrolling = true;
+            clearTimeout(scrollTimeout);
+            
+            scrollTimeout = setTimeout(() => {
+                userScrolling = false;
+            }, 3000);
+        });
+
+        const blocks = document.querySelectorAll('.timestamp-block');
+        blocks.forEach(block => {
+            block.addEventListener('click', () => {
+                const startTime = parseInt(block.dataset.start);
+                audio.currentTime = startTime;
+                audio.play();
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+            });
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const currentTime = audio.currentTime;
+            
+            blocks.forEach(block => {
+                const startTime = parseInt(block.dataset.start);
+                const endTime = parseInt(block.dataset.end);
+                
+                if (currentTime >= startTime && currentTime < endTime) {
+                    if (!block.classList.contains('current-block')) {
+                        block.classList.add('current-block');
+                        
+                        if (autoScrollToggle.checked && !userScrolling) {
+                            block.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                        }
+                    }
+                } else {
+                    block.classList.remove('current-block');
+                }
+            });
+        });
+
+        // Click progress bar to seek
+        const progressContainer = progressBar.parentElement;
+        progressContainer.addEventListener('click', (e) => {
+            const rect = progressContainer.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = pos * audio.duration;
+        });
+
+        // Initialize volume and speed
+        audio.volume = volumeSlider.value / 100;
+        speedDisplay.textContent = '1.0x';
+
+        function toggleInstructions() {
+    const modal = document.getElementById('instructionsModal');
+    if (modal.style.display === 'none' || !modal.style.display) {
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    } else {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
+document.getElementById('instructionsModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        toggleInstructions();
+    }
+});
+    </script>
+</body>
+</html>
