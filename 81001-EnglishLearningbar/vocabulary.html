@@ -686,6 +686,31 @@
     from { transform: translateY(-20px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
 }
+
+.example span {
+    display: inline-block;
+    padding: 2px 4px;
+    margin: 0 -1px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.example span.highlight {
+    background-color: rgba(79, 70, 229, 0.1);
+    color: #4f46e5;
+    transform: scale(1.05);
+}
+
+.example span.highlight-word {
+    color: #4f46e5;
+    font-weight: 600;
+}
+
+.highlight-word {
+    color: #4f46e5;
+    font-weight: 700; /* 提升粗體效果從 600 到 700 */
+}
+
 </style>
 </head>
 <body>
@@ -1042,7 +1067,7 @@
     return 3;
 }
 
-        function initializeFlashcards() {
+function initializeFlashcards() {
             updateCardVisibility();
             updateCardContent();
             updateCardIndicators();
@@ -1149,8 +1174,8 @@
     const meaningDisplay = document.getElementById('meaningDisplay');
     const exampleDisplay = document.getElementById('exampleDisplay');
     const exampleDisplay2 = document.getElementById('exampleDisplay2');
-    const translationDisplay = document.getElementById('translationDisplay');
-    const translationDisplay2 = document.getElementById('translationDisplay2');
+    const exampleTextContainer = document.querySelector('#card3 .example-text');
+    const exampleTextContainer2 = document.querySelector('#card4 .example-text');
     const imageContainer = document.getElementById('imageContainer');
     const imageContainer2 = document.getElementById('imageContainer2');
 
@@ -1159,82 +1184,427 @@
     imageContainer2.innerHTML = '圖片預留區';
 
     requestAnimationFrame(() => {
-        // Update basic content
+        // 更新基本內容
         wordDisplay.textContent = currentWord.word;
         wordBack.textContent = currentWord.word;
         meaningDisplay.textContent = currentWord.meaning;
 
-        // Handle examples and translations
+        // 處理例句和翻譯
         if (currentWord.examples) {
-            // Handle first example
+            // 處理第一個例句
             if (currentWord.examples.length > 0) {
                 const example1 = currentWord.examples[0];
-                const boldedExample1 = example1.sentence.replace(
-                    new RegExp(currentWord.word, 'gi'),
-                    match => `<strong>${match}</strong>`
-                );
-                exampleDisplay.innerHTML = boldedExample1;
-
-                // Create new translation container for first example
-                const translationDisplay = document.querySelector('#translationDisplay');
-                if (translationDisplay) {
-                    const newTranslation1 = createTranslationContainer(example1.translation);
-                    translationDisplay.parentNode.replaceChild(newTranslation1, translationDisplay);
-                    newTranslation1.id = 'translationDisplay';
+                exampleDisplay.innerHTML = processExampleText(example1.sentence, currentWord.word);
+                
+                // 確保移除所有舊的翻譯容器
+                const oldTranslation = exampleTextContainer.querySelector('.translation-container');
+                if (oldTranslation) {
+                    oldTranslation.remove();
                 }
+                
+                // 創建並附加新的翻譯容器
+                const translationContainer1 = createTranslationContainer(example1.translation);
+                exampleTextContainer.appendChild(translationContainer1);
 
                 if (example1.image) {
                     imageContainer.innerHTML = `<img src="${example1.image}" alt="${currentWord.word}" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
                 }
             }
 
-            // Handle second example if exists
+            // 處理第二個例句（如果存在）
             if (currentWord.examples.length > 1) {
                 const example2 = currentWord.examples[1];
-                const boldedExample2 = example2.sentence.replace(
-                    new RegExp(currentWord.word, 'gi'),
-                    match => `<strong>${match}</strong>`
-                );
-                exampleDisplay2.innerHTML = boldedExample2;
-
-                // Create new translation container for second example
-                const translationDisplay2 = document.querySelector('#translationDisplay2');
-                if (translationDisplay2) {
-                    const newTranslation2 = createTranslationContainer(example2.translation);
-                    translationDisplay2.parentNode.replaceChild(newTranslation2, translationDisplay2);
-                    newTranslation2.id = 'translationDisplay2';
+                exampleDisplay2.innerHTML = processExampleText(example2.sentence, currentWord.word);
+                
+                // 確保移除所有舊的翻譯容器
+                const oldTranslation2 = exampleTextContainer2.querySelector('.translation-container');
+                if (oldTranslation2) {
+                    oldTranslation2.remove();
                 }
+                
+                // 創建並附加新的翻譯容器
+                const translationContainer2 = createTranslationContainer(example2.translation);
+                exampleTextContainer2.appendChild(translationContainer2);
 
                 if (example2.image) {
                     imageContainer2.innerHTML = `<img src="${example2.image}" alt="${currentWord.word}" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
                 }
             }
         } else if (currentWord.example) {
-            // Handle legacy format
-            const boldedExample = currentWord.example.replace(
-                new RegExp(currentWord.word, 'gi'),
-                match => `<strong>${match}</strong>`
-            );
-            exampleDisplay.innerHTML = boldedExample;
-
-            const translationDisplay = document.querySelector('#translationDisplay');
-            if (translationDisplay) {
-                const newTranslation = createTranslationContainer(currentWord.translation);
-                translationDisplay.parentNode.replaceChild(newTranslation, translationDisplay);
-                newTranslation.id = 'translationDisplay';
+            // 處理舊格式的例句
+            exampleDisplay.innerHTML = processExampleText(currentWord.example, currentWord.word);
+            
+            // 確保移除所有舊的翻譯容器
+            const oldTranslation = exampleTextContainer.querySelector('.translation-container');
+            if (oldTranslation) {
+                oldTranslation.remove();
             }
+            
+            // 創建並附加新的翻譯容器
+            const translationContainer = createTranslationContainer(currentWord.translation);
+            exampleTextContainer.appendChild(translationContainer);
 
             if (currentWord.image) {
                 imageContainer.innerHTML = `<img src="${currentWord.image}" alt="${currentWord.word}" style="max-width: 100%; max-height: 100%; object-fit: contain;">`;
             }
         }
 
-        // Update card indicators
+        // 調整卡片指示器
         updateCardIndicators();
         
-        // Adjust word display after content update
+        // 在內容更新後調用 adjustWordDisplay
         setTimeout(adjustWordDisplay, 100);
     });
+}
+
+		function processExampleText(text, targetWord) {
+    // 檢查目標詞是單詞還是片語
+    const isPhrase = targetWord.includes(' ');
+    
+    if (isPhrase) {
+        // 處理片語的情況
+        return processExampleWithPhrase(text, targetWord);
+    } else {
+        // 處理單詞的情況 - 原有的邏輯
+        const words = text.match(/[\w']+|[.,!?;]|\s+/g) || [];
+        
+        return words.map((word, index) => {
+            const cleanWord = word.trim().toLowerCase().replace(/[.,!?;]$/, '');
+            const isTargetWord = cleanWord === targetWord.toLowerCase();
+            const isPunctuation = /^[.,!?;]$/.test(word);
+            const isSpace = /^\s+$/.test(word);
+            
+            if (isSpace) {
+                return ' ';
+            }
+            
+            return `<span 
+                data-index="${index}" 
+                class="${isTargetWord ? 'highlight-word' : ''}"
+                ${isPunctuation ? 'style="margin-left: -2px;"' : ''}
+            >${word}</span>`;
+        }).join('');
+    }
+}
+
+		function processExampleWithPhrase(text, targetPhrase) {
+    // 創建一個函數來處理片語的變形
+    function getPhraseVariations(phrase) {
+        let variations = [phrase.toLowerCase()];
+        let originalPhrase = phrase.toLowerCase();
+        let words = originalPhrase.split(/\s+/);
+        
+        // 處理冠詞變化 (a/the)
+        if (originalPhrase.includes("a/the")) {
+            const withA = originalPhrase.replace("a/the", "a");
+            const withThe = originalPhrase.replace("a/the", "the");
+            variations.push(withA, withThe);
+            // 添加不含冠詞的版本，因為例句可能省略冠詞
+            variations.push(originalPhrase.replace("a/the ", ""));
+        }
+        
+        // 處理動詞變化
+        if (words[0] === 'be') {
+            // be 動詞的變形: am, is, are, was, were, been, being
+            const beVariations = ['am', 'is', 'are', 'was', 'were', 'been', 'being'];
+            beVariations.forEach(verb => {
+                variations.push(originalPhrase.replace(/^be\s/, verb + ' '));
+            });
+        } else if (words[0] === 'have') {
+            // have 動詞的變形: has, had, having
+            const haveVariations = ['has', 'had', 'having'];
+            haveVariations.forEach(verb => {
+                variations.push(originalPhrase.replace(/^have\s/, verb + ' '));
+            });
+        } else if (words[0] === 'give' || words[0] === 'go' || words[0] === 'make') {
+            // 其他動詞的常見變形: 第三人稱單數、過去式、現在分詞、過去分詞
+            const verbForms = {
+                'give': ['gives', 'gave', 'giving', 'given'],
+                'go': ['goes', 'went', 'going', 'gone'],
+                'make': ['makes', 'made', 'making']
+            };
+            
+            if (verbForms[words[0]]) {
+                verbForms[words[0]].forEach(verb => {
+                    variations.push(originalPhrase.replace(new RegExp(`^${words[0]}\\s`), verb + ' '));
+                });
+            }
+        }
+        
+        // 處理代詞變化 (one's)
+        if (originalPhrase.includes("one's")) {
+            const pronouns = ['my', 'your', 'his', 'her', 'its', 'our', 'their'];
+            pronouns.forEach(pronoun => {
+                variations.push(originalPhrase.replace("one's", pronoun));
+            });
+        }
+        
+        // 處理 sth./sb. 變化
+        if (originalPhrase.includes("sth.")) {
+            // 添加不帶 sth. 的基本形式，因為實際例句中會用具體名詞替換
+            variations.push(originalPhrase.replace(" sth.", ""));
+            // 還可能縮寫為 something
+            variations.push(originalPhrase.replace("sth.", "something"));
+            // 或是具體名詞
+            variations.push(originalPhrase.replace("sth.", ""));
+        }
+        
+        // 處理 "all the time" 這類特殊片語
+        if (originalPhrase === "all the time") {
+            variations.push("all the time");
+            variations.push("all times");
+        }
+        
+        return variations;
+    }
+    
+    // 生成可能的片語變形
+    const phraseVariations = getPhraseVariations(targetPhrase);
+    const lowerText = text.toLowerCase();
+    
+    // 尋找最佳匹配
+    let bestMatch = null;
+    let bestMatchIndex = -1;
+    let bestMatchLength = 0;
+    
+    // 方法1: 嘗試完整匹配任一變形
+    for (const variation of phraseVariations) {
+        const index = lowerText.indexOf(variation);
+        if (index !== -1 && variation.length > bestMatchLength) {
+            bestMatch = variation;
+            bestMatchIndex = index;
+            bestMatchLength = variation.length;
+        }
+    }
+    
+    // 方法2: 如果未找到完整匹配，嘗試使用正則表達式進行更靈活的匹配
+    if (bestMatchIndex === -1) {
+        const originalWords = targetPhrase.toLowerCase().split(/\s+/);
+        
+        // 處理 "all the time" 特殊情況
+        if (targetPhrase.toLowerCase() === "all the time") {
+            const allTimeRegex = /\ball\s+the\s+time\b/i;
+            const match = allTimeRegex.exec(text);
+            if (match) {
+                bestMatch = match[0];
+                bestMatchIndex = match.index;
+                bestMatchLength = match[0].length;
+            }
+        }
+        
+        // 處理 "make a/the difference" 特殊情況
+        if (targetPhrase.toLowerCase().includes("make a/the difference")) {
+            const differenceRegex = /\bmake\s+a\s+difference\b|\bmake\s+the\s+difference\b|\bmakes?\s+a\s+difference\b|\bmakes?\s+the\s+difference\b|\bmade\s+a\s+difference\b|\bmade\s+the\s+difference\b/i;
+            const match = differenceRegex.exec(text);
+            if (match) {
+                bestMatch = match[0];
+                bestMatchIndex = match.index;
+                bestMatchLength = match[0].length;
+            }
+        }
+        
+        // 處理 "be in the same boat" 特殊情況
+        if (targetPhrase.toLowerCase().includes("be in the same boat")) {
+            const boatRegex = /\b(?:am|is|are|was|were|been|being)\s+in\s+the\s+same\s+boat\b/i;
+            const match = boatRegex.exec(text);
+            if (match) {
+                bestMatch = match[0];
+                bestMatchIndex = match.index;
+                bestMatchLength = match[0].length;
+            }
+        }
+        
+        // 處理 "go for sth." 特殊情況
+        if (targetPhrase.toLowerCase().includes("go for")) {
+            const goForRegex = /\b(?:go|goes|went|going|gone)\s+for\b/i;
+            const match = goForRegex.exec(text);
+            if (match) {
+                bestMatch = match[0];
+                bestMatchIndex = match.index;
+                bestMatchLength = match[0].length;
+            }
+        }
+        
+        // 處理 "have one's back" 特殊情況
+        if (targetPhrase.toLowerCase().includes("have one's back")) {
+            const haveBackRegex = /\b(?:have|has|had|having)\s+(?:my|your|his|her|its|our|their)\s+back\b/i;
+            const match = haveBackRegex.exec(text);
+            if (match) {
+                bestMatch = match[0];
+                bestMatchIndex = match.index;
+                bestMatchLength = match[0].length;
+            }
+        }
+        
+        // 處理短語動詞可能分離的情況
+        if (bestMatchIndex === -1 && originalWords.length >= 2 && 
+            (originalWords[originalWords.length-1] === 'up' || 
+             originalWords[originalWords.length-1] === 'down' ||
+             originalWords[originalWords.length-1] === 'in' ||
+             originalWords[originalWords.length-1] === 'out' ||
+             originalWords[originalWords.length-1] === 'off' ||
+             originalWords[originalWords.length-1] === 'on')) {
+            
+            const verb = originalWords[0];
+            const particle = originalWords[originalWords.length-1];
+            
+            // 檢查動詞和介詞是否都存在於文本中
+            const verbIndex = lowerText.indexOf(verb);
+            const particleIndex = lowerText.indexOf(particle, verbIndex + 1);
+            
+            if (verbIndex !== -1 && particleIndex !== -1 && 
+                particleIndex - verbIndex < 30) { // 限制動詞和介詞之間的距離
+                
+                // 嘗試識別分離的短語動詞
+                return processTextWithSeparatedPhraseVerb(text, verb, particle, verbIndex, particleIndex);
+            }
+        }
+    }
+    
+    // 如果仍未找到匹配，嘗試更寬鬆的識別方式（關鍵詞匹配）
+    if (bestMatchIndex === -1) {
+        return processWithKeywordHighlighting(text, targetPhrase);
+    }
+    
+    // 當找到完整匹配時，準備高亮顯示
+    const actualPhrase = text.substring(bestMatchIndex, bestMatchIndex + bestMatchLength);
+    
+    // 將例句分為三部分
+    const beforePhrase = text.substring(0, bestMatchIndex);
+    const afterPhrase = text.substring(bestMatchIndex + bestMatchLength);
+    
+    // 處理片語前的部分
+    let beforeHtml = '';
+    if (beforePhrase) {
+        const beforeWords = beforePhrase.match(/[\w']+|[.,!?;]|\s+/g) || [];
+        beforeHtml = beforeWords.map((word, index) => {
+            const isSpace = /^\s+$/.test(word);
+            if (isSpace) return ' ';
+            return `<span data-index="${index}">${word}</span>`;
+        }).join('');
+    }
+    
+    // 處理片語本身 - 保持作為一個整體
+    const phraseHtml = `<span class="highlight-word" style="font-weight: 700;">${actualPhrase}</span>`;
+    
+    // 處理片語後的部分
+    let afterHtml = '';
+    if (afterPhrase) {
+        const afterWords = afterPhrase.match(/[\w']+|[.,!?;]|\s+/g) || [];
+        
+        afterHtml = afterWords.map((word, index) => {
+            const isSpace = /^\s+$/.test(word);
+            if (isSpace) return ' ';
+            return `<span data-index="${index + beforePhrase.split(/\s+/).length + actualPhrase.split(/\s+/).length}">${word}</span>`;
+        }).join('');
+    }
+    
+    return beforeHtml + phraseHtml + afterHtml;
+}
+
+// 處理分離的短語動詞
+function processTextWithSeparatedPhraseVerb(text, verb, particle, verbIndex, particleIndex) {
+    const words = text.match(/[\w']+|[.,!?;]|\s+/g) || [];
+    let result = '';
+    let currentIndex = 0;
+    let verbHighlighted = false;
+    let particleHighlighted = false;
+    
+    words.forEach((word, index) => {
+        const cleanWord = word.trim().toLowerCase().replace(/[.,!?;]$/, '');
+        const isPunctuation = /^[.,!?;]$/.test(word);
+        const isSpace = /^\s+$/.test(word);
+        
+        if (isSpace) {
+            result += ' ';
+            return;
+        }
+        
+        // 更精確的匹配邏輯
+        const wordStartIndex = text.toLowerCase().indexOf(cleanWord, currentIndex);
+        const isVerb = !verbHighlighted && 
+                       cleanWord === verb.toLowerCase() && 
+                       Math.abs(wordStartIndex - verbIndex) < 3;
+        
+        const isParticle = !particleHighlighted && 
+                         cleanWord === particle.toLowerCase() && 
+                         Math.abs(wordStartIndex - particleIndex) < 3;
+        
+        if (isVerb) {
+            result += `<span data-index="${index}" class="highlight-word">${word}</span>`;
+            verbHighlighted = true;
+        } else if (isParticle) {
+            result += `<span data-index="${index}" class="highlight-word">${word}</span>`;
+            particleHighlighted = true;
+        } else {
+            result += `<span data-index="${index}">${word}</span>`;
+        }
+        
+        if (!isSpace) {
+            currentIndex = wordStartIndex + cleanWord.length;
+        }
+    });
+    
+    return result;
+}
+
+// 處理關鍵詞高亮（當找不到完整匹配時）
+function processWithKeywordHighlighting(text, targetPhrase) {
+    const words = text.match(/[\w']+|[.,!?;]|\s+/g) || [];
+    let phraseWords = targetPhrase.toLowerCase()
+                      .replace(/a\/the/g, '') // 移除 a/the
+                      .replace(/sth\./g, '')  // 移除 sth.
+                      .replace(/one's/g, '')  // 移除 one's
+                      .replace(/\s+/g, ' ')   // 標準化空格
+                      .trim()
+                      .split(/\s+/)
+                      .filter(word => word.length > 0);
+    
+    // 為每個片語定義關鍵詞
+    const keywordsMap = {
+        "be in the same boat": ["boat", "same"],
+        "make a/the difference": ["difference"],
+        "go for sth": ["went", "for"],
+        "give up": ["give", "gives", "giving", "gave", "up"],
+        "have one's back": ["back"],
+        "all the time": ["time"]
+    };
+    
+    // 查找匹配的關鍵詞
+    let keywordsToHighlight = [];
+    for (const [phrase, keywords] of Object.entries(keywordsMap)) {
+        if (targetPhrase.toLowerCase().includes(phrase) || 
+            phrase.includes(targetPhrase.toLowerCase())) {
+            keywordsToHighlight = keywords;
+            break;
+        }
+    }
+    
+    // 如果沒有找到特定的關鍵詞，使用過濾後的片語詞
+    if (keywordsToHighlight.length === 0) {
+        // 過濾常見的無意義詞（除非它們是片語的關鍵部分）
+        keywordsToHighlight = phraseWords.filter(word => 
+            word.length > 3 || 
+            ['up', 'in', 'on', 'for', 'the', 'off', 'out', 'down'].includes(word)
+        );
+    }
+    
+    return words.map((word, index) => {
+        const cleanWord = word.trim().toLowerCase().replace(/[.,!?;]$/, '');
+        const isPunctuation = /^[.,!?;]$/.test(word);
+        const isSpace = /^\s+$/.test(word);
+        
+        if (isSpace) return ' ';
+        
+        // 檢查是否是片語中的關鍵詞
+        const isKeyword = keywordsToHighlight.includes(cleanWord);
+        
+        return `<span 
+            data-index="${index}" 
+            class="${isKeyword ? 'highlight-word' : ''}"
+            ${isPunctuation ? 'style="margin-left: -2px;"' : ''}
+        >${word}</span>`;
+    }).join('');
 }
 
         function updateCardIndicators() {
@@ -1254,23 +1624,140 @@
 
         async function playCardAudio() {
     const currentWord = vocabularyData[currentCategory][currentWordIndex];
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     
+    // 獲取最佳語音設置
+    const voiceSettings = getVoiceSettings();
+
     if (currentCard === 0) {
-        await playAudio();
+        return playAudio();
     } else if (currentCard === 1) {
-        await speak(currentWord.word, getVoiceSettings());
-    } else if (currentCard === 2) {
-        // 檢查是否使用新的 'examples' 陣列格式
-        if (currentWord.examples && currentWord.examples.length > 0) {
-            await speak(currentWord.examples[0].sentence, getVoiceSettings());
-        } 
-        // 或使用舊的 'example' 字串格式
-        else if (currentWord.example) {
-            await speak(currentWord.example, getVoiceSettings());
+    // 替換 "sth." 為 "something" 以獲得更好的發音
+    const processedWord = currentWord.word.replace(/\bsth\b|\bsth\./g, "something");
+    return speak(processedWord, voiceSettings);
+} else if (currentCard === 2 || currentCard === 3) {
+    // 確定當前顯示的是哪個例句和相應的DOM元素
+    const exampleDisplay = currentCard === 2 ? 
+        document.getElementById('exampleDisplay') : 
+        document.getElementById('exampleDisplay2');
+    
+    let exampleText = '';
+    
+    // 判斷是使用新格式還是舊格式來獲取例句文本
+    if (currentWord.examples && currentWord.examples.length > 0) {
+        const exampleIndex = currentCard === 2 ? 0 : 1;
+        if (currentWord.examples.length > exampleIndex) {
+            exampleText = currentWord.examples[exampleIndex].sentence;
         }
-    } else if (currentCard === 3 && currentWord.examples && currentWord.examples.length > 1) {
-        await speak(currentWord.examples[1].sentence, getVoiceSettings());
+    } else if (currentCard === 2 && currentWord.example) {
+        exampleText = currentWord.example;
     }
+    
+    if (!exampleText) return Promise.resolve();
+
+    // 替換 "sth." 為 "something" 以獲得更好的發音
+    exampleText = exampleText.replace(/\bsth\b|\bsth\./g, "something");
+
+    return new Promise((resolve) => {
+        // 創建語音實例
+        const utterance = new SpeechSynthesisUtterance(exampleText);
+        Object.assign(utterance, voiceSettings);
+
+            // 調整語音速率 - 放慢速度以便跟上高亮
+            utterance.rate = isIOS ? 0.75 : 0.7; // 比之前更慢
+            
+            // iOS 特定優化
+            if (isIOS) {
+                utterance.pitch = 1.1;
+            }
+
+            let lastHighlightedIndex = -1;
+            let pendingHighlight = null;
+
+            utterance.onboundary = function(event) {
+                if (event.name === 'word') {
+                    // 取消上一個待定高亮
+                    if (pendingHighlight) {
+                        clearTimeout(pendingHighlight);
+                    }
+                    
+                    // 延遲高亮顯示以減少偏差
+                    pendingHighlight = setTimeout(() => {
+                        requestAnimationFrame(() => {
+                            // 清除上一個高亮
+                            if (lastHighlightedIndex >= 0) {
+                                const prevWord = exampleDisplay.querySelector(`span[data-index="${lastHighlightedIndex}"]`);
+                                if (prevWord && !prevWord.classList.contains('highlight-word')) {
+                                    prevWord.classList.remove('highlight');
+                                }
+                            }
+
+                            // 使用更準確的字符匹配算法
+                            const spans = exampleDisplay.querySelectorAll('span');
+                            let bestSpan = null;
+                            let minDistance = Infinity;
+                            let charCount = 0;
+                            
+                            // 遍歷所有 span，找到最接近當前朗讀位置的單詞
+                            for (let i = 0; i < spans.length; i++) {
+                                const span = spans[i];
+                                const spanLength = span.textContent.length;
+                                
+                                // 計算開始和結束位置
+                                const startDist = Math.abs(charCount - event.charIndex);
+                                const endDist = Math.abs(charCount + spanLength - event.charIndex);
+                                
+                                // 如果這個 span 包含當前朗讀位置，或者最接近
+                                if (startDist < minDistance || endDist < minDistance) {
+                                    minDistance = Math.min(startDist, endDist);
+                                    bestSpan = span;
+                                }
+                                
+                                charCount += spanLength + 1; // +1 為空格
+                            }
+
+                            if (bestSpan) {
+                                bestSpan.classList.add('highlight');
+                                lastHighlightedIndex = bestSpan.dataset.index;
+                                
+                                // 平滑滾動到當前單字
+                                if (exampleDisplay.scrollHeight > exampleDisplay.clientHeight) {
+                                    bestSpan.scrollIntoView({
+                                        behavior: 'smooth',
+                                        block: 'center',
+                                        inline: 'nearest'
+                                    });
+                                }
+                            }
+                        });
+                    }, 50); // 50ms 的延遲，可以根據需要調整
+                }
+            };
+
+            utterance.onend = function() {
+                // 清除所有臨時高亮，但保留目標單字的特殊樣式
+                exampleDisplay.querySelectorAll('span').forEach(span => {
+                    if (!span.classList.contains('highlight-word')) {
+                        span.classList.remove('highlight');
+                    }
+                });
+                resolve();
+            };
+
+            utterance.onerror = function(event) {
+                console.error('Speech synthesis error:', event);
+                exampleDisplay.querySelectorAll('span:not(.highlight-word)').forEach(span => {
+                    span.classList.remove('highlight');
+                });
+                resolve();
+            };
+
+            // 播放語音
+            speechSynthesis.speak(utterance);
+        });
+    }
+    
+    return Promise.resolve();
 }
 
         function getVoiceSettings() {
@@ -1383,18 +1870,21 @@
         
         // 播放慢速版本並同步 highlight
         const slowSpeechPromise = new Promise(resolve => {
-            const utterance = new SpeechSynthesisUtterance(currentWord.word);
-            Object.assign(utterance, {
-                ...voiceSettings,
-                rate: isIOS ? 0.25 : 0.3,
-                pitch: isIOS ? 1.1 : 1.0
-            });
-            utterance.onend = resolve;
-            
-            setTimeout(() => {
-                speechSynthesis.speak(utterance);
-            }, 100);
-        });
+    // 替換 "sth." 為 "something" 以獲得更好的發音
+    const processedText = currentWord.word.replace(/\bsth\b|\bsth\./g, "something");
+    
+    const utterance = new SpeechSynthesisUtterance(processedText);
+    Object.assign(utterance, {
+        ...voiceSettings,
+        rate: isIOS ? 0.25 : 0.3,
+        pitch: isIOS ? 1.1 : 1.0
+    });
+    utterance.onend = resolve;
+    
+    setTimeout(() => {
+        speechSynthesis.speak(utterance);
+    }, 100);
+});
 
         // 處理視覺高亮效果
         for (let i = 0; i < words.length; i++) {
@@ -1469,18 +1959,21 @@
     
     // 同步播放慢速語音和顯示音節
     const slowSpeechPromise = new Promise(resolve => {
-        const utterance = new SpeechSynthesisUtterance(currentWord.word);
-        Object.assign(utterance, {
-            ...voiceSettings,
-            rate: rateAdjustment,
-            pitch: isIOS ? 1.1 : 1.0
-        });
-        utterance.onend = resolve;
-        
-        setTimeout(() => {
-            speechSynthesis.speak(utterance);
-        }, 100);
+    // 替換 "sth." 為 "something" 以獲得更好的發音
+    const processedText = currentWord.word.replace(/\bsth\b|\bsth\./g, "something");
+    
+    const utterance = new SpeechSynthesisUtterance(processedText);
+    Object.assign(utterance, {
+        ...voiceSettings,
+        rate: rateAdjustment,
+        pitch: isIOS ? 1.1 : 1.0
     });
+    utterance.onend = resolve;
+    
+    setTimeout(() => {
+        speechSynthesis.speak(utterance);
+    }, 100);
+});
 
     // 處理視覺高亮效果
     let currentDelay = 0;
@@ -1555,15 +2048,17 @@
         }
 
         async function speak(text, options = {}) {
-            return new Promise((resolve, reject) => {
-                const utterance = new SpeechSynthesisUtterance(text);
-                Object.assign(utterance, getVoiceSettings(), options);
-                utterance.onend = resolve;
-                utterance.onerror = reject;
-                speechSynthesis.speak(utterance);
-            });
-        }
-
+    // 替換 "sth." 為 "something" 以獲得更好的發音
+    const processedText = text.replace(/\bsth\b|\bsth\./g, "something");
+    
+    return new Promise((resolve, reject) => {
+        const utterance = new SpeechSynthesisUtterance(processedText);
+        Object.assign(utterance, getVoiceSettings(), options);
+        utterance.onend = resolve;
+        utterance.onerror = reject;
+        speechSynthesis.speak(utterance);
+    });
+}
         function stopSpeaking() {
             window.speechSynthesis.cancel();
         }
