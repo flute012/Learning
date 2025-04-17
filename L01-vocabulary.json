@@ -1,0 +1,794 @@
+[
+  {
+    "section": "Words for Production",
+    "word_forms": [
+      {
+        "root_word": "champion",
+        "word": "champion",
+        "phonetics": "[ˈtʃæmpɪən]",
+        "pos": "n. [C]",
+        "definition_zh": "冠軍",
+        "definition_en": "the winner of a sports event or a competition",
+        "examples": [
+          {
+            "example": "Howard will be crowned the world chess champion after winning the final next Monday.",
+            "translate": "在下星期一贏得決賽後，Howard將會被冠上西洋棋世界冠軍的頭銜。"
+          }
+        ],
+        "number": "wp_1"
+      },
+      {
+        "root_word": "dedication",
+        "word": "dedication",
+        "phonetics": "[ˏdɛdə`keʃən]",
+        "pos": "n. [U]",
+        "definition_zh": "奉獻；投入",
+        "definition_en": "the time, effort, and hard work one puts into achieving a certain goal",
+        "examples": [
+          {
+            "example": "Doctor Parker shows total dedication to this project. She has spent a lot of time doing detailed studies since she began the project two years ago.",
+            "translate": "Parker博士完全投入在這個計畫中。自從兩年前她開始這個計畫，她已經花了很多時間做詳盡的研究。"
+          }
+        ],
+        "number": "wp_2"
+      },
+      {
+        "root_word": "dedication",
+        "word": "dedicate",
+        "phonetics": "[`dɛdəˏket]",
+        "pos": "vt.",
+        "verb_pattern": "dedicate-dedicated-dedicated",
+        "definition_zh": "把……奉獻於；將……投入於",
+        "examples": [
+          {
+            "example": "For eighteen months, this author has dedicated himself to writing a book about the snacks available in Taiwanese night markets.",
+            "translate": "有十八個月的時間，這位作者將自己完全投入在寫一本關於臺灣夜市裡可買得到小吃的書。"
+          }
+        ],
+        "number": "wp_2_1"
+      },
+      {
+        "root_word": "medal",
+        "word": "medal",
+        "phonetics": "[`mɛdḷ]",
+        "pos": "n. [C]",
+        "definition_zh": "獎牌",
+        "definition_en": "a flat piece of metal awarded to someone that has won a race or competition",
+        "examples": [
+          {
+            "example": "Liz dreamed of coming in first in the race and wearing a shiny gold medal around her neck.",
+            "translate": "Liz夢想在賽跑中得到第一名，並戴著一枚閃亮的金牌在她脖子上。"
+          }
+        ],
+        "number": "wp_3"
+      },
+      {
+        "root_word": "injury",
+        "word": "injury",
+        "phonetics": "[`ɪndʒərɪ]",
+        "pos": "n. [C, U]",
+        "definition_zh": "受傷",
+        "definition_en": "physical damage or harm done to one’s body, especially in an accident or attack",
+        "examples": [
+          {
+            "example": "After suffering a serious injury in her last race, the cyclist has no chance of becoming a world champion this time.",
+            "translate": "在經歷上一場比賽嚴重的受傷之後，這名自行車選手這一次就沒有機會成為世界冠軍了。"
+          },
+          {
+            "example": "Aunt May crashed her car into a tree last night. Fortunately, she escaped without injury.",
+            "translate": "May阿姨昨晚開車撞到樹。幸好她毫髮無傷地逃過一劫。"
+          }
+        ],
+        "number": "wp_4"
+      },
+      {
+        "root_word": "injury",
+        "word": "injure",
+        "phonetics": "[`ɪndʒɚ]",
+        "pos": "vt.",
+        "verb_pattern": "injure-injured-injured",
+        "definition_zh": "使……受傷",
+        "examples": [
+          {
+            "example": "Harry badly injured himself at the beach and was taken to the hospital.",
+            "translate": "Harry在海灘上嚴重受傷，而被送到醫院去。"
+          }
+        ],
+        "number": "wp_4_1"
+      },
+      {
+        "root_word": "success",
+        "word": "success",
+        "phonetics": "[sək`sɛs]",
+        "pos": "n. [U]",
+        "definition_zh": "成功",
+        "definition_en": "the fact that someone achieves something or does a job very well",
+        "examples": [
+          {
+            "example": "Monica had great success in her work and became a famous singer after years of dedication.",
+            "translate": "經過多年的投入，Monica在她的工作上獲得巨大成功，並且成為一位知名的歌手。"
+          }
+        ],
+        "number": "wp_5"
+      },
+      {
+        "root_word": "success",
+        "word": "success",
+        "phonetics": "[sək`sɛs]",
+        "pos": "n. [C]",
+        "definition_zh": "成功的人、事物",
+        "examples": [
+          {
+            "example": "Sally’s first year at her university was a great success. She made lots of new friends and got high grades.",
+            "translate": "Sally在大學的第一年是很成功的一年。她交了很多新朋友，也得到很高的成績。"
+          }
+        ],
+        "number": "wp_5_1"
+      },
+      {
+        "root_word": "success",
+        "word": "succeed",
+        "phonetics": "[sək`sid]",
+        "pos": "vi.",
+        "verb_pattern": "succeed-succeeded-succeeded",
+        "definition_zh": "成功辦到",
+        "examples": [
+          {
+            "example": "Despite having faced many difficulties, Kevin still succeeded in starting his own company.",
+            "translate": "儘管曾經面對許多困難，Kevin仍然成功開始他自己的公司。"
+          }
+        ],
+        "number": "wp_5_2"
+      },
+      {
+        "root_word": "success",
+        "word": "successful",
+        "phonetics": "[sək`sɛsfəl]",
+        "pos": "adj.",
+        "definition_zh": "成功的",
+        "examples": [
+          {
+            "example": "If you want to be successful in your job, work hard and never give up.",
+            "translate": "如果你想要在工作上獲得成功，你要努力而且永不放棄。"
+          }
+        ],
+        "number": "wp_5_3"
+      },
+      {
+        "root_word": "pain",
+        "word": "pain",
+        "phonetics": "[pen]",
+        "pos": "n. [C, U]",
+        "definition_zh": "疼痛",
+        "definition_en": "what you feel when you are hurt, injured, or sick",
+        "examples": [
+          {
+            "example": "Alex experienced a sharp pain in his leg while hiking.",
+            "translate": "在健行的時候，Alex感受到腿部一陣劇痛。"
+          },
+          {
+            "example": "Once the dentist pulled out Alice’s rotten tooth, she no longer suffered from the pain.",
+            "translate": "一旦牙醫將Alice的蛀牙拔掉，她就不再遭受疼痛了。"
+          }
+        ],
+        "number": "wp_6"
+      },
+      {
+        "root_word": "pain",
+        "word": "painfully",
+        "phonetics": "[`penfəlɪ]",
+        "pos": "adv.",
+        "definition_zh": "痛苦地",
+        "examples": [
+          {
+            "example": "In spite of her sore wrist, Mrs. Davis painfully turned the tight handle until the door opened.",
+            "translate": "儘管她的手腕疼痛，Davis太太還是痛苦地轉動緊扣的門把，直到門開啟。"
+          }
+        ],
+        "number": "wp_6_1"
+      },
+      {
+        "root_word": "pain",
+        "word": "painful",
+        "phonetics": "[`penfəl]",
+        "pos": "adj.",
+        "definition_zh": "疼痛的",
+        "examples": [
+          {
+            "example": "Meg’s right arm was injured last week and thus she found carrying heavy things a bit painful.",
+            "translate": "Meg的右手臂在上星期受傷了，也因此她覺得提重的東西會有點疼痛。"
+          }
+        ],
+        "number": "wp_6_2"
+      },
+      {
+        "root_word": "pain",
+        "word": "painful",
+        "phonetics": "[`penfəl]",
+        "pos": "adj.",
+        "definition_zh": "令人痛苦的",
+        "examples": [
+          {
+            "example": "The soldier wants to forget his painful memories of the war.",
+            "translate": "那位士兵想要忘卻戰爭的痛苦回憶。"
+          }
+        ],
+        "number": "wp_6_3"
+      },
+      {
+        "root_word": "immediately",
+        "word": "immediately",
+        "phonetics": "[ɪ`midɪɪtlɪ]",
+        "pos": "adv.",
+        "definition_zh": "立即；馬上",
+        "definition_en": "right away or without delay",
+        "examples": [
+          {
+            "example": "I need to leave immediately, or I’ll miss my plane.",
+            "translate": "我必須要馬上離開，否則我會錯過我的飛機。"
+          }
+        ],
+        "number": "wp_7"
+      },
+      {
+        "root_word": "immediately",
+        "word": "immediate",
+        "phonetics": "[ɪ`midɪɪt]",
+        "pos": "adj.",
+        "definition_zh": "立即的",
+        "examples": [
+          {
+            "example": "Upon getting the call, the police took immediate action and quickly arrived at the scene of the crime.",
+            "translate": "一接到電話，警方採取立即行動，並且快速抵達犯罪現場。"
+          }
+        ],
+        "number": "wp_7_1"
+      },
+      {
+        "root_word": "collapse",
+        "word": "collapse",
+        "phonetics": "[kə`læps]",
+        "pos": "vi.",
+        "definition_zh": "倒下",
+        "definition_en": "to fall down, especially when one faints or feels very weak",
+        "examples": [
+          {
+            "example": "The woman felt dizzy after the seven-hour train journey and suddenly collapsed in the station.",
+            "translate": "在七個小時的火車旅行後，那名婦人感到頭暈，並且突然在車站裡倒下。"
+          }
+        ],
+        "number": "wp_8"
+      },
+      {
+        "root_word": "collapse",
+        "word": "collapse",
+        "phonetics": "[kə`læps]",
+        "pos": "vi.",
+        "definition_zh": "倒塌",
+        "examples": [
+          {
+            "example": "The walls of our old house completely collapsed when a strong typhoon struck last week.",
+            "translate": "上星期的強烈颱風來襲時，我們舊房子的牆壁完全倒塌了。"
+          }
+        ],
+        "number": "wp_8_1"
+      },
+      {
+        "root_word": "collapse",
+        "word": "collapse",
+        "phonetics": "[kə`læps]",
+        "pos": "n. [U]",
+        "definition_zh": "倒塌",
+        "examples": [
+          {
+            "example": "A powerful earthquake led to the sudden collapse of many houses in the area.",
+            "translate": "一場強烈的地震導致這個區域的許多房子突然倒塌。"
+          }
+        ],
+        "number": "wp_8_2"
+      },
+      {
+        "root_word": "medical",
+        "word": "medical",
+        "phonetics": "[`mɛdɪkḷ]",
+        "pos": "adj.",
+        "definition_zh": "醫療的",
+        "definition_en": "related to the study and treatment of injury or disease",
+        "examples": [
+          {
+            "example": "Lisa plans to attend medical school and become a doctor in the future.",
+            "translate": "Lisa計劃就讀醫學院，並且在未來成為一位醫生。"
+          }
+        ],
+        "number": "wp_9"
+      },
+      {
+        "root_word": "staff",
+        "word": "staff",
+        "phonetics": "[stæf]",
+        "pos": "n. [U, C]",
+        "definition_zh": "全體員工",
+        "definition_en": "a group or team of workers or employees",
+        "examples": [
+          {
+            "example": "The hotel staff greets all guests in a polite way.",
+            "translate": "那家飯店的員工禮貌地向所有客人打招呼。"
+          },
+          {
+            "example": "The movie theater has a small staff of fifteen part-time workers.",
+            "translate": "這家電影院只有少少的十五名兼職員工。"
+          }
+        ],
+        "number": "wp_10"
+      },
+      {
+        "root_word": "courage",
+        "word": "courage",
+        "phonetics": "[`kɝɪdʒ]",
+        "pos": "n. [U]",
+        "definition_zh": "勇氣",
+        "definition_en": "the ability to face a difficult, painful, or dangerous situation",
+        "examples": [
+          {
+            "example": "It takes courage for first-time swimmers to put their heads under the water.",
+            "translate": "對於第一次游泳的人而言，將頭放進水下需要勇氣。"
+          }
+        ],
+        "number": "wp_11"
+      },
+      {
+        "root_word": "strength",
+        "word": "strength",
+        "phonetics": "[strɛŋθ]",
+        "pos": "n. [U]",
+        "definition_zh": "意志力",
+        "definition_en": "will power or courage, usually shown under challenging conditions",
+        "examples": [
+          {
+            "example": "It’s important for a player to have enough mental strength to handle the stress during competitions.",
+            "translate": "一名選手有足夠的意志力去處理比賽時的壓力是重要的。"
+          }
+        ],
+        "number": "wp_12"
+      },
+      {
+        "root_word": "strength",
+        "word": "strength",
+        "phonetics": "[strɛŋθ]",
+        "pos": "n. [U]",
+        "definition_zh": "體力；力量",
+        "examples": [
+          {
+            "example": "Rachel tried to build up her strength by exercising every day.",
+            "translate": "Rachel試著藉由每天運動來增強她的體力。"
+          }
+        ],
+        "number": "wp_12_1"
+      },
+      {
+        "root_word": "strength",
+        "word": "strengthen",
+        "phonetics": "[`strɛŋθən]",
+        "pos": "vt.",
+        "verb_pattern": "strengthen-strengthened-strengthened",
+        "definition_zh": "強化",
+        "examples": [
+          {
+            "example": "Spending holidays together greatly strengthens the bond between Henry and his family.",
+            "translate": "一起度假大大地強化了Henry和他家人之間的關係。"
+          }
+        ],
+        "number": "wp_12_2"
+      },
+      {
+        "root_word": "support",
+        "word": "support",
+        "phonetics": "[sə`pɔrt]",
+        "pos": "n. [U]",
+        "definition_zh": "支持",
+        "definition_en": "backing or encouragement for someone to help him or her deal with something",
+        "examples": [
+          {
+            "example": "The crowd cheered loudly to show their support for the tennis player every time she won a point.",
+            "translate": "每當她贏得一分，群眾就會大聲歡呼來表現出他們對於這位網球選手的支持。"
+          }
+        ],
+        "number": "wp_13"
+      },
+      {
+        "root_word": "support",
+        "word": "support",
+        "phonetics": "[sə`pɔrt]",
+        "pos": "vt.",
+        "verb_pattern": "support-supported-supported",
+        "definition_zh": "支持",
+        "examples": [
+          {
+            "example": "Clive’s parents support him in his desire to become a pilot and will gladly pay his flight school fees.",
+            "translate": "Clive的父母支持他想要成為一名飛行員的渴望，並且會很開心替他付飛行學校的學費。"
+          }
+        ],
+        "number": "wp_13_1"
+      },
+      {
+        "root_word": "support",
+        "word": "support",
+        "phonetics": "[sə`pɔrt]",
+        "pos": "vt.",
+        "verb_pattern": "support-supported-supported",
+        "definition_zh": "支撐",
+        "examples": [
+          {
+            "example": "The bridge across the river is supported by two huge stone pillars.",
+            "translate": "這座跨河的橋是由兩根巨大的石柱所支撐著。"
+          }
+        ],
+        "number": "wp_13_2"
+      },
+      {
+        "root_word": "struggle",
+        "word": "struggle",
+        "phonetics": "[`strʌgḷ]",
+        "pos": "vi.",
+        "definition_zh": "艱難地前進",
+        "definition_en": "to move with great difficulty",
+        "examples": [
+          {
+            "example": "With a heavy load in back, the truck struggled slowly up the steep hill.",
+            "translate": "後面載著重物，那輛卡車艱難地慢慢往陡峭的山上開去。"
+          }
+        ],
+        "number": "wp_14"
+      },
+      {
+        "root_word": "struggle",
+        "word": "struggle",
+        "phonetics": "[`strʌgḷ]",
+        "pos": "vi.",
+        "definition_zh": "奮力；爭取",
+        "examples": [
+          {
+            "example": "Our neighbor was trapped in the fire and struggled for breath.",
+            "translate": "我們的鄰居被困在火場裡，奮力地想要吸到空氣。"
+          }
+        ],
+        "number": "wp_14_1"
+      },
+      {
+        "root_word": "struggle",
+        "word": "struggle",
+        "phonetics": "[`strʌgḷ]",
+        "pos": "n. [C]",
+        "definition_zh": "奮鬥；努力",
+        "examples": [
+          {
+            "example": "Natalie missed a whole week of school, so it was quite a struggle for her to catch up.",
+            "translate": "Natalie錯過一整個禮拜學校的課，所以她要很努力才能趕上。"
+          }
+        ],
+        "number": "wp_14_2"
+      },
+      {
+        "root_word": "pride",
+        "word": "pride",
+        "phonetics": "[praɪd]",
+        "pos": "n. [U]",
+        "definition_zh": "驕傲；得意",
+        "definition_en": "satisfaction or pleasure in one’s achievements",
+        "examples": [
+          {
+            "example": "Neil took pride in his brother’s determination when he saw him complete the marathon.",
+            "translate": "在看到他的弟弟完成馬拉松賽跑時，Neil對他的決心感到驕傲。"
+          }
+        ],
+        "number": "wp_15"
+      },
+      {
+        "root_word": "pride",
+        "word": "proud",
+        "phonetics": "[praʊd]",
+        "pos": "adj.",
+        "definition_zh": "驕傲的；得意的",
+        "examples": [
+          {
+            "example": "Laura’s parents were very proud of her excellent score in science class.",
+            "translate": "Laura的父母對於她在自然科學課上出色的成績感到很驕傲。"
+          }
+        ],
+        "number": "wp_15_1"
+      },
+      {
+        "root_word": "emotional",
+        "word": "emotional",
+        "phonetics": "[ɪ`moʃənḷ]",
+        "pos": "adj.",
+        "definition_zh": "情緒激動的",
+        "definition_en": "having or showing strong feelings",
+        "examples": [
+          {
+            "example": "Mr. Jones got very emotional and struggled to hold back the tears when his daughter graduated from law school.",
+            "translate": "當Jones先生的女兒從法學院畢業的時候，他變得很激動，而且努力地要忍住淚水。"
+          }
+        ],
+        "number": "wp_16"
+      },
+      {
+        "root_word": "emotional",
+        "word": "emotional",
+        "phonetics": "[ɪ`moʃənḷ]",
+        "pos": "adj.",
+        "definition_zh": "情緒的；情感的",
+        "examples": [
+          {
+            "example": "Amy’s emotional support helped me a lot when my mother died.",
+            "translate": "當我母親過世時，Amy在情感上的支持幫助我很多。"
+          }
+        ],
+        "number": "wp_16_1"
+      },
+      {
+        "root_word": "emotional",
+        "word": "emotion",
+        "phonetics": "[ɪ`moʃən]",
+        "pos": "n. [C, U]",
+        "definition_zh": "情緒；情感",
+        "examples": [
+          {
+            "example": "Danny is shy, so it’s hard for him to express his emotions and let others know how he feels.",
+            "translate": "Danny很害羞，所以對他而言要表達他的情緒並讓別人知道他的感受是很難的。"
+          },
+          {
+            "example": "The bride’s voice was full of emotion when she smiled and answered, “I do.”",
+            "translate": "當新娘子微笑地回答「我願意。」時，她的聲音充滿情感。"
+          }
+        ],
+        "number": "wp_16_2"
+      },
+      {
+        "root_word": "admiration",
+        "word": "admiration",
+        "phonetics": "[ˏædmə`reʃən]",
+        "pos": "n. [U]",
+        "definition_zh": "欽佩",
+        "definition_en": "a feeling of deep approval for someone or something",
+        "examples": [
+          {
+            "example": "Fans showed their admiration for the amazing actor by throwing flowers up onto the stage after the show.",
+            "translate": "在表演之後，粉絲們將花丟到臺上以展現他們對這位出色演員的欽佩。"
+          }
+        ],
+        "number": "wp_17"
+      },
+      {
+        "root_word": "admiration",
+        "word": "admire",
+        "phonetics": "[əd`maɪr]",
+        "pos": "vt.",
+        "verb_pattern": "admire-admired-admired",
+        "definition_zh": "欽佩",
+        "examples": [
+          {
+            "example": "Debbie deeply admires Jimmy for his generosity and honesty.",
+            "translate": "Debbie深深地欽佩Jimmy的大方和誠實。"
+          }
+        ],
+        "number": "wp_17_1"
+      },
+      {
+        "root_word": "respect",
+        "word": "respect",
+        "phonetics": "[rɪ`spɛkt]",
+        "pos": "n. [U]",
+        "definition_zh": "尊敬；尊重",
+        "definition_en": "a feeling of admiration for one’s qualities, experience, or achievements",
+        "examples": [
+          {
+            "example": "Mike had great respect for the wise old man and always treated him politely.",
+            "translate": "Mike非常尊敬這位有智慧的老先生，並且總是禮貌地對待他。"
+          }
+        ],
+        "number": "wp_18"
+      },
+      {
+        "root_word": "respect",
+        "word": "respect",
+        "phonetics": "[rɪ`spɛkt]",
+        "pos": "vt.",
+        "verb_pattern": "respect-respected-respected",
+        "definition_zh": "尊敬；尊重",
+        "examples": [
+          {
+            "example": "Even if you don’t agree with someone, it’s still important to respect his or her opinions.",
+            "translate": "即使你不同意某人，尊重他或她的意見還是很重要。"
+          }
+        ],
+        "number": "wp_18_1"
+      }
+    ]
+  },
+  {
+    "section": "Idioms and Phrases",
+    "word_forms": [
+      {
+        "root_word": "take off",
+        "word": "take off",
+        "definition_zh": "(1) 出發",
+        "definition_en": "to leave a place",
+        "examples": [
+          {
+            "example": "As soon as these firefighters were ready, they took off at great speed toward the burning building.",
+            "translate": "這些消防員一就緒，他們就以極快速度出發前往失火的建築物。"
+          }
+        ],
+        "number": "ip_1"
+      },
+      {
+        "root_word": "take off",
+        "word": "take off",
+        "definition_zh": "(2) 起飛",
+        "definition_en": "to rise up from the ground and start to fly",
+        "examples": [
+          {
+            "example": "After racing down the runway, the large plane successfully took off into the air.",
+            "translate": "在跑道上衝刺後，這架大型飛機成功地起飛至空中。"
+          }
+        ],
+        "number": "ip_1_1"
+      },
+      {
+        "root_word": "have one’s heart set on",
+        "word": "have one’s heart set on",
+        "definition_zh": "一心一意想要做某事",
+        "definition_en": "to want something with all one’s heart",
+        "examples": [
+          {
+            "example": "Toby has his heart set on being an NBA player and trains for hours every day to improve his basketball skills.",
+            "translate": "Toby一心一意想要當一名NBA球員，而且每天訓練好幾個小時來增進他的球技。"
+          }
+        ],
+        "number": "ip_2"
+      },
+      {
+        "root_word": "speed (...) up",
+        "word": "speed (...) up",
+        "definition_zh": "加速",
+        "definition_en": "to cause something to happen or move faster, or to increase one’s speed",
+        "examples": [
+          {
+            "example": "We are behind schedule, so we need to speed up and work more quickly.",
+            "translate": "我們進度落後了，所以我們需要加快速度，工作更快一些。"
+          }
+        ],
+        "number": "ip_3"
+      },
+      {
+        "root_word": "rise to one’s feet",
+        "word": "rise to one’s feet",
+        "definition_zh": "(重新)站起來",
+        "definition_en": "to stand up, sometimes in a determined way",
+        "examples": [
+          {
+            "example": "When the injured boxer rose to his feet after being knocked down, everyone clapped wildly.",
+            "translate": "當這位受傷的拳擊手在被擊倒後重新站了起來時，每個人都熱烈地鼓掌。"
+          }
+        ],
+        "number": "ip_4"
+      },
+      {
+        "root_word": "carry...through",
+        "word": "carry...through",
+        "definition_zh": "幫助……渡過難關",
+        "definition_en": "to help someone get through a difficult time",
+        "examples": [
+          {
+            "example": "It was Evan’s support that carried Mandy through when she lost her sister in a car accident.",
+            "translate": "當Mandy在一場車禍中失去她的姊姊時，是Evan的支持幫助她渡過難關。"
+          }
+        ],
+        "number": "ip_5"
+      }
+    ]
+  },
+  {
+    "section": "Words for Recognition",
+    "word_forms": [
+      {
+        "root_word": "stadium",
+        "word": "stadium",
+        "phonetics": "[`stedɪəm]",
+        "pos": "n",
+        "definition_zh": "體育場",
+        "number": "wr_1"
+      },
+      {
+        "root_word": "bang",
+        "word": "bang",
+        "phonetics": "[bæŋ]",
+        "pos": "n",
+        "definition_zh": "砰的一聲",
+        "number": "wr_2"
+      },
+      {
+        "root_word": "Derek Redmond",
+        "word": "Derek Redmond",
+        "phonetics": "[`dɛrək `rɛdmʌnd]",
+        "pos": "n",
+        "definition_zh": "德瑞克．雷德蒙",
+        "number": "wr_3"
+      },
+      {
+        "root_word": "the Olympics",
+        "word": "the Olympics",
+        "phonetics": "[ðɪo`lɪmpɪks]",
+        "pos": "n",
+        "definition_zh": "奧林匹克運動會",
+        "number": "wr_4"
+      },
+      {
+        "root_word": "the Olympics",
+        "word": "Olympic",
+        "phonetics": "[o`lɪmpɪk]",
+        "pos": "adj",
+        "definition_zh": "奧林匹克運動會的",
+        "number": "wr_4_1"
+      },
+      {
+        "root_word": "unbearable",
+        "word": "unbearable",
+        "phonetics": "[ʌn`bɛrəbḷ]",
+        "pos": "adj",
+        "definition_zh": "難以忍受的",
+        "number": "wr_5"
+      },
+      {
+        "root_word": "limb",
+        "word": "limb",
+        "phonetics": "[lɪm]",
+        "pos": "n",
+        "definition_zh": "四肢之一（手臂或腿）",
+        "number": "wr_6"
+      },
+      {
+        "root_word": "hamstring",
+        "word": "hamstring",
+        "phonetics": "[`hæmˏstrɪŋ]",
+        "pos": "n",
+        "definition_zh": "腿後肌腱（位於大腿後側）",
+        "number": "wr_7"
+      },
+      {
+        "root_word": "stand",
+        "word": "stand",
+        "phonetics": "[stænd]",
+        "pos": "n",
+        "definition_zh": "看臺",
+        "number": "wr_8"
+      },
+      {
+        "root_word": "security guard",
+        "word": "security guard",
+        "phonetics": "[sɪ`kjʊrətɪ ˏgɑrd]",
+        "pos": "n",
+        "definition_zh": "保安人員",
+        "number": "wr_9"
+      },
+      {
+        "root_word": "the Olympics",
+        "word": "Olympic",
+        "phonetics": "[o`lɪmpɪk]",
+        "pos": "adj",
+        "definition_zh": "奧林匹克運動會的",
+        "number": "wr_10"
+      },
+      {
+        "root_word": "spectator",
+        "word": "spectator",
+        "phonetics": "[`spɛktetɚ]",
+        "pos": "n",
+        "definition_zh": "（體育比賽的）觀眾",
+        "number": "wr_11"
+      }
+
+    ]
+  }
+]
