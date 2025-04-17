@@ -626,59 +626,10 @@
                     if (!word) return;
                     
                     try {
-                        // 創建語音合成發聲請求
+                        // 使用瀏覽器的語音合成API播放單字發音
                         const utterance = new SpeechSynthesisUtterance(word);
                         utterance.lang = 'en-US'; // 設定語言為英文
-                        utterance.rate = 0.9; // 稍微放慢速度
-                        
-                        // 獲取所有可用的語音
-                        let voices = window.speechSynthesis.getVoices();
-                        
-                        // 如果語音列表是空的，等待語音加載
-                        if (voices.length === 0) {
-                            await new Promise(resolve => {
-                                window.speechSynthesis.onvoiceschanged = resolve;
-                                setTimeout(resolve, 1000); // 設置超時，防止無限等待
-                            });
-                            voices = window.speechSynthesis.getVoices();
-                        }
-                        
-                        // 優先選擇的男聲語音名稱
-                        const preferredMaleVoices = [
-                            'Google US English Male',
-                            'Microsoft Mark',                            
-                            'Fred',
-                            'Alex',
-                            'Mark'
-                        ];
-                        
-                        // 按優先順序查找男聲
-                        let selectedVoice = null;
-                        for (const voiceName of preferredMaleVoices) {
-                            const voice = voices.find(v => v.name.includes(voiceName) && v.lang.includes('en'));
-                            if (voice) {
-                                selectedVoice = voice;
-                                break;
-                            }
-                        }
-                        
-                        // 如果找不到優先的男聲，使用本地的英文語音
-                        if (!selectedVoice) {
-                            selectedVoice = voices.find(v => v.lang.includes('en') && v.localService === true);
-                        }
-                        
-                        // 如果仍然找不到，使用任何英文語音
-                        if (!selectedVoice) {
-                            selectedVoice = voices.find(v => v.lang.includes('en'));
-                        }
-                        
-                        // 設置選定的語音
-                        if (selectedVoice) {
-                            utterance.voice = selectedVoice;
-                            console.log(`使用語音: ${selectedVoice.name}`);
-                        } else {
-                            console.log("未找到合適的男聲語音，使用預設語音");
-                        }
+                        utterance.rate = 0.9; // 稍微放慢速度以便清晰聽到
                         
                         // 播放發音
                         window.speechSynthesis.speak(utterance);
