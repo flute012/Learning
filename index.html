@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>互動詞彙學習</title>
+    <title>英文自學霸</title>
     <script src="https://unpkg.com/vue@3"></script>
     <style>
         body {
@@ -15,6 +15,12 @@
             padding: 0;
         }
         
+        h1{
+            color: #1e7ac0;
+            font-weight:bold;
+            font-size: 2.7rem;
+
+        }
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -26,7 +32,7 @@
         
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 1rem;
             padding-bottom: 10px;
             border-bottom: 1px solid #eee;
         }
@@ -200,7 +206,7 @@
 <body>
     <div id="app" class="container">
         <div class="header">
-            <h1>互動詞彙學習</h1>
+            <h1>英文自學霸</h1>
         </div>
         
         <div id="audio-controls"></div>
@@ -230,9 +236,11 @@
                 <span>{{ selectedWord.word }}</span>
                 <span class="phonetics" v-if="selectedWord.phonetics">{{ selectedWord.phonetics }}</span>
                 <span class="pos" v-if="selectedWord.pos">{{ selectedWord.pos }}</span>
+              
             </h3>
             
             <div class="definition" v-if="selectedWord">
+                <span class="syllable" v-if="selectedWord.syllable"><strong>音節: </strong>{{ selectedWord.syllable }}</span>
                 <p v-if="selectedWord.definition_en"><strong>英文:</strong> {{ selectedWord.definition_en }}</p>
                 <p><strong>中文:</strong> {{ selectedWord.definition_zh }}</p>
             </div>
@@ -250,7 +258,7 @@
                     FILE_PATHS: {
                         HTML_PARAGRAPH_JSON: 'L01_課文文件_processed.json', // 包含HTML標記和時間戳記的英文
                         CHINESE_PARAGRAPH_JSON: 'L01_段落.json', // 包含中文翻譯的文件
-                        VOCABULARY_JSON: 'L01-vocabulary.json',
+                        VOCABULARY_JSON: 'L01-vocabulary_final.json',
                         AUDIO_FILE: 'B2L1課文全文.mp3'
                     },
                     // 資料結構設定
@@ -590,16 +598,48 @@
                 
                 // 顯示詞彙卡片
                 const showVocabularyCard = () => {
+                    // 顯示詞彙卡和遮罩
                     document.getElementById('vocabularyCard').style.display = 'block';
                     document.getElementById('overlay').style.display = 'block';
-                };
-                
+                    
+                    // 暫停音頻播放
+                    if (audioElement.value && !audioElement.value.paused) {
+                        audioElement.value.pause();
+                        console.log("詞彙卡顯示時暫停音頻播放");
+                    }
+                    
+                    // 如果已有選定的詞彙，延遲0.3秒後播放發音
+                    if (selectedWord.value && selectedWord.value.word) {
+                        setTimeout(() => {
+                            window.playWordPronunciation(selectedWord.value.word);
+                        }, 50);
+                    }
+                };          
                 // 關閉詞彙卡片
                 const closeVocabularyCard = () => {
                     document.getElementById('vocabularyCard').style.display = 'none';
                     document.getElementById('overlay').style.display = 'none';
                 };
+
                 
+                window.playWordPronunciation = async (word) => {
+                    if (!word) return;
+                    
+                    try {
+                        // 使用瀏覽器的語音合成API播放單字發音
+                        const utterance = new SpeechSynthesisUtterance(word);
+                        utterance.lang = 'en-US'; // 設定語言為英文
+                        utterance.rate = 0.9; // 稍微放慢速度以便清晰聽到
+                        
+                        // 播放發音
+                        window.speechSynthesis.speak(utterance);
+                        console.log(`播放單字: ${word}`);
+                    } catch (err) {
+                        console.error("播放單字發音失敗:", err);
+                    }
+                };
+
+
                 // 處理詞彙點擊
                 const handleWordClick = (id) => {
                     let word = vocabularyData.value.find(w => w.number === id);
@@ -615,7 +655,8 @@
                                     word: text,
                                     phonetics: '(暫無音標)',
                                     pos: '未知',
-                                    definition_zh: '此詞彙尚未有定義'
+                                    definition_zh: '此詞彙尚未有定義',
+                                    syllable: '' // 添加syllable字段
                                 };
                             }
                         }
@@ -624,6 +665,11 @@
                     if (word) {
                         selectedWord.value = word;
                         showVocabularyCard();
+                        
+                        // 延遲0.3秒後播放單字發音
+                        setTimeout(() => {
+                            window.playWordPronunciation(word.word);
+                        }, 50);
                     }
                 };
                 
