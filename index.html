@@ -4,239 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>英文自學霸</title>
+    <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/vue@3"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 0;
-        }
-        
-        h1{
-            color: #1e7ac0;
-            font-weight:bold;
-            font-size: 2.7rem;
-
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            min-height: 100vh;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 1rem;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .controls {
-            margin: 15px 0;
-            text-align: center;
-        }
-        
-        .controls button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        
-        .controls button:hover {
-            background-color: #45a049;
-        }
-        
-        .paragraph-container {
-            margin: 20px 0;
-        }
-        
-        .paragraph {
-            margin-bottom: 30px;
-            line-height: 1.8;
-        }
-        
-        .translation {
-            color: #666;
-            font-style: italic;
-            margin-top: 10px;
-            padding-left: 10px;
-            border-left: 3px solid #4CAF50;
-        }
-        
-        .vocab-word {
-            color: #0066cc;
-            cursor: pointer;
-            border-bottom: 1px dotted #0066cc;
-            position: relative;
-        }
-        
-        .vocab-word:hover {
-            background-color: #e8f4ff;
-        }
-        
-        .vocabulary-card {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            z-index: 1001;
-            max-width: 500px;
-            width: 80%;
-        }
-        
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-        }
-        
-        .vocabulary-card h3 {
-            margin-top: 0;
-            border-bottom: 2px solid #4CAF50;
-            padding-bottom: 10px;
-        }
-        
-        .phonetics {
-            color: #666;
-            margin-left: 10px;
-            font-weight: normal;
-        }
-        
-        .pos {
-            color: #999;
-            font-size: 14px;
-            font-style: italic;
-            font-weight: normal;
-            margin-left: 10px;
-        }
-        
-        .definition {
-            line-height: 1.6;
-        }
-        
-        .loading-spinner {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #4CAF50;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .error-message {
-            color: #f44336;
-            text-align: center;
-            padding: 20px;
-            background-color: #ffebee;
-            border-radius: 4px;
-            margin: 20px 0;
-        }
-        
-        /* 音頻控制樣式 */
-        #audio-controls {
-            margin: 20px 0;
-            padding: 15px;
-            background-color: #f5f5f5;
-            border-radius: 8px;
-        }
-        
-        #audio-controls button {
-            background-color: #2196F3;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            margin-right: 10px;
-            cursor: pointer;
-        }
-        
-        #audio-controls button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        
-        #audio-time-display {
-            margin: 0 15px;
-        }
-        
-        /* 單詞高亮樣式 */
-        .word {
-            cursor: pointer;
-            border-radius: 3px;
-            padding: 2px 0;
-        }
-        
-        .word:hover {
-            background-color: #f0f8ff;
-        }
-        
-        .current-word {
-            background-color: #ffff99;
-            padding: 2px 4px;
-            border-radius: 3px;
-        }
-    </style>
 </head>
 <body>
-    <div id="app" class="container">
-        <div class="header">
-            <h1>英文自學霸</h1>
-        </div>
-        
-        <div id="audio-controls"></div>
-        
-        <div class="controls">
-            <button @click="switchLanguage">{{ selectedLanguage === 'english' ? '顯示中文翻譯' : '隱藏中文翻譯' }}</button>
-        </div>
-        
-        <div v-if="error" class="error-message">{{ error }}</div>
-        
-        <div v-if="loading" class="paragraph-container">
-            <div class="loading-spinner"></div>
-            <div style="text-align: center;">正在載入內容...</div>
-        </div>
-        
-        <div v-else-if="paragraphData.length > 0" class="paragraph-container">
-            <div v-for="(paragraph, index) in paragraphData" :key="index" class="paragraph">
-                <div v-html="processedParagraphs[index]"></div>
-                <div v-if="selectedLanguage === 'chinese'" class="translation">{{ paragraph.chinese }}</div>
+    <div id="app">
+        <!-- 頂部固定導航欄 -->
+        <div id="fixed-top">
+            <div class="header-row">
+                <a href="menu.html" class="home-button" style="position: absolute; left: 16px;">🏠</a>
+                <h1>{{ lessonTitle }}</h1>
+                <button id="instructionsBtn" style="position: absolute; right: 16px;" @click="toggleInstructions">💡</button>
             </div>
         </div>
+
+        <!-- 滾動內容區域 -->
+        <div id="scrollable-content">
+            <div id="article">
+                <div v-if="error" class="error-message">{{ error }}</div>
+                
+                <div v-if="loading" class="loading-spinner">
+                    <div style="text-align: center;">正在載入內容...</div>
+                </div>
+                
+                <div v-else-if="paragraphData.length > 0">
+                    <div v-for="(paragraph, index) in paragraphData" :key="index" class="paragraph">
+                        <div v-html="processedParagraphs[index]"></div>
+                        <div v-show="showTranslation" class="translation">{{ paragraph.chinese }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 單詞解釋彈窗 -->
+        <div id="wordInfo"></div>
+        <div id="overlay" @click="closeVocabularyCard"></div>
         
-        <div class="overlay" id="overlay" @click="closeVocabularyCard"></div>
-        
+        <!-- 詞彙卡片 -->
         <div class="vocabulary-card" id="vocabularyCard">
             <h3 v-if="selectedWord">
                 <span>{{ selectedWord.word }}</span>
                 <span class="phonetics" v-if="selectedWord.phonetics">{{ selectedWord.phonetics }}</span>
                 <span class="pos" v-if="selectedWord.pos">{{ selectedWord.pos }}</span>
-              
             </h3>
             
             <div class="definition" v-if="selectedWord">
@@ -245,725 +54,94 @@
                 <p><strong>中文:</strong> {{ selectedWord.definition_zh }}</p>
             </div>
         </div>
+        
+        <!-- 速度調節模態窗 -->
+        <div id="speedModal">
+            <div id="speedControlPanel">
+                <div class="modal-drag-indicator"></div>
+                <div class="current-speed-display" id="modalSpeedValue">1x</div>
+                
+                <div class="speed-slider-container">
+                    <input type="range" id="speedControlModal" min="0.25" max="2" step="0.05" value="1">
+                </div>
+                
+                <div class="speed-presets">
+                    <button class="speed-preset-btn" data-speed="0.25">0.25</button>
+                    <button class="speed-preset-btn active" data-speed="1.0">1.0</button>
+                    <button class="speed-preset-btn" data-speed="1.25">1.25</button>
+                    <button class="speed-preset-btn" data-speed="1.5">1.5</button>
+                    <button class="speed-preset-btn" data-speed="2.0">2.0</button>
+                </div>
+                <div class="speed-label">正常</div>
+            </div>
+        </div>
+
+        <!-- 底部控制欄 -->
+        <div id="bottom-controls">
+            <div class="control-item">
+                <button id="speedBtn" @click="toggleSpeedModal">
+                    <span class="speed-icon">⏱</span>
+                    <span id="speedValue" class="speed-value">1.0x</span>
+                </button>
+                <span class="control-label">語速</span>
+            </div>
+            
+            <div class="control-item">
+                <button id="playPauseBtn" @click="togglePlayPause">▶</button>
+                <span class="control-label">播放</span>
+            </div>
+            
+            <div class="control-item">
+                <label class="translation-switch" title="切換中英文顯示">
+                    <input type="checkbox" id="translationToggle" v-model="showTranslation">
+                    <span class="slider">
+                        <span class="lang-label lang-en">英文</span>
+                        <span class="lang-label lang-zh">中英</span>
+                    </span>
+                </label>
+                <span class="control-label">語言切換</span>
+            </div>
+        </div>
+
+        <!-- 音頻進度條 -->
+        <div id="audio-progress-container">
+            <div id="audio-progress-bar"></div>
+        </div>
+
+        <!-- 使用說明模態窗 -->
+        <div id="instructionsModal">
+            <div id="instructionsContent">
+                <div class="instructions-header">
+                    <h2>使用說明</h2>
+                    <button class="close-button" @click="toggleInstructions">×</button>
+                </div>
+                <div class="instructions-body">
+                    <div class="instruction-item">
+                        <span class="instruction-icon">🔊</span>
+                        <p>點擊任何單字可聽發音</p>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="instruction-icon">📖</span>
+                        <p>點擊<strong>粗體字</strong>可查看詳細解釋</p>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="instruction-icon">⏱️</span>
+                        <p>點擊速度按鈕可調整朗讀速度</p>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="instruction-icon">▶️</span>
+                        <p>使用播放按鈕控制全文朗讀</p>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="instruction-icon">🔄</span>
+                        <p>切換翻譯開關可顯示/隱藏中文翻譯</p>
+                    </div>
+                </div>
+                <button class="got-it-button" @click="toggleInstructions">知道了！</button>
+            </div>
+        </div>
     </div>
 
-    <script>
-        const { createApp, ref, computed, onMounted, watch, nextTick } = Vue;
-        
-        const app = createApp({
-            setup() {
-                // 集中管理檔案路徑與設定
-                const APP_CONFIG = {
-                    // 檔案路徑
-                    FILE_PATHS: {
-                        HTML_PARAGRAPH_JSON: 'L01_課文文件_processed.json', // 包含HTML標記和時間戳記的英文
-                        CHINESE_PARAGRAPH_JSON: 'L01_段落.json', // 包含中文翻譯的文件
-                        VOCABULARY_JSON: 'L01-vocabulary_final.json',
-                        AUDIO_FILE: 'B2L1課文全文.mp3'
-                    },
-                    // 資料結構設定
-                    DATA_KEYS: {
-                        HTML_ROOT_KEY: 'L01_課文文件', // HTML段落JSON檔案的根鍵名
-                        HTML_PARAGRAPHS_KEY: 'paragraphs', // HTML段落資料的子鍵名
-                        CHINESE_ROOT_KEY_PATTERN: 'L01', // 中文翻譯JSON檔案的根鍵名模式
-                    }
-                };
-                
-                // 主要狀態
-                const paragraphData = ref([]);
-                const vocabularyData = ref([]);
-                const selectedLanguage = ref('english');
-                const selectedWord = ref(null);
-                const loading = ref(true);
-                const error = ref(null);
-                const processedParagraphs = ref([]);
-                
-                // 音頻相關
-                const audioElement = ref(null);
-                const audioLoaded = ref(false);
-                const currentWordIndex = ref(-1);
-                const wordElements = ref([]);
-
-                // 清理和合併詞彙 (用於處理word span)
-                const cleanAndMergeWords = (text) => {
-                    if (!text) return '';
-                    return text.replace(/\s+/g, ' ').trim();
-                };
-
-                // 計算兩個詞的相似度
-                const calculateSimilarity = (a, b) => {
-                    if (a === b) return 1; // 完全匹配
-                    if (!a || !b) return 0;
-                    
-                    // 部分包含檢查
-                    if (a.includes(b) || b.includes(a)) {
-                        const ratio = Math.min(a.length, b.length) / Math.max(a.length, b.length);
-                        return 0.8 * ratio + 0.2; 
-                    }
-                    
-                    // 萊文斯坦距離計算
-                    const matrix = [];
-                    
-                    for (let i = 0; i <= a.length; i++) {
-                        matrix[i] = [i];
-                    }
-                    
-                    for (let j = 0; j <= b.length; j++) {
-                        matrix[0][j] = j;
-                    }
-                    
-                    for (let i = 1; i <= a.length; i++) {
-                        for (let j = 1; j <= b.length; j++) {
-                            const cost = a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1;
-                            matrix[i][j] = Math.min(
-                                matrix[i - 1][j] + 1,
-                                matrix[i][j - 1] + 1,
-                                matrix[i - 1][j - 1] + cost
-                            );
-                        }
-                    }
-                    
-                    const distance = matrix[a.length][b.length];
-                    const maxLength = Math.max(a.length, b.length);
-                    
-                    return maxLength === 0 ? 1 : 1 - (distance / maxLength);
-                };
-
-                // 轉義正則表達式
-                const escapeRegExp = (string) => {
-                    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                };
-                
-                // 初始化音頻控制界面
-                const initializeAudioControls = () => {
-                    const controlsDiv = document.getElementById('audio-controls');
-                    if (!controlsDiv) return;
-
-                    // 進度條容器
-                    const progressContainer = document.createElement('div');
-                    progressContainer.id = 'audio-progress-container';
-                    progressContainer.style.width = '100%';
-                    progressContainer.style.backgroundColor = '#eee';
-                    progressContainer.style.height = '10px';
-                    progressContainer.style.borderRadius = '5px';
-                    progressContainer.style.margin = '10px 0';
-                    progressContainer.style.cursor = 'pointer';
-                    
-                    const progressBar = document.createElement('div');
-                    progressBar.id = 'audio-progress-bar';
-                    progressBar.style.width = '0%';
-                    progressBar.style.height = '100%';
-                    progressBar.style.backgroundColor = '#4CAF50';
-                    progressBar.style.borderRadius = '5px';
-                    progressBar.style.transition = 'width 0.1s';
-                    
-                    progressContainer.appendChild(progressBar);
-                    
-                    // 控制按鈕容器
-                    const buttonContainer = document.createElement('div');
-                    buttonContainer.style.display = 'flex';
-                    buttonContainer.style.alignItems = 'center';
-                    buttonContainer.style.gap = '10px';
-                    buttonContainer.style.marginBottom = '10px';
-                    
-                    // 創建按鈕和控制元素
-                    const elements = {
-                        playBtn: { id: 'audio-play-btn', text: '播放', disabled: true },
-                        pauseBtn: { id: 'audio-pause-btn', text: '暫停', disabled: true },
-                        timeDisplay: { id: 'audio-time-display', text: '00:00 / 00:00', type: 'span' },
-                        speedLabel: { text: '速度:', type: 'span' },
-                        speedSelect: { id: 'audio-speed', type: 'select' }
-                    };
-                    
-                    // 創建UI元素
-                    for (const [key, props] of Object.entries(elements)) {
-                        let element;
-                        
-                        if (props.type === 'span') {
-                            element = document.createElement('span');
-                            element.textContent = props.text;
-                        } else if (props.type === 'select') {
-                            element = document.createElement('select');
-                            [0.5, 0.75, 1, 1.25, 1.5, 2].forEach(speed => {
-                                const option = document.createElement('option');
-                                option.value = speed;
-                                option.textContent = `${speed}x`;
-                                if (speed === 1) option.selected = true;
-                                element.appendChild(option);
-                            });
-                        } else {
-                            element = document.createElement('button');
-                            element.textContent = props.text;
-                            if (props.disabled) element.disabled = true;
-                        }
-                        
-                        if (props.id) element.id = props.id;
-                        buttonContainer.appendChild(element);
-                    }
-                    
-                    // 狀態顯示
-                    const statusDiv = document.createElement('div');
-                    statusDiv.id = 'audio-status';
-                    statusDiv.textContent = '載入中...';
-                    
-                    // 組合控制面板
-                    controlsDiv.appendChild(buttonContainer);
-                    controlsDiv.appendChild(progressContainer);
-                    controlsDiv.appendChild(statusDiv);
-                    
-                    // 事件處理
-                    const playBtn = document.getElementById('audio-play-btn');
-                    const pauseBtn = document.getElementById('audio-pause-btn');
-                    const speedSelect = document.getElementById('audio-speed');
-                    
-                    if (playBtn) {
-                        playBtn.onclick = () => {
-                            if (audioElement.value) {
-                                audioElement.value.play().catch(err => {
-                                    console.error("播放音頻失敗:", err);
-                                });
-                            }
-                        };
-                    }
-                    
-                    if (pauseBtn) {
-                        pauseBtn.onclick = () => {
-                            if (audioElement.value) {
-                                audioElement.value.pause();
-                            }
-                        };
-                    }
-                    
-                    if (speedSelect) {
-                        speedSelect.onchange = () => {
-                            if (audioElement.value) {
-                                audioElement.value.playbackRate = parseFloat(speedSelect.value);
-                            }
-                        };
-                    }
-                    
-                    if (progressContainer) {
-                        progressContainer.addEventListener('click', (e) => {
-                            if (audioElement.value && audioElement.value.duration) {
-                                const rect = progressContainer.getBoundingClientRect();
-                                const clickPosition = (e.clientX - rect.left) / rect.width;
-                                audioElement.value.currentTime = clickPosition * audioElement.value.duration;
-                                updateProgressBar();
-                            }
-                        });
-                    }
-                };
-                
-                // 更新進度條
-                const updateProgressBar = () => {
-                    const progressBar = document.getElementById('audio-progress-bar');
-                    const timeDisplay = document.getElementById('audio-time-display');
-                    
-                    if (progressBar && audioElement.value && audioElement.value.duration) {
-                        const percentage = (audioElement.value.currentTime / audioElement.value.duration) * 100;
-                        progressBar.style.width = `${percentage}%`;
-                    }
-                    
-                    if (timeDisplay && audioElement.value) {
-                        const current = formatTime(audioElement.value.currentTime);
-                        const duration = formatTime(audioElement.value.duration);
-                        timeDisplay.textContent = `${current} / ${duration}`;
-                    }
-                };
-                
-                // 格式化時間
-                const formatTime = (seconds) => {
-                    if (isNaN(seconds)) return '00:00';
-                    
-                    const mins = Math.floor(seconds / 60);
-                    const secs = Math.floor(seconds % 60);
-                    
-                    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-                };
-                
-                // 處理詞彙元素
-                const processWordElements = () => {
-                    console.log("開始處理單詞元素...");
-                    
-                    // 重置單詞元素列表
-                    wordElements.value = [];
-                    
-                    // 查找所有帶有時間戳記的元素
-                    const spanElements = document.querySelectorAll('span[data-start][data-end]');
-                    console.log(`找到 ${spanElements.length} 個時間標記的元素`);
-                    
-                    // 按時間排序
-                    const sortedElements = Array.from(spanElements).sort((a, b) => {
-                        return parseFloat(a.dataset.start) - parseFloat(b.dataset.start);
-                    });
-                    
-                    // 處理排序後的元素
-                    sortedElements.forEach((element, idx) => {
-                        const startTime = parseFloat(element.dataset.start);
-                        const endTime = parseFloat(element.dataset.end);
-                        
-                        if (!isNaN(startTime) && !isNaN(endTime)) {
-                            element.classList.add('word');
-                            element.dataset.index = idx;
-                            
-                            // 檢查是否是詞彙 - 優先級高於播放功能
-                            const isVocab = element.classList.contains('vocab-word') || 
-                                        element.closest('.vocab-word') !== null || 
-                                        element.hasAttribute('data-id') || 
-                                        element.parentElement.hasAttribute('data-id') ||
-                                        (element.closest('b') && element.closest('b').hasAttribute('id'));
-                            
-                            // 非詞彙才添加播放功能
-                            if (!isVocab) {
-                                element.addEventListener('click', (e) => {
-                                    e.stopPropagation();
-                                    playFromWord(element);
-                                });
-                            }
-                            
-                            wordElements.value.push(element);
-                        }
-                    });
-                    
-                    console.log(`共處理 ${wordElements.value.length} 個文字元素`);
-                };
-                
-                // 從指定單詞播放
-                const playFromWord = (wordElement) => {
-                    if (!audioElement.value || !wordElement.dataset.start) return;
-                    
-                    const startTime = parseFloat(wordElement.dataset.start);
-                    console.log(`播放位置: ${startTime}秒`);
-                    
-                    audioElement.value.currentTime = startTime;
-                    audioElement.value.play().catch(err => {
-                        console.error("播放音頻失敗:", err);
-                    });
-                    
-                    currentWordIndex.value = parseInt(wordElement.dataset.index);
-                    updateProgressBar();
-                    highlightCurrentWord();
-                };
-                
-                // 高亮當前單詞
-                const highlightCurrentWord = () => {
-                    // 移除所有高亮
-                    document.querySelectorAll('.current-word').forEach(el => {
-                        el.classList.remove('current-word');
-                    });
-                    
-                    if (currentWordIndex.value === -1) return;
-                    
-                    // 找到匹配當前索引的元素並高亮
-                    wordElements.value.forEach(element => {
-                        if (element.dataset.index && parseInt(element.dataset.index) === currentWordIndex.value) {
-                            element.classList.add('current-word');
-                            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }
-                    });
-                };
-                
-                // 更新單詞高亮
-                const updateWordHighlight = () => {
-                    if (!audioElement.value) return;
-                    
-                    updateProgressBar();
-                    
-                    const currentTime = audioElement.value.currentTime;
-                    let newIndex = -1;
-                    
-                    // 先清除所有高亮
-                    document.querySelectorAll('.current-word').forEach(el => {
-                        el.classList.remove('current-word');
-                    });
-                    
-                    // 尋找當前時間範圍內的單詞
-                    for (let i = 0; i < wordElements.value.length; i++) {
-                        const element = wordElements.value[i];
-                        const start = parseFloat(element.dataset.start);
-                        const end = parseFloat(element.dataset.end);
-                        
-                        if (!isNaN(start) && !isNaN(end) && currentTime >= start && currentTime <= end) {
-                            element.classList.add('current-word');
-                            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            newIndex = parseInt(element.dataset.index);
-                            break;
-                        }
-                    }
-                    
-                    if (newIndex !== -1) {
-                        currentWordIndex.value = newIndex;
-                    }
-                };
-                
-                // 顯示詞彙卡片
-                const showVocabularyCard = () => {
-                    // 顯示詞彙卡和遮罩
-                    document.getElementById('vocabularyCard').style.display = 'block';
-                    document.getElementById('overlay').style.display = 'block';
-                    
-                    // 暫停音頻播放
-                    if (audioElement.value && !audioElement.value.paused) {
-                        audioElement.value.pause();
-                        console.log("詞彙卡顯示時暫停音頻播放");
-                    }
-                    
-                    // 如果已有選定的詞彙，延遲0.3秒後播放發音
-                    if (selectedWord.value && selectedWord.value.word) {
-                        setTimeout(() => {
-                            window.playWordPronunciation(selectedWord.value.word);
-                        }, 50);
-                    }
-                };          
-                // 關閉詞彙卡片
-                const closeVocabularyCard = () => {
-                    document.getElementById('vocabularyCard').style.display = 'none';
-                    document.getElementById('overlay').style.display = 'none';
-                };
-
-                
-                window.playWordPronunciation = async (word) => {
-                    if (!word) return;
-                    
-                    try {
-                        // 使用瀏覽器的語音合成API播放單字發音
-                        const utterance = new SpeechSynthesisUtterance(word);
-                        utterance.lang = 'en-US'; // 設定語言為英文
-                        utterance.rate = 0.9; // 稍微放慢速度以便清晰聽到
-                        
-                        // 播放發音
-                        window.speechSynthesis.speak(utterance);
-                        console.log(`播放單字: ${word}`);
-                    } catch (err) {
-                        console.error("播放單字發音失敗:", err);
-                    }
-                };
-
-
-                // 處理詞彙點擊
-                const handleWordClick = (id) => {
-                    let word = vocabularyData.value.find(w => w.number === id);
-                    
-                    if (!word && event && event.target) {
-                        const dataId = event.target.getAttribute('data-id');
-                        if (dataId) {
-                            word = vocabularyData.value.find(w => w.number === dataId);
-                            if (!word) {
-                                const text = event.target.textContent;
-                                word = {
-                                    number: dataId,
-                                    word: text,
-                                    phonetics: '(暫無音標)',
-                                    pos: '未知',
-                                    definition_zh: '此詞彙尚未有定義',
-                                    syllable: '' // 添加syllable字段
-                                };
-                            }
-                        }
-                    }
-                    
-                    if (word) {
-                        selectedWord.value = word;
-                        showVocabularyCard();
-                        
-                        // 延遲0.3秒後播放單字發音
-                        setTimeout(() => {
-                            window.playWordPronunciation(word.word);
-                        }, 50);
-                    }
-                };
-                
-                // 切換語言
-                const switchLanguage = () => {
-                    selectedLanguage.value = selectedLanguage.value === 'english' ? 'chinese' : 'english';
-                };
-                
-                // 更新音頻控制按鈕狀態
-                const updateAudioControls = () => {
-                    const playButton = document.getElementById('audio-play-btn');
-                    const pauseButton = document.getElementById('audio-pause-btn');
-                    const statusElement = document.getElementById('audio-status');
-                    
-                    if (audioLoaded.value) {
-                        if (playButton) playButton.disabled = false;
-                        if (pauseButton) pauseButton.disabled = false;
-                        if (statusElement) {
-                            statusElement.textContent = '音頻已載入，可以開始播放';
-                        }
-                    }
-                };
-
-                // 從HTML文件中提取段落數據
-                const extractHtmlParagraphData = (jsonData) => {
-                    const rootKey = APP_CONFIG.DATA_KEYS.HTML_ROOT_KEY;
-                    const paragraphsKey = APP_CONFIG.DATA_KEYS.HTML_PARAGRAPHS_KEY;
-                    
-                    if (!jsonData[rootKey]) {
-                        throw new Error(`無法找到根鍵 "${rootKey}" 在HTML JSON數據中`);
-                    }
-                    
-                    if (!jsonData[rootKey][paragraphsKey]) {
-                        throw new Error(`無法找到 "${rootKey}.${paragraphsKey}" 在HTML JSON數據中`);
-                    }
-                    
-                    // 轉換段落數據為陣列格式
-                    const paragraphsData = jsonData[rootKey][paragraphsKey];
-                    const paragraphsArray = [];
-                    
-                    // 將對象轉換為數組
-                    for (const key in paragraphsData) {
-                        if (paragraphsData.hasOwnProperty(key)) {
-                            paragraphsArray.push({
-                                ...paragraphsData[key],
-                                id: key
-                            });
-                        }
-                    }
-                    
-                    return paragraphsArray;
-                };
-
-                // 從中文翻譯文件中提取數據
-                const extractChineseTranslations = (jsonData) => {
-                    // 查找包含指定模式的鍵
-                    const pattern = APP_CONFIG.DATA_KEYS.CHINESE_ROOT_KEY_PATTERN;
-                    const rootKey = Object.keys(jsonData).find(key => key.includes(pattern));
-                    
-                    if (!rootKey || !jsonData[rootKey]) {
-                        console.warn(`無法找到包含 "${pattern}" 的鍵在中文翻譯JSON中`);
-                        return [];
-                    }
-                    
-                    return jsonData[rootKey];
-                };
-                
-                // 合併HTML和中文翻譯數據
-                const mergeHtmlAndChineseData = (htmlData, chineseData) => {
-                    // 複製HTML數據，不直接修改原始數據
-                    const mergedData = JSON.parse(JSON.stringify(htmlData));
-                    
-                    // 添加中文翻譯
-                    mergedData.forEach((paragraph, index) => {
-                        if (chineseData[index]) {
-                            paragraph.chinese = chineseData[index].chinese;
-                        } else {
-                            paragraph.chinese = "（此段落無中文翻譯）";
-                        }
-                    });
-                    
-                    return mergedData;
-                };
-                
-                // 載入數據
-                const loadData = async () => {
-                    try {
-                        // 載入HTML段落數據
-                        console.log("開始載入HTML段落數據...");
-                        const htmlResponse = await fetch(APP_CONFIG.FILE_PATHS.HTML_PARAGRAPH_JSON);
-                        
-                        if (!htmlResponse.ok) {
-                            throw new Error(`無法載入HTML段落數據: ${htmlResponse.status}`);
-                        }
-                        
-                        const parsedHtmlData = await htmlResponse.json();
-                        const htmlParagraphs = extractHtmlParagraphData(parsedHtmlData);
-                        
-                        // 載入中文翻譯數據
-                        console.log("開始載入中文翻譯數據...");
-                        const chineseResponse = await fetch(APP_CONFIG.FILE_PATHS.CHINESE_PARAGRAPH_JSON);
-                        
-                        if (!chineseResponse.ok) {
-                            throw new Error(`無法載入中文翻譯數據: ${chineseResponse.status}`);
-                        }
-                        
-                        const parsedChineseData = await chineseResponse.json();
-                        const chineseTranslations = extractChineseTranslations(parsedChineseData);
-                        
-                        // 合併HTML和中文翻譯數據
-                        paragraphData.value = mergeHtmlAndChineseData(htmlParagraphs, chineseTranslations);
-                        
-                        // 載入詞彙數據
-                        const vocabResponse = await fetch(APP_CONFIG.FILE_PATHS.VOCABULARY_JSON);
-                        
-                        if (!vocabResponse.ok) {
-                            throw new Error(`無法載入詞彙數據: ${vocabResponse.status}`);
-                        }
-                        
-                        const parsedVocabData = await vocabResponse.json();
-                        
-                        // 壓平詞彙資料
-                        // 壓平詞彙資料
-                        const flatVocab = [];
-                        parsedVocabData.forEach(section => {
-                            if (section.word_forms) {
-                                section.word_forms.forEach(word => {
-                                    flatVocab.push(word);
-                                });
-                            }
-                        });
-                        
-                        vocabularyData.value = flatVocab;
-                        
-                        // 預處理所有段落
-                        paragraphData.value.forEach((paragraph, index) => {
-                            processedParagraphs.value[index] = paragraph.english_with_html;
-                        });
-                        
-                        loading.value = false;
-                    } catch (err) {
-                        console.error("載入數據時發生錯誤:", err);
-                        error.value = `載入數據時發生錯誤: ${err.message}`;
-                        loading.value = false;
-                    }
-                };
-                
-                // 為點擊詞彙卡片設置事件委派
-                const setupVocabClickHandlers = () => {
-                    document.addEventListener('click', (e) => {
-                        // 首先檢查是否為詞彙卡片點擊（優先處理）
-                        const vocabElement = e.target.closest('.vocab-word') || 
-                                        e.target.closest('b[id]') ||
-                                        (e.target.hasAttribute('data-id') ? e.target : null) ||
-                                        (e.target.parentElement && e.target.parentElement.hasAttribute('data-id') ? e.target.parentElement : null);
-                        
-                        if (vocabElement) {
-                            e.stopPropagation(); // 阻止事件冒泡
-                            e.preventDefault(); // 阻止默認行為
-                            
-                            // 獲取詞彙ID，優先從 data-id 屬性獲取
-                            let id = vocabElement.getAttribute('data-id');
-                            
-                            // 如果沒有 data-id，則嘗試從 onclick 屬性獲取
-                            if (!id) {
-                                const onclickMatch = vocabElement.getAttribute('onclick')?.match(/'([^']+)'/);
-                                if (onclickMatch) {
-                                    id = onclickMatch[1];
-                                }
-                            }
-                            
-                            // 如果還沒有找到ID，但元素是或在 b 標籤內，則從 b 標籤獲取 id
-                            if (!id && (vocabElement.tagName === 'B' || vocabElement.closest('b'))) {
-                                const bElement = vocabElement.tagName === 'B' ? vocabElement : vocabElement.closest('b');
-                                id = bElement.getAttribute('id');
-                            }
-                            
-                            if (id) {
-                                handleWordClick(id);
-                                return; // 已處理詞彙點擊，不再繼續
-                            }
-                        }
-                        
-                        // 如果不是詞彙點擊，檢查是否需要播放音頻
-                        if (e.target.classList.contains('word') && 
-                            !e.target.closest('.vocab-word') && 
-                            !e.target.hasAttribute('data-id') && 
-                            !(e.target.parentElement && e.target.parentElement.hasAttribute('data-id')) &&
-                            !e.target.closest('b[id]')) {
-                            playFromWord(e.target);
-                        }
-                    });
-                };
-                
-                // 初始化
-                onMounted(async () => {
-                    console.log("頁面載入，開始初始化...");
-                    
-                    // 添加音頻元素
-                    const audio = document.createElement('audio');
-                    audio.id = 'audio-player';
-                    audio.style.display = 'none';
-                    document.body.appendChild(audio);
-                    audioElement.value = audio;
-                    
-                    // 添加音頻事件監聽
-                    audio.addEventListener('timeupdate', updateWordHighlight);
-                    
-                    // 初始化控制介面
-                    initializeAudioControls();
-                    
-                    // 載入音頻文件
-                    try {
-                        audioElement.value.src = APP_CONFIG.FILE_PATHS.AUDIO_FILE;
-                        audioElement.value.onloadedmetadata = () => {
-                            audioLoaded.value = true;
-                            updateAudioControls();
-                        };
-                        audioElement.value.onerror = (e) => {
-                            console.error("音頻載入失敗:", e);
-                        };
-                        audioElement.value.load();
-                    } catch (err) {
-                        console.error("載入音頻文件時發生錯誤:", err);
-                    }
-                    
-                    // 添加全局事件監聽器
-                    
-                    // 按ESC鍵關閉詞彙卡片
-                    document.addEventListener('keydown', (e) => {
-                        if (e.key === 'Escape') {
-                            closeVocabularyCard();
-                        } else if (e.key === ' ' && audioElement.value) {
-                            // 空格鍵控制播放/暫停
-                            if (audioElement.value.paused) {
-                                audioElement.value.play();
-                            } else {
-                                audioElement.value.pause();
-                            }
-                            e.preventDefault();
-                        }
-                    });
-                    
-                    // 防止點擊卡片關閉
-                    const vocabCard = document.getElementById('vocabularyCard');
-                    if (vocabCard) {
-                        vocabCard.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                        });
-                    }
-                    
-                    // 將處理函數暴露給window
-                    window.handleWordClick = handleWordClick;
-                    
-                    // 設置詞彙點擊處理
-                    setupVocabClickHandlers();
-                    
-                    // 載入數據
-                    await loadData();
-                    
-                    // 數據載入後，處理詞彙元素
-                    nextTick(() => {
-                        processWordElements();
-                    });
-                });
-
-                // 監聽狀態變化
-                watch([audioLoaded], ([newAudioLoaded]) => {
-                    if (newAudioLoaded) {
-                        console.log("音頻已載入，準備處理單詞元素");
-                        nextTick(() => {
-                            console.log("DOM 已更新，開始處理單詞元素");
-                            processWordElements();
-                            updateAudioControls();
-                        });
-                    }
-                });
-
-                // 返回設置中的值和方法
-                return {
-                    paragraphData,
-                    vocabularyData,
-                    selectedLanguage,
-                    selectedWord,
-                    loading,
-                    error,
-                    processedParagraphs,
-                    handleWordClick,
-                    switchLanguage,
-                    showVocabularyCard,
-                    closeVocabularyCard
-                };
-            }
-        }).mount('#app');
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
