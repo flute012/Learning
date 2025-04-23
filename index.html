@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>英文自學霸</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="./code/styles.css">
+    <script src="./code/script.js"></script>
     <script src="https://unpkg.com/vue@3"></script>
 </head>
 <body>
@@ -42,16 +43,15 @@
         
         <!-- 詞彙卡片 -->
         <div class="vocabulary-card" id="vocabularyCard">
-            <h3 v-if="selectedWord">
-                <span>{{ selectedWord.word }}</span>
-                <span class="phonetics" v-if="selectedWord.phonetics">{{ selectedWord.phonetics }}</span>
-                <span class="pos" v-if="selectedWord.pos">{{ selectedWord.pos }}</span>
-            </h3>
             
+            <h3 >單字資訊 </h3>
             <div class="definition" v-if="selectedWord">
-                <span class="syllable" v-if="selectedWord.syllable"><strong>音節: </strong>{{ selectedWord.syllable }}</span>
-                <p v-if="selectedWord.definition_en"><strong>英文:</strong> {{ selectedWord.definition_en }}</p>
-                <p><strong>中文:</strong> {{ selectedWord.definition_zh }}</p>
+                <p><strong>單字： </strong>{{ selectedWord.word }}</p>
+                <p v-if="selectedWord.phonetics"><strong>音標： </strong>{{ selectedWord.phonetics }}</p>
+                <p v-if="selectedWord.pos"><strong>詞性： </strong>{{ selectedWord.pos }}.</p>
+                <p><strong>中文意思:</strong> {{ selectedWord.definition_zh }}</p>
+                <p v-if="selectedWord.definition_en"><strong>英文意思:</strong> {{ selectedWord.definition_en }}</p>
+
             </div>
         </div>
         
@@ -142,6 +142,6 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+
 </body>
 </html>
