@@ -29,6 +29,15 @@ p{
     color: #59018b;
   }
 
+[id^="ip_"] {
+    color: #0277de;
+    text-decoration: underline;
+    text-decoration-color: #0277de;
+    text-decoration-style: dotted;
+    text-decoration-thickness: 0.5px;
+  }
+
+
 #fixed-top {
     background: linear-gradient(to right, #4a90e2, #63b3ed);
     padding: 0 16px;
