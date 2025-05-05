@@ -87,7 +87,7 @@
             </div>
             
             <div class="control-item">
-                <button id="playPauseBtn" @click="togglePlayPause">▶</button>
+                <button id="playPauseBtn" :class="{ 'playing': isPlaying }" @click="togglePlayPause">▶</button>
                 <span class="control-label">播放</span>
             </div>
             
