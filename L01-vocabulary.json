@@ -696,7 +696,7 @@
         "root_word": "stadium",
         "word": "stadium",
         "phonetics": "[`stedɪəm]",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "體育場",
         "number": "wr_1"
       },
@@ -712,7 +712,7 @@
         "root_word": "Derek Redmond",
         "word": "Derek Redmond",
         "phonetics": "[`dɛrək `rɛdmʌnd]",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "德瑞克．雷德蒙",
         "number": "wr_3"
       },
@@ -720,7 +720,7 @@
         "root_word": "the Olympics",
         "word": "the Olympics",
         "phonetics": "[ðɪo`lɪmpɪks]",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "奧林匹克運動會",
         "number": "wr_4"
       },
@@ -728,7 +728,7 @@
         "root_word": "the Olympics",
         "word": "Olympic",
         "phonetics": "[o`lɪmpɪk]",
-        "pos": "adj",
+        "pos": "adj.",
         "definition_zh": "奧林匹克運動會的",
         "number": "wr_4_1"
       },
@@ -736,7 +736,7 @@
         "root_word": "unbearable",
         "word": "unbearable",
         "phonetics": "[ʌn`bɛrəbḷ]",
-        "pos": "adj",
+        "pos": "adj.",
         "definition_zh": "難以忍受的",
         "number": "wr_5"
       },
@@ -744,7 +744,7 @@
         "root_word": "limb",
         "word": "limb",
         "phonetics": "[lɪm]",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "四肢之一（手臂或腿）",
         "number": "wr_6"
       },
@@ -752,7 +752,7 @@
         "root_word": "hamstring",
         "word": "hamstring",
         "phonetics": "[`hæmˏstrɪŋ]",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "腿後肌腱（位於大腿後側）",
         "number": "wr_7"
       },
@@ -760,7 +760,7 @@
         "root_word": "stand",
         "word": "stand",
         "phonetics": "[stænd]",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "看臺",
         "number": "wr_8"
       },
@@ -768,7 +768,7 @@
         "root_word": "security guard",
         "word": "security guard",
         "phonetics": "[sɪ`kjʊrətɪ ˏgɑrd]",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "保安人員",
         "number": "wr_9"
       },
@@ -776,7 +776,7 @@
         "root_word": "the Olympics",
         "word": "Olympic",
         "phonetics": "[o`lɪmpɪk]",
-        "pos": "adj",
+        "pos": "adj.",
         "definition_zh": "奧林匹克運動會的",
         "number": "wr_10"
       },
@@ -784,7 +784,7 @@
         "root_word": "spectator",
         "word": "spectator",
         "phonetics": "[`spɛktetɚ]",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "（體育比賽的）觀眾",
         "number": "wr_11"
       }
