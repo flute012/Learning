@@ -647,6 +647,6 @@ input:checked + .slider:before {
 
 @media screen and (max-width: 480px) {
     div .paragraph {
-        margin-bottom:1.1rem;
+        margin-bottom:1rem;
     }
   }
