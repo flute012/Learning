@@ -24,6 +24,11 @@ p{
     margin:1rem;
     unicode-bidi:isolate;
 }
+
+[id^="wr_"] {
+    color: #59018b;
+  }
+
 #fixed-top {
     background: linear-gradient(to right, #4a90e2, #63b3ed);
     padding: 0 16px;
