@@ -7,7 +7,7 @@
         "word": "champion",
         "phonetics": "[ˈtʃæmpɪən]",
         "syllable": "cham·pi·on",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "冠軍",
         "definition_en": "the winner of a sports event or a competition",
         "examples": [
@@ -23,7 +23,7 @@
         "word": "dedication",
         "phonetics": "[ˏdɛdəˈkeʃən]",
         "syllable": "ded·i·ca·tion",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "奉獻；投入",
         "definition_en": "the time, effort, and hard work one puts into achieving a certain goal",
         "examples": [
@@ -39,7 +39,7 @@
         "word": "dedicate",
         "phonetics": "[ˈdɛdəˌkeɪt]",
         "syllable": "ded·i·cate",
-        "pos": "vt",
+        "pos": "vt.",
         "verb_pattern": "dedicate-dedicated-dedicated",
         "definition_zh": "把……奉獻於；將……投入於",
         "examples": [
@@ -55,7 +55,7 @@
         "word": "medal",
         "phonetics": "[ˈmɛdḷ]",
         "syllable": "me·dal",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "獎牌",
         "definition_en": "a flat piece of metal awarded to someone that has won a race or competition",
         "examples": [
@@ -71,7 +71,7 @@
         "word": "injury",
         "phonetics": "[ˈɪndʒərɪ]",
         "syllable": "in·ju·ry",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "受傷",
         "definition_en": "physical damage or harm done to one’s body, especially in an accident or attack",
         "examples": [
@@ -91,7 +91,7 @@
         "word": "injure",
         "phonetics": "[ˈɪndʒɚ]",
         "syllable": "in·jure",
-        "pos": "vt",
+        "pos": "vt.",
         "verb_pattern": "injure-injured-injured",
         "definition_zh": "使……受傷",
         "examples": [
@@ -107,7 +107,7 @@
         "word": "success",
         "phonetics": "[səkˈsɛs]",
         "syllable": "suc·cess",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "成功",
         "definition_en": "the fact that someone achieves something or does a job very well",
         "examples": [
@@ -123,7 +123,7 @@
         "word": "success",
         "phonetics": "[səkˈsɛs]",
         "syllable": "suc·cess",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "成功的人、事物",
         "examples": [
           {
@@ -138,7 +138,7 @@
         "word": "succeed",
         "phonetics": "[səkˈsid]",
         "syllable": "suc·ceed",
-        "pos": "vi",
+        "pos": "vi.",
         "verb_pattern": "succeed-succeeded-succeeded",
         "definition_zh": "成功辦到",
         "examples": [
@@ -154,7 +154,7 @@
         "word": "successful",
         "phonetics": "[səkˈsɛsfəl]",
         "syllable": "suc·cess·ful",
-        "pos": "adj",
+        "pos": "adj.",
         "definition_zh": "成功的",
         "examples": [
           {
@@ -169,7 +169,7 @@
         "word": "pain",
         "phonetics": "[peɪn]",
         "syllable": "pain",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "疼痛",
         "definition_en": "what you feel when you are hurt, injured, or sick",
         "examples": [
@@ -189,7 +189,7 @@
         "word": "painfully",
         "phonetics": "[ˈpeɪnfəlɪ]",
         "syllable": "pain·ful·ly",
-        "pos": "adv",
+        "pos": "adv.",
         "definition_zh": "痛苦地",
         "examples": [
           {
@@ -204,7 +204,7 @@
         "word": "painful",
         "phonetics": "[ˈpeɪnfəl]",
         "syllable": "pain·ful",
-        "pos": "adj",
+        "pos": "adj.",
         "definition_zh": "疼痛的",
         "examples": [
           {
@@ -219,7 +219,7 @@
         "word": "painful",
         "phonetics": "[ˈpeɪnfəl]",
         "syllable": "pain·ful",
-        "pos": "adj",
+        "pos": "adj.",
         "definition_zh": "令人痛苦的",
         "examples": [
           {
@@ -234,7 +234,7 @@
         "word": "immediately",
         "phonetics": "[ɪˈmɪdiətlɪ]",
         "syllable": "im·me·di·ate·ly",
-        "pos": "adv",
+        "pos": "adv.",
         "definition_zh": "立即；馬上",
         "definition_en": "right away or without delay",
         "examples": [
@@ -250,7 +250,7 @@
         "word": "immediate",
         "phonetics": "[ɪˈmɪdiət]",
         "syllable": "im·me·di·ate",
-        "pos": "adj",
+        "pos": "adj.",
         "definition_zh": "立即的",
         "examples": [
           {
@@ -265,7 +265,7 @@
         "word": "collapse",
         "phonetics": "[kəˈlæps]",
         "syllable": "col·lapse",
-        "pos": "vi",
+        "pos": "vi.",
         "verb_pattern": "collapse-collapsed-collapsed",
         "definition_zh": "倒下",
         "definition_en": "to fall down, especially when one faints or feels very weak",
@@ -282,7 +282,7 @@
         "word": "collapse",
         "phonetics": "[kəˈlæps]",
         "syllable": "col·lapse",
-        "pos": "vi",
+        "pos": "vi.",
         "verb_pattern": "collapse-collapsed-collapsed",
         "definition_zh": "倒塌",
         "examples": [
@@ -298,7 +298,7 @@
         "word": "collapse",
         "phonetics": "[kəˈlæps]",
         "syllable": "col·lapse",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "倒塌",
         "examples": [
           {
@@ -313,7 +313,7 @@
         "word": "medical",
         "phonetics": "[ˈmɛdɪkəl]",
         "syllable": "me·di·cal",
-        "pos": "adj",
+        "pos": "adj.",
         "definition_zh": "醫療的",
         "definition_en": "related to the study and treatment of injury or disease",
         "examples": [
@@ -329,7 +329,7 @@
         "word": "staff",
         "phonetics": "[stæf]",
         "syllable": "staff",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "全體員工",
         "definition_en": "a group or team of workers or employees",
         "examples": [
@@ -349,7 +349,7 @@
         "word": "courage",
         "phonetics": "[ˈkɜrɪdʒ]",
         "syllable": "cour·age",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "勇氣",
         "definition_en": "the ability to face a difficult, painful, or dangerous situation",
         "examples": [
@@ -365,7 +365,7 @@
         "word": "strength",
         "phonetics": "[strɛŋθ]",
         "syllable": "strength",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "意志力",
         "definition_en": "will power or courage, usually shown under challenging conditions",
         "examples": [
@@ -381,7 +381,7 @@
         "word": "strength",
         "phonetics": "[strɛŋθ]",
         "syllable": "strength",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "體力；力量",
         "examples": [
           {
@@ -396,7 +396,7 @@
         "word": "strengthen",
         "phonetics": "[ˈstrɛŋθən]",
         "syllable": "streng·then",
-        "pos": "vt",
+        "pos": "vt.",
         "verb_pattern": "strengthen-strengthened-strengthened",
         "definition_zh": "強化",
         "examples": [
@@ -412,7 +412,7 @@
         "word": "support",
         "phonetics": "[səˈpɔrt]",
         "syllable": "sup·port",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "支持",
         "definition_en": "backing or encouragement for someone to help him or her deal with something",
         "examples": [
@@ -428,7 +428,7 @@
         "word": "support",
         "phonetics": "[səˈpɔrt]",
         "syllable": "sup·port",
-        "pos": "vt",
+        "pos": "vt..",
         "verb_pattern": "support-supported-supported",
         "definition_zh": "支持",
         "examples": [
@@ -444,7 +444,7 @@
         "word": "support",
         "phonetics": "[səˈpɔrt]",
         "syllable": "sup·port",
-        "pos": "vt",
+        "pos": "vt.",
         "verb_pattern": "support-supported-supported",
         "definition_zh": "支撐",
         "examples": [
@@ -460,7 +460,7 @@
         "word": "struggle",
         "phonetics": "[ˈstrʌɡl]",
         "syllable": "strug·gle",
-        "pos": "vi",
+        "pos": "vi.",
         "verb_pattern": "struggle-struggled-struggled",
         "definition_zh": "艱難地前進",
         "definition_en": "to move with great difficulty",
@@ -477,7 +477,7 @@
         "word": "struggle",
         "phonetics": "[ˈstrʌɡl]",
         "syllable": "strug·gle",
-        "pos": "vi",
+        "pos": "vi.",
         "verb_pattern": "struggle-struggled-struggled",
         "definition_zh": "奮力；爭取",
         "examples": [
@@ -493,7 +493,7 @@
         "word": "struggle",
         "phonetics": "[ˈstrʌɡl]",
         "syllable": "strug·gle",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "奮鬥；努力",
         "examples": [
           {
@@ -508,7 +508,7 @@
         "word": "pride",
         "phonetics": "[praɪd]",
         "syllable": "pride",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "驕傲；得意",
         "definition_en": "satisfaction or pleasure in one’s achievements",
         "examples": [
@@ -524,7 +524,7 @@
         "word": "proud",
         "phonetics": "[praʊd]",
         "syllable": "proud",
-        "pos": "adj",
+        "pos": "adj.",
         "definition_zh": "驕傲的；得意的",
         "examples": [
           {
@@ -539,7 +539,7 @@
         "word": "emotional",
         "phonetics": "[ɪˈmoʊʃənəl]",
         "syllable": "e·mo·tion·al",
-        "pos": "adj",
+        "pos": "adj.",
         "definition_zh": "情緒激動的",
         "definition_en": "having or showing strong feelings",
         "examples": [
@@ -555,7 +555,7 @@
         "word": "emotional",
         "phonetics": "[ɪˈmoʊʃənəl]",
         "syllable": "e·mo·tion·al",
-        "pos": "adj",
+        "pos": "adj.",
         "definition_zh": "情緒的；情感的",
         "examples": [
           {
@@ -570,7 +570,7 @@
         "word": "emotion",
         "phonetics": "[ɪˈmoʊʃən]",
         "syllable": "e·mo·tion",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "情緒；情感",
         "examples": [
           {
@@ -589,7 +589,7 @@
         "word": "admiration",
         "phonetics": "[ˌædməˈreɪʃən]",
         "syllable": "ad·mi·ra·tion",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "欽佩",
         "definition_en": "a feeling of deep approval for someone or something",
         "examples": [
@@ -605,7 +605,7 @@
         "word": "admire",
         "phonetics": "[ədˈmaɪər]",
         "syllable": "ad·mire",
-        "pos": "vt",
+        "pos": "vt.",
         "verb_pattern": "admire-admired-admired",
         "definition_zh": "欽佩",
         "examples": [
@@ -621,7 +621,7 @@
         "word": "respect",
         "phonetics": "[rɪˈspɛkt]",
         "syllable": "re·spect",
-        "pos": "n",
+        "pos": "n.",
         "definition_zh": "尊敬；尊重",
         "definition_en": "a feeling of admiration for one’s qualities, experience, or achievements",
         "examples": [
@@ -637,7 +637,7 @@
         "word": "respect",
         "phonetics": "[rɪˈspɛkt]",
         "syllable": "re·spect",
-        "pos": "vt",
+        "pos": "vt.",
         "verb_pattern": "respect-respected-respected",
         "definition_zh": "尊敬；尊重",
         "examples": [
