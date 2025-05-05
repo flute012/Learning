@@ -19,14 +19,16 @@ b sup span{
     color: #000;
 }
 
-p{
-    display:block;
-    margin:1rem;
-    unicode-bidi:isolate;
+
+div .paragraph {
+    line-height: 1.6;
+    font-size: 1.1rem; 
+    margin-bottom:.85rem;
 }
 
 [id^="wr_"] {
-    color: #59018b;
+    color: #3e0160;
+
   }
 
 [id^="ip_"] {
@@ -37,13 +39,12 @@ p{
     text-decoration-thickness: 0.6px;
   }
 
-div .paragraph {
-    line-height: 1.6;
-    font-size: 1.1rem; 
-    margin-bottom:0.8rem;
+
+p{
+    display:block;
+    margin:1rem;
+    unicode-bidi:isolate;
 }
-
-
 #fixed-top {
     background: linear-gradient(to right, #4a90e2, #63b3ed);
     padding: 0 16px;
@@ -151,19 +152,51 @@ h1 {
 }
 
 /* 播放按鈕樣式 */
+
 #playPauseBtn {
     width: 56px;
     height: 56px;
     border-radius: 50%;
     background-color: #4a90e2;
-    color: white;
     border: none;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
     box-shadow: 0 2px 8px rgba(74,144,226,0.4);
+    position: relative;
+        /* 清除所有預設內容 */
+    font-size: 0;
+    color: transparent;
+    text-indent: -9999px;
+    overflow: hidden;
+}
+
+#playPauseBtn::before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+}
+
+#playPauseBtn.playing::before {
+    background: linear-gradient(
+        to right,
+        white 35%,
+        transparent 35%,
+        transparent 65%,
+        white 65%
+    );
+}
+
+#playPauseBtn:not(.playing)::before {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px 0 10px 20px;
+    border-color: transparent transparent transparent white;
+    margin-left: 4px;
+    background: transparent;
 }
 
 /* 翻譯開關樣式 - 改進視覺提示 */
@@ -607,7 +640,7 @@ input:checked + .slider:before {
 } */
 
 .definition {
-    line-height: 1.6;
+    line-height: 1.8;
 }
 
 /* 進度條 */
@@ -650,3 +683,4 @@ input:checked + .slider:before {
         margin-bottom:1rem;
     }
   }
+

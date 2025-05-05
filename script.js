@@ -17,17 +17,16 @@ document.addEventListener('DOMContentLoaded', () => {
             VOCABULARY_JSON: 'L01-vocabulary_final.json',
             AUDIO_FILE: 'B2L1課文全文.mp3'
         },
-        // 資料結構設定
-        DATA_KEYS: {
-            HTML_ROOT_KEY: 'L01_課文文件', // HTML段落JSON檔案的根鍵名
-            HTML_PARAGRAPHS_KEY: 'paragraphs', // HTML段落資料的子鍵名
-            CHINESE_ROOT_KEY_PATTERN: 'L01', // 中文翻譯JSON檔案的根鍵名模式
-        },
-        // 當前課程
+                // 當前課程
         LESSON: {
             TITLE: "英文自學霸",
             ID: "L01"
+        },
+        // 資料結構設定
+        DATA_KEYS: {
+            HTML_PARAGRAPHS_KEY: 'paragraphs', // HTML段落資料的子鍵名
         }
+
     };
 
     // 創建 Vue 應用
@@ -51,20 +50,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const wordElements = ref([]);
 
             // === 方法 ===
-            
+ 
             // 切換播放/暫停
             const togglePlayPause = () => {
                 if (!audioElement.value) return;
                 
+                const playPauseBtn = document.getElementById('playPauseBtn');
+                
                 if (isPlaying.value) {
                     audioElement.value.pause();
-                    document.getElementById('playPauseBtn').innerHTML = '▶';
+                    playPauseBtn.classList.remove('playing');
                     isPlaying.value = false;
                 } else {
                     audioElement.value.play().catch(err => {
                         console.error("播放音頻失敗:", err);
                     });
-                    document.getElementById('playPauseBtn').innerHTML = '⏸';
+                    playPauseBtn.classList.add('playing');
                     isPlaying.value = true;
                 }
             };
@@ -389,21 +390,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             };
             
-            // 從HTML文件中提取段落數據
+            // 從HTML文件中提取段落數據 - 使用遞歸搜尋
             const extractHtmlParagraphData = (jsonData) => {
-                const rootKey = APP_CONFIG.DATA_KEYS.HTML_ROOT_KEY;
                 const paragraphsKey = APP_CONFIG.DATA_KEYS.HTML_PARAGRAPHS_KEY;
                 
-                if (!jsonData[rootKey]) {
-                    throw new Error(`無法找到根鍵 "${rootKey}" 在HTML JSON數據中`);
-                }
+                // 遞歸查找目標鍵的函數
+                const findValueByKey = (obj, targetKey) => {
+                    // 如果 obj 是 null 或非對象，返回 null
+                    if (obj === null || typeof obj !== 'object') {
+                        return null;
+                    }
+                    
+                    // 如果目標鍵存在於當前對象中，直接返回
+                    if (targetKey in obj) {
+                        return obj[targetKey];
+                    }
+                    
+                    // 否則遞歸搜尋對象中的每個值
+                    for (const key in obj) {
+                        const result = findValueByKey(obj[key], targetKey);
+                        if (result !== null) {
+                            return result;
+                        }
+                    }
+                    
+                    // 如果沒有找到，返回 null
+                    return null;
+                };
                 
-                if (!jsonData[rootKey][paragraphsKey]) {
-                    throw new Error(`無法找到 "${rootKey}.${paragraphsKey}" 在HTML JSON數據中`);
+                // 查找段落數據
+                const paragraphsData = findValueByKey(jsonData, paragraphsKey);
+                
+                if (!paragraphsData) {
+                    throw new Error(`無法找到鍵 "${paragraphsKey}" 在JSON數據中`);
                 }
                 
                 // 轉換段落數據為陣列格式
-                const paragraphsData = jsonData[rootKey][paragraphsKey];
                 const paragraphsArray = [];
                 
                 // 將對象轉換為數組
@@ -419,18 +441,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 return paragraphsArray;
             };
 
-            // 從中文翻譯文件中提取數據
+            // 從中文翻譯文件中提取數據 - 使用特徵識別
             const extractChineseTranslations = (jsonData) => {
-                // 查找包含指定模式的鍵
-                const pattern = APP_CONFIG.DATA_KEYS.CHINESE_ROOT_KEY_PATTERN;
-                const rootKey = Object.keys(jsonData).find(key => key.includes(pattern));
+                // 遞歸查找第一個包含中文翻譯的對象
+                const findChineseData = (obj) => {
+                    // 如果 obj 是 null 或非對象，返回 null
+                    if (obj === null || typeof obj !== 'object') {
+                        return null;
+                    }
+                    
+                    // 檢查當前對象是否包含中文翻譯
+                    // 通常中文翻譯是數組且每個元素有 chinese 屬性
+                    if (Array.isArray(obj) && obj.length > 0 && obj[0] && typeof obj[0].chinese === 'string') {
+                        return obj;
+                    }
+                    
+                    // 否則遞歸搜尋對象中的每個值
+                    for (const key in obj) {
+                        const result = findChineseData(obj[key]);
+                        if (result !== null) {
+                            return result;
+                        }
+                    }
+                    
+                    // 如果沒有找到，返回 null
+                    return null;
+                };
                 
-                if (!rootKey || !jsonData[rootKey]) {
-                    console.warn(`無法找到包含 "${pattern}" 的鍵在中文翻譯JSON中`);
+                // 查找中文翻譯數據
+                const chineseData = findChineseData(jsonData);
+                
+                if (!chineseData) {
+                    console.warn(`無法找到中文翻譯數據`);
                     return [];
                 }
                 
-                return jsonData[rootKey];
+                return chineseData;
             };
             
             // 合併HTML和中文翻譯數據
