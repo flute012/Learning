@@ -37,6 +37,12 @@ p{
     text-decoration-thickness: 0.5px;
   }
 
+div .paragraph {
+    line-height: 1.6;
+    font-size: 1.1rem; 
+    margin-bottom:.85rem;
+}
+
 
 #fixed-top {
     background: linear-gradient(to right, #4a90e2, #63b3ed);
