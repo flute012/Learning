@@ -40,7 +40,7 @@ p{
 div .paragraph {
     line-height: 1.6;
     font-size: 1.1rem; 
-    margin-bottom:.9rem;
+    margin-bottom:.7rem;
 }
 
 
@@ -644,3 +644,9 @@ input:checked + .slider:before {
 .vocab-word:hover {
     background-color: #e8f4ff;
 }
+
+@media screen and (max-width: 480px) {
+    div .paragraph {
+        margin-bottom:1rem;
+    }
+  }
